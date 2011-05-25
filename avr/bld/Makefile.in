@@ -1,0 +1,228 @@
+#
+# AVR Project Makefile Definitions
+# master rules for making an AVR project
+# jwc :: jwcxz.com
+#
+
+D_BLD=$(D_ROOT)/bld
+
+include $(D_BLD)/Makefile.defs
+
+# AVR toolchain dir
+D_AVRTC=/usr/avr
+
+# tools
+D_TOOLS=$(D_ROOT)/tools
+
+# ouput dir
+D_OUT=$(D_PROJ)/out
+
+# sources
+D_LIB=$(D_ROOT)/lib
+D_SRC=$(D_PROJ):$(D_LIB):$(D_AVRTC)/lib
+
+# includes
+D_INC=$(D_PROJ):$(D_ROOT)/inc:$(D_AVRTC)/include
+
+
+# compiler includes and libraries
+I_INC=$(addprefix -I,$(subst :, ,$(D_INC)))
+I_LIB=
+
+vpath %.c $(D_SRC)
+vpath %.S $(D_SRC)
+vpath %.h $(D_INC)
+
+# hex output of bootloader project
+I_HEX_BTL=$(D_BTL)/out/$(BOOTLOADER_NAME).hex
+
+# output files
+O_OUT=$(D_OUT)/$(PROJECT_NAME).out
+O_MAP=$(D_OUT)/$(PROJECT_NAME).out.map
+O_ASM=$(D_OUT)/$(PROJECT_NAME).s
+O_HEX=$(D_OUT)/$(PROJECT_NAME).hex
+O_EHX=$(D_OUT)/$(PROJECT_NAME).ee.hex
+O_GDB=$(D_OUT)/gdbinit-$(PROJECT_NAME)
+
+O_MRG=$(D_OUT)/$(PROJECT_NAME).merged.hex
+
+O_TAG=$(D_ROOT)/tags
+
+
+# commands
+C_CC=avr-gcc
+C_GDB=avr-gdb
+C_OBJCOPY=avr-objcopy
+C_OBJDUMP=avr-objdump
+C_SIZE=avr-size
+
+C_MERGE=$(D_TOOLS)/merge-hex
+
+C_PROGRAMMER=avrdude -F
+C_BOOTLOADER=$(D_ROOT)/../sw/bootloader/program.sh
+
+C_TAGS=ctags
+C_REMOVE=rm -f
+
+
+# build flags
+CFLAGS+=$(I_INC) -g -mmcu=$(BLD_PART) -O$(BLD_OLVL)	\
+	-fpack-struct -fshort-enums             		\
+	-funsigned-bitfields -funsigned-char    		\
+	-Wall -Wstrict-prototypes               		\
+	-Wa,-ahlms=$(D_OUT)/$(notdir $(firstword $(filter %.lst, $(<:.c=.lst))))
+
+ASMFLAGS+=$(I_INC) -mmcu=$(BLD_PART) -x assembler-with-cpp \
+	-Wa,-gstabs,-ahlms=$(D_OUT)/$(notdir $(firstword $(<:.S=.lst) $(<:.s=.lst)))
+
+LDFLAGS+=-Wl,-Map,$(O_MAP) -mmcu=$(BLD_PART) -lm $(I_LIB)
+
+
+# source files
+S_C=$(filter %.c, $(S_SRC))
+S_ASM=$(filter %.S, $(S_SRC))
+
+
+# intermediate build files
+F_OBJDEPS=$(addprefix $(D_OUT)/,$(S_C:.c=.o) $(S_ASM:.S=.o))
+
+F_LST=$(filter %.lst, $(F_OBJDEPS:.o=.lst))
+F_ASM=$(filter %.s, $(F_OBJDEPS:.o=.s))
+
+
+# build targets
+.PHONY: all disasm hex gdbinit tags install stats clean clean_asm clean_fasm clean_gdbinit clean_hex clean_lst clean_map clean_oasm clean_objdeps clean_out write_bootloader write_flash write_fuse
+
+all: $(O_OUT)
+
+disasm: $(O_ASM) stats
+
+hex: $(O_HEX) $(O_EHX)
+
+merged: $(O_MRG)
+
+gdbinit: $(O_GDB)
+
+tags: $(O_TAG)
+
+install:
+ifeq ($(PGM_WITH_BOOTLOADER),1)
+	make write_bootloader
+else
+	make write_flash
+endif
+
+stats: $(O_OUT)
+	$(C_OBJDUMP) -h $(O_OUT)
+	$(C_SIZE) --mcu=$(BLD_PART) $(O_OUT)
+	$(C_SIZE) --mcu=$(BLD_PART) -C $(O_OUT)
+
+
+# clean targets
+clean: clean_hex clean_out clean_objdeps clean_asm clean_map clean_lst clean_gdbinit
+
+clean_asm: clean_oasm clean_fasm
+
+clean_hex:
+	$(C_REMOVE) $(O_HEX) $(O_EHX)
+
+clean_out:
+	$(C_REMOVE) $(O_OUT)
+
+clean_objdeps:
+	$(C_REMOVE) $(F_OBJDEPS)
+
+clean_oasm:
+	$(C_REMOVE) $(O_ASM)
+
+clean_fasm:
+	$(C_REMOVE) $(F_ASM)
+
+clean_map:
+	$(C_REMOVE) $(O_MAP)
+
+clean_lst:
+	$(C_REMOVE) $(F_LST)
+
+clean_gdbinit:
+	$(C_REMOVE) $(O_GDB)
+
+
+# firmware programming targets
+write_fuse:
+	$(C_PROGRAMMER) -c $(PGM_PROG) \
+		-p $(PGM_PART) -P $(PGM_PORT) -e  \
+		-U hfuse:w:$(AVR_HFUSE):m \
+        -U lfuse:w:$(AVR_LFUSE):m \
+        -U efuse:w:$(AVR_EFUSE):m
+
+write_flash: hex
+	$(C_PROGRAMMER) -c $(PGM_PROG) \
+		-p $(PGM_PART) -P $(PGM_PORT) -e \
+		-U flash:w:$(O_HEX)
+
+write_bootloader: hex
+	$(C_BOOTLOADER) `realpath $(O_HEX)`
+
+write_merged: merged
+	$(C_PROGRAMMER) -c $(PGM_PROG) \
+		-p $(PGM_PART) -P $(PGM_PORT) -e \
+		-U flash:w:$(O_MRG)
+
+
+# build outputs
+$(D_OUT):
+	mkdir -p $(D_OUT)
+
+$(O_OUT): $(D_OUT) $(F_OBJDEPS)
+	$(C_CC) $(LDFLAGS) -o $(O_OUT) $(F_OBJDEPS)
+
+$(O_ASM): $(O_OUT)
+	$(C_OBJDUMP) -S $< > $@
+
+$(O_TAG): FORCE
+	$(C_TAGS) -o $(abspath $(O_TAG)) -R $(abspath $(subst :, ,$(D_INC)) $(subst :, ,$(D_SRC)))
+
+# intermediate outputs
+$(D_OUT)/%.o: %.c
+	$(C_CC) $(CFLAGS) -c $< -o $@
+
+$(D_OUT)/%.o: %.S
+	$(C_CC) $(ASMFLAGS) -c $< -o $@
+
+
+# assembly outputs
+$(D_OUT)/%.s: %.c
+	$(C_CC) -S $(CFLAGS) $< -o $@
+
+$(D_OUT)/%.s: %.S
+	$(C_CC) -S $(ASMFLAGS) $< -o $@
+
+
+# hex outputs
+$(O_HEX): $(O_OUT)
+	$(C_OBJCOPY) -j .text -j .data -O $(BLD_HFMT) $< $@
+
+${O_EHX}: $(O_OUT)
+	$(C_OBJCOPY) -j .eeprom --change-section-lma .eeprom=0 -O $(BLD_HFMT) $< $@
+
+
+# merged app and bootloader
+$(I_HEX_BTL): FORCE
+	make -C $(D_BTL) hex
+
+$(O_MRG): $(O_HEX) $(I_HEX_BTL)
+	$(C_MERGE) $(O_HEX) $(I_HEX_BTL) > $(O_MRG)
+
+
+# gdb debug outputs
+$(O_GDBINIT): $(O_OUT)
+	@echo "file $(O_OUT)" > $(O_GDB)
+	@echo "target remote localhost:1212" >> $(O_GDB)
+	@echo "load"        >> $(O_GDB)
+	@echo "break main"  >> $(O_GDB)
+	@echo "continue"    >> $(O_GDB)
+
+	@echo "Use '$(C_GDB) -x $(O_GDB)'"
+
+FORCE:

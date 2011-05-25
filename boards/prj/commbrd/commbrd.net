@@ -1,0 +1,203 @@
+# EESchema Netlist Version 1.1 created  Sun 07 Aug 2011 01:59:13 PM EDT
+(
+ ( /4DE311CC SM0805 C1 0.1uF
+  ( 1 VCC )
+  ( 2 GND )
+ )
+ ( /4DE311E4 SM1206POL C2 10uF
+  ( 1 VCC )
+  ( 2 GND )
+ )
+ ( /4DE311CF SM0805 C3 0.1uF
+  ( 1 N-000027 )
+  ( 2 GND )
+ )
+ ( /4DE32C26 LED-1206 D1 LED
+  ( 1 N-000002 )
+  ( 2 GND )
+ )
+ ( /4DE31208 LED-1206 D2 LED
+  ( 1 N-000026 )
+  ( 2 N-000010 )
+ )
+ ( /4DE3120F LED-1206 D3 LED
+  ( 1 N-000025 )
+  ( 2 N-000017 )
+ )
+ ( /4E3ED1CD SM0603 FB1 FILTER
+  ( 1 N-000029 )
+  ( 2 VCC )
+ )
+ ( /4DE311C4 USB_MINI_A J1 USB_2
+  ( 1 N-000029 )
+  ( 2 N-000021 )
+  ( 3 N-000030 )
+  ( 4 GND )
+ )
+ ( /4DE31580 RJ45_8 J2 RJ45
+  ( 1 N-000003 )
+  ( 2 N-000038 )
+  ( 3 N-000004 )
+  ( 4 N-000009 )
+  ( 5 N-000036 )
+  ( 6 N-000005 )
+  ( 7 N-000006 )
+  ( 8 N-000007 )
+  ( 9 ? )
+ )
+ ( /4DE3156D RJ45_8 J3 RJ45
+  ( 1 N-000003 )
+  ( 2 N-000038 )
+  ( 3 N-000004 )
+  ( 4 N-000009 )
+  ( 5 N-000036 )
+  ( 6 N-000005 )
+  ( 7 N-000006 )
+  ( 8 N-000007 )
+  ( 9 ? )
+ )
+ ( /4DE3146B SM1206 JP1 JUMPER
+  ( 1 VCC )
+  ( 2 N-000035 )
+ )
+ ( /4DE3186E SIL-1 PGND1 CONN_1
+  ( 1 GND )
+ )
+ ( /4DE32E8C SIL-1 PRXD1 CONN_1
+  ( 1 N-000031 )
+ )
+ ( /4DE32EA5 SIL-1 PTXD1 CONN_1
+  ( 1 N-000037 )
+ )
+ ( /4DE3185C SIL-1 PVCC1 CONN_1
+  ( 1 VCC )
+ )
+ ( /4DE32BAB SM0805 R1 1K
+  ( 1 N-000002 )
+  ( 2 VCC )
+ )
+ ( /4DE311FC SM0805 R2 1K
+  ( 1 VCC )
+  ( 2 N-000026 )
+ )
+ ( /4DE311FF SM0805 R3 1K
+  ( 1 VCC )
+  ( 2 N-000025 )
+ )
+ ( /4DE31533 SM0805 R4 120
+  ( 1 N-000038 )
+  ( 2 N-000003 )
+ )
+ ( /4DE3118E SSOP28 U1 FT232RL
+  ( 1 N-000037 )
+  ( 2 ? )
+  ( 3 ? )
+  ( 4 VCC )
+  ( 5 N-000031 )
+  ( 6 ? )
+  ( 7 GND )
+  ( 8 ? )
+  ( 9 ? )
+  ( 10 ? )
+  ( 11 ? )
+  ( 12 ? )
+  ( 13 ? )
+  ( 14 ? )
+  ( 15 N-000030 )
+  ( 16 N-000021 )
+  ( 17 N-000027 )
+  ( 18 GND )
+  ( 19 ? )
+  ( 20 VCC )
+  ( 21 GND )
+  ( 22 N-000017 )
+  ( 23 N-000010 )
+  ( 24 ? )
+  ( 25 GND )
+  ( 26 GND )
+  ( 27 ? )
+  ( 28 ? )
+ )
+ ( /4DE311AD SOIC8 U2 SN75176B
+  ( 1 N-000037 )
+  ( 2 N-000035 )
+  ( 3 N-000035 )
+  ( 4 N-000031 )
+  ( 5 GND )
+  ( 6 N-000038 )
+  ( 7 N-000003 )
+  ( 8 VCC )
+ )
+)
+*
+{ Allowed footprints by component:
+$component C1
+ SM*
+ C?
+ C1-1
+$endlist
+$component C2
+ CP*
+ SM*
+$endlist
+$component C3
+ SM*
+ C?
+ C1-1
+$endlist
+$component D1
+ LED-3MM
+ LED-5MM
+ LED-10MM
+ LED-0603
+ LED-0805
+ LED-1206
+ LEDV
+$endlist
+$component D2
+ LED-3MM
+ LED-5MM
+ LED-10MM
+ LED-0603
+ LED-0805
+ LED-1206
+ LEDV
+$endlist
+$component D3
+ LED-3MM
+ LED-5MM
+ LED-10MM
+ LED-0603
+ LED-0805
+ LED-1206
+ LEDV
+$endlist
+$component R1
+ R?
+ SM0603
+ SM0805
+ R?-*
+$endlist
+$component R2
+ R?
+ SM0603
+ SM0805
+ R?-*
+$endlist
+$component R3
+ R?
+ SM0603
+ SM0805
+ R?-*
+$endlist
+$component R4
+ R?
+ SM0603
+ SM0805
+ R?-*
+$endlist
+$component U2
+ DIL-8
+$endlist
+$endfootprintlist
+}

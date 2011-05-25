@@ -1,0 +1,19 @@
+# default project config
+
+PGM_WITH_BOOTLOADER?=0
+PROJECT_NAME?=fw
+
+AVR_LFUSE?=0xce
+AVR_HFUSE?=0xdf
+AVR_EFUSE?=0xf8
+
+BLD_PART?=atmega168p
+BLD_OLVL?=s
+BLD_HFMT?=ihex
+
+PGM_PART?=m168
+PGM_PROG?=ponyser
+PGM_PORT?=/dev/ttyS0
+
+D_BTL?=$(D_ROOT)/prj/bootloader
+BOOTLOADER_NAME?=ledbtldr

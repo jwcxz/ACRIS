@@ -1,0 +1,26 @@
+features and improvements (over next-make board)
+
+- general board changes
+    - no DIP switches
+    - sockets on AVR, LED drivers
+    - screw holes for attaching heatsink to LED drivers
+    - LED indicators (SMD)
+        - power
+        - 4 user LEDs
+    - more compact
+    - small reset button
+
+- power
+    - one connector has ground and LED power
+    - one connector has ground and logic power
+        - spot for LM7805
+    - ability to tie LED power and logic power together
+    - can place molex connector over it, too?
+    - capacitors between
+        - led power and ground (electrolytic, ceramic)
+        - logic power and ground (ceramic)
+        - LM7805 output and ground (ceramic)
+
+- communications
+    - 2 RJ45 jacks
+    - It would be nice to have a USB port if possible

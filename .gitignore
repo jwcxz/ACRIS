@@ -1,0 +1,35 @@
+# order information
+orders/*
+
+
+# firmware
+*.ee.hex
+*.hex
+*.out
+*.out.map
+*.lst
+*.o
+*.s
+avr/prj/*/out
+
+
+# python
+*.pyc
+
+
+# kicad
+*.bak
+$savepcb*
+boards/export
+
+
+# temporary
+*.sw[op]
+
+
+# ctags
+tags
+
+
+# don't add reports yet
+docs/reports

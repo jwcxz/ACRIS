@@ -1,0 +1,150 @@
+Cmp-Mod V01 Created by CvPCB (2011-07-08)-stable date = Sun 07 Aug 2011 01:59:13 PM EDT
+
+BeginCmp
+TimeStamp = /4DE311CC;
+Reference = C1;
+ValeurCmp = 0.1uF;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /4DE311E4;
+Reference = C2;
+ValeurCmp = 10uF;
+IdModule  = SM1206POL;
+EndCmp
+
+BeginCmp
+TimeStamp = /4DE311CF;
+Reference = C3;
+ValeurCmp = 0.1uF;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /4DE32C26;
+Reference = D1;
+ValeurCmp = LED;
+IdModule  = LED-1206;
+EndCmp
+
+BeginCmp
+TimeStamp = /4DE31208;
+Reference = D2;
+ValeurCmp = LED;
+IdModule  = LED-1206;
+EndCmp
+
+BeginCmp
+TimeStamp = /4DE3120F;
+Reference = D3;
+ValeurCmp = LED;
+IdModule  = LED-1206;
+EndCmp
+
+BeginCmp
+TimeStamp = /4E3ED1CD;
+Reference = FB1;
+ValeurCmp = FILTER;
+IdModule  = SM0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /4DE311C4;
+Reference = J1;
+ValeurCmp = USB_2;
+IdModule  = USB_MINI_A;
+EndCmp
+
+BeginCmp
+TimeStamp = /4DE31580;
+Reference = J2;
+ValeurCmp = RJ45;
+IdModule  = RJ45_8;
+EndCmp
+
+BeginCmp
+TimeStamp = /4DE3156D;
+Reference = J3;
+ValeurCmp = RJ45;
+IdModule  = RJ45_8;
+EndCmp
+
+BeginCmp
+TimeStamp = /4DE3146B;
+Reference = JP1;
+ValeurCmp = JUMPER;
+IdModule  = SM1206;
+EndCmp
+
+BeginCmp
+TimeStamp = /4DE3186E;
+Reference = PGND1;
+ValeurCmp = CONN_1;
+IdModule  = SIL-1;
+EndCmp
+
+BeginCmp
+TimeStamp = /4DE32E8C;
+Reference = PRXD1;
+ValeurCmp = CONN_1;
+IdModule  = SIL-1;
+EndCmp
+
+BeginCmp
+TimeStamp = /4DE32EA5;
+Reference = PTXD1;
+ValeurCmp = CONN_1;
+IdModule  = SIL-1;
+EndCmp
+
+BeginCmp
+TimeStamp = /4DE3185C;
+Reference = PVCC1;
+ValeurCmp = CONN_1;
+IdModule  = SIL-1;
+EndCmp
+
+BeginCmp
+TimeStamp = /4DE32BAB;
+Reference = R1;
+ValeurCmp = 1K;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /4DE311FC;
+Reference = R2;
+ValeurCmp = 1K;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /4DE311FF;
+Reference = R3;
+ValeurCmp = 1K;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /4DE31533;
+Reference = R4;
+ValeurCmp = 120;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /4DE3118E;
+Reference = U1;
+ValeurCmp = FT232RL;
+IdModule  = SSOP28;
+EndCmp
+
+BeginCmp
+TimeStamp = /4DE311AD;
+Reference = U2;
+ValeurCmp = SN75176B;
+IdModule  = SOIC8;
+EndCmp
+
+EndListe

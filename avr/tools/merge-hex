@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# merge hex files together
+# strips out record 01 out of input files and inserts it at the end of the merged file
+# does not relocate any other record types
+
+EOR=":00000001FF"
+
+for file in "$@"; do
+    grep -e "$EOR" -v $file
+done
+
+echo $EOR

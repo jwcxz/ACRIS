@@ -1,0 +1,414 @@
+# EESchema Netlist Version 1.1 created  Wed 23 Nov 2011 10:18:29 PM EST
+(
+ ( /4DDBFDFD SMB-0402 C1 1uF
+  ( 1 N-000021 )
+  ( 2 GND )
+ )
+ ( /4DDBFE8A SMB-0402 C2 100nF
+  ( 1 N-000021 )
+  ( 2 GND )
+ )
+ ( /4DDC21B3 Elko_vert_DM7-5_RM2-5 C3 47uF
+  ( 1 N-000006 )
+  ( 2 GND )
+ )
+ ( /4DDBFEE3 SMB-0402 C4 1uF
+  ( 1 N-000006 )
+  ( 2 GND )
+ )
+ ( /4DDBFEE5 SMB-0402 C5 100nF
+  ( 1 N-000006 )
+  ( 2 GND )
+ )
+ ( /4DDBFF22 SMB-0402 C6 100nF
+  ( 1 VCC )
+  ( 2 GND )
+ )
+ ( /4DDBFF26 SMB-0402 C7 1nF
+  ( 1 VCC )
+  ( 2 GND )
+ )
+ ( /4DDC1FAE SMB-0402 C8 1nF
+  ( 1 N-000006 )
+  ( 2 GND )
+ )
+ ( /4D1A525A SMB-0402 C9 100nF
+  ( 1 GND )
+  ( 2 N-000034 )
+ )
+ ( /4D1A474A SMB-0402 C10 8pF
+  ( 1 GND )
+  ( 2 N-000026 )
+ )
+ ( /4D1A474D SMB-0402 C11 8pF
+  ( 1 GND )
+  ( 2 N-000043 )
+ )
+ ( /4DDC03FC LED-1206 D1 LED
+  ( 1 VCC )
+  ( 2 N-000009 )
+ )
+ ( /4DDC0B98 LED-1206 D2 LED
+  ( 1 N-000014 )
+  ( 2 N-000010 )
+ )
+ ( /4DDC0C44 LED-1206 D3 LED
+  ( 1 N-000001 )
+  ( 2 N-000002 )
+ )
+ ( /4DDC0C6F LED-1206 D4 LED
+  ( 1 N-000004 )
+  ( 2 N-000003 )
+ )
+ ( /4DDC0C78 LED-1206 D5 LED
+  ( 1 N-000012 )
+  ( 2 N-000005 )
+ )
+ ( /4E22799E PIN DA1 CONN_1
+  ( 1 N-000007 )
+ )
+ ( /4E227975 PIN DB1 CONN_1
+  ( 1 N-000008 )
+ )
+ ( /4E230772 TQFP32 IC1 ATMEGA168-M
+  ( 1 N-000027 )
+  ( 2 N-000042 )
+  ( 3 GND )
+  ( 4 VCC )
+  ( 5 GND )
+  ( 6 VCC )
+  ( 7 N-000026 )
+  ( 8 N-000043 )
+  ( 9 N-000039 )
+  ( 10 ? )
+  ( 11 ? )
+  ( 12 ? )
+  ( 13 N-000031 )
+  ( 14 N-000038 )
+  ( 15 N-000040 )
+  ( 16 N-000013 )
+  ( 17 N-000016 )
+  ( 18 VCC )
+  ( 19 ? )
+  ( 20 VCC )
+  ( 21 GND )
+  ( 22 ? )
+  ( 23 N-000014 )
+  ( 24 N-000001 )
+  ( 25 N-000004 )
+  ( 26 N-000012 )
+  ( 27 ? )
+  ( 28 ? )
+  ( 29 N-000034 )
+  ( 30 N-000028 )
+  ( 31 N-000017 )
+  ( 32 N-000041 )
+ )
+ ( /4D1A428B SOIC8 IC2 SN75176B
+  ( 1 N-000028 )
+  ( 2 N-000041 )
+  ( 3 N-000041 )
+  ( 4 N-000017 )
+  ( 5 GND )
+  ( 6 N-000007 )
+  ( 7 N-000008 )
+  ( 8 VCC )
+ )
+ ( /4E227A07 PIN PINPGND1 CONN_1
+  ( 1 GND )
+ )
+ ( /4E227A97 PIN PINPLED1 CONN_1
+  ( 1 N-000006 )
+ )
+ ( /4E2279DE PIN PINPLGC1 CONN_1
+  ( 1 N-000021 )
+ )
+ ( /4DDBFD65 PIN PLEDVCC1 CONN_1
+  ( 1 N-000006 )
+ )
+ ( /4DDC562B PIN PLEDVCC2 CONN_1
+  ( 1 N-000006 )
+ )
+ ( /4DDC55C5 PIN PLEDVCC3 CONN_1
+  ( 1 N-000006 )
+ )
+ ( /4DDC5615 PIN PLEDVCC4 CONN_1
+  ( 1 N-000006 )
+ )
+ ( /4E22FD34 PIN PLEDVCC5 CONN_1
+  ( 1 N-000006 )
+ )
+ ( /4E22FCBD PIN PMISO1 CONN_1
+  ( 1 N-000013 )
+ )
+ ( /4E22FC70 PIN PMOSI1 CONN_1
+  ( 1 N-000040 )
+ )
+ ( /4D1A6533 PIN PO0 CONN_1
+  ( 1 N-000035 )
+ )
+ ( /4D1A653B PIN PO1 CONN_1
+  ( 1 N-000036 )
+ )
+ ( /4D1A653F PIN PO2 CONN_1
+  ( 1 N-000037 )
+ )
+ ( /4D1A6541 PIN PO3 CONN_1
+  ( 1 N-000033 )
+ )
+ ( /4D1A6543 PIN PO4 CONN_1
+  ( 1 N-000032 )
+ )
+ ( /4E2304DA PIN PPGMLGC1 CONN_1
+  ( 1 VCC )
+ )
+ ( /4E22FC9E PIN PSCK1 CONN_1
+  ( 1 N-000016 )
+ )
+ ( /4DDC28A6 PIN PX1 CONN_1
+  ( 1 N-000042 )
+ )
+ ( /4DDC0401 SMB-0402 R1 1K
+  ( 1 N-000009 )
+  ( 2 GND )
+ )
+ ( /4D1A5248 SMB-0402 R2 10K
+  ( 1 N-000034 )
+  ( 2 VCC )
+ )
+ ( /4D1A455D SMB-0402 R3 325.5
+  ( 1 N-000020 )
+  ( 2 GND )
+ )
+ ( /4DDC0B97 SMB-0402 R6 1K
+  ( 1 GND )
+  ( 2 N-000010 )
+ )
+ ( /4DDC0C45 SMB-0402 R7 1K
+  ( 1 GND )
+  ( 2 N-000002 )
+ )
+ ( /4DDC0C6E SMB-0402 R8 1K
+  ( 1 GND )
+  ( 2 N-000003 )
+ )
+ ( /4DDC0C79 SMB-0402 R9 1K
+  ( 1 GND )
+  ( 2 N-000005 )
+ )
+ ( /4DDC2CAC SMB-0402 R10 120
+  ( 1 N-000008 )
+  ( 2 N-000007 )
+ )
+ ( /4ECDB369 SMB-0402 R11 10K
+  ( 1 GND )
+  ( 2 N-000041 )
+ )
+ ( /4D1A5263 SIL-2 SW1 SW_PUSH
+  ( 1 N-000034 )
+  ( 2 GND )
+ )
+ ( /4D1A4475 SSOP28 TLC1 TLC5940
+  ( 1 N-000035 )
+  ( 2 N-000035 )
+  ( 3 N-000035 )
+  ( 4 N-000036 )
+  ( 5 N-000036 )
+  ( 6 N-000036 )
+  ( 7 N-000037 )
+  ( 8 N-000037 )
+  ( 9 N-000037 )
+  ( 10 N-000033 )
+  ( 11 N-000033 )
+  ( 12 N-000033 )
+  ( 13 N-000032 )
+  ( 14 N-000032 )
+  ( 15 N-000032 )
+  ( 16 N-000039 )
+  ( 17 ? )
+  ( 18 N-000027 )
+  ( 19 VCC )
+  ( 20 N-000020 )
+  ( 21 VCC )
+  ( 22 GND )
+  ( 23 N-000038 )
+  ( 24 N-000031 )
+  ( 25 N-000016 )
+  ( 26 N-000040 )
+  ( 27 GND )
+  ( 28 GND )
+ )
+ ( /4DDBFCAC LM78XXV U1 LM7805
+  ( GND GND )
+  ( VI N-000021 )
+  ( VO VCC )
+ )
+ ( /4D1A4743 Crystal_FOX-FE_SMD_RevA_09Aug2010 X1 CRYSTAL
+  ( 1 N-000026 )
+  ( 2 N-000043 )
+ )
+)
+*
+{ Allowed footprints by component:
+$component C1
+ SM*
+ C?
+ C1-1
+$endlist
+$component C2
+ SM*
+ C?
+ C1-1
+$endlist
+$component C3
+ CP*
+ SM*
+$endlist
+$component C4
+ SM*
+ C?
+ C1-1
+$endlist
+$component C5
+ SM*
+ C?
+ C1-1
+$endlist
+$component C6
+ SM*
+ C?
+ C1-1
+$endlist
+$component C7
+ SM*
+ C?
+ C1-1
+$endlist
+$component C8
+ SM*
+ C?
+ C1-1
+$endlist
+$component C9
+ SM*
+ C?
+ C1-1
+$endlist
+$component C10
+ SM*
+ C?
+ C1-1
+$endlist
+$component C11
+ SM*
+ C?
+ C1-1
+$endlist
+$component D1
+ LED-3MM
+ LED-5MM
+ LED-10MM
+ LED-0603
+ LED-0805
+ LED-1206
+ LEDV
+$endlist
+$component D2
+ LED-3MM
+ LED-5MM
+ LED-10MM
+ LED-0603
+ LED-0805
+ LED-1206
+ LEDV
+$endlist
+$component D3
+ LED-3MM
+ LED-5MM
+ LED-10MM
+ LED-0603
+ LED-0805
+ LED-1206
+ LEDV
+$endlist
+$component D4
+ LED-3MM
+ LED-5MM
+ LED-10MM
+ LED-0603
+ LED-0805
+ LED-1206
+ LEDV
+$endlist
+$component D5
+ LED-3MM
+ LED-5MM
+ LED-10MM
+ LED-0603
+ LED-0805
+ LED-1206
+ LEDV
+$endlist
+$component IC1
+ 28DIP-ELL600
+ 28dip600
+$endlist
+$component IC2
+ DIL-8
+$endlist
+$component R1
+ R?
+ SM0603
+ SM0805
+ R?-*
+$endlist
+$component R2
+ R?
+ SM0603
+ SM0805
+ R?-*
+$endlist
+$component R3
+ R?
+ SM0603
+ SM0805
+ R?-*
+$endlist
+$component R6
+ R?
+ SM0603
+ SM0805
+ R?-*
+$endlist
+$component R7
+ R?
+ SM0603
+ SM0805
+ R?-*
+$endlist
+$component R8
+ R?
+ SM0603
+ SM0805
+ R?-*
+$endlist
+$component R9
+ R?
+ SM0603
+ SM0805
+ R?-*
+$endlist
+$component R10
+ R?
+ SM0603
+ SM0805
+ R?-*
+$endlist
+$component R11
+ R?
+ SM0603
+ SM0805
+ R?-*
+$endlist
+$endfootprintlist
+}
