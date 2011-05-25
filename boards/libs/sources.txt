@@ -1,0 +1,5 @@
+monomeArduino.lib: http://melka.one.free.fr/blog/?cat=4
+    -- using some components from this custom-made library
+SparkFun.lib     : http://melka.one.free.fr/blog/?cat=4
+atmel.lib        : http://www.kicadlib.org/modules/kk_atmel_library_.zip
+sn75176b.lib     : modified max187 from http://library.oshec.org/
