@@ -1,0 +1,1092 @@
+GAS LISTING /tmp/ccJC3REw.s 			page 1
+
+
+   1               		.file	"timeout.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   7               		.global __do_copy_data
+   8               		.global __do_clear_bss
+   9               		.stabs	"/home/j/projects/acris/avr/huecycle/",100,0,2,.Ltext0
+  10               		.stabs	"timeout.c",100,0,2,.Ltext0
+  11               		.text
+  12               	.Ltext0:
+  13               		.stabs	"gcc2_compiled.",60,0,0,0
+  14               		.stabs	"int:t(0,1)=r(0,1);-32768;32767;",128,0,0,0
+  15               		.stabs	"char:t(0,2)=@s8;r(0,2);0;255;",128,0,0,0
+  16               		.stabs	"long int:t(0,3)=@s32;r(0,3);020000000000;017777777777;",128,0,0,0
+  17               		.stabs	"unsigned int:t(0,4)=r(0,4);0;0177777;",128,0,0,0
+  18               		.stabs	"long unsigned int:t(0,5)=@s32;r(0,5);0;037777777777;",128,0,0,0
+  19               		.stabs	"long long int:t(0,6)=@s64;r(0,6);01000000000000000000000;0777777777777777777777;",128,0,0,
+  20               		.stabs	"long long unsigned int:t(0,7)=@s64;r(0,7);0;01777777777777777777777;",128,0,0,0
+  21               		.stabs	"short int:t(0,8)=r(0,8);-32768;32767;",128,0,0,0
+  22               		.stabs	"short unsigned int:t(0,9)=r(0,9);0;0177777;",128,0,0,0
+  23               		.stabs	"signed char:t(0,10)=@s8;r(0,10);-128;127;",128,0,0,0
+  24               		.stabs	"unsigned char:t(0,11)=@s8;r(0,11);0;255;",128,0,0,0
+  25               		.stabs	"float:t(0,12)=r(0,1);4;0;",128,0,0,0
+  26               		.stabs	"double:t(0,13)=r(0,1);4;0;",128,0,0,0
+  27               		.stabs	"long double:t(0,14)=r(0,1);4;0;",128,0,0,0
+  28               		.stabs	"void:t(0,15)=(0,15)",128,0,0,0
+  29               		.stabs	"timeout.h",130,0,0,0
+  30               		.stabs	"main.h",130,0,0,0
+  31               		.stabs	"/usr/lib/gcc/avr/4.6.0/../../../../avr/include/inttypes.h",130,0,0,0
+  32               		.stabs	"/usr/lib/gcc/avr/4.6.0/include/stdint.h",130,0,0,0
+  33               		.stabs	"/usr/lib/gcc/avr/4.6.0/../../../../avr/include/stdint.h",130,0,0,0
+  34               		.stabs	"int8_t:t(5,1)=(0,10)",128,0,121,0
+  35               		.stabs	"uint8_t:t(5,2)=(0,11)",128,0,122,0
+  36               		.stabs	"int16_t:t(5,3)=(0,1)",128,0,123,0
+  37               		.stabs	"uint16_t:t(5,4)=(0,4)",128,0,124,0
+  38               		.stabs	"int32_t:t(5,5)=(0,3)",128,0,125,0
+  39               		.stabs	"uint32_t:t(5,6)=(0,5)",128,0,126,0
+  40               		.stabs	"int64_t:t(5,7)=(0,6)",128,0,128,0
+  41               		.stabs	"uint64_t:t(5,8)=(0,7)",128,0,129,0
+  42               		.stabs	"intptr_t:t(5,9)=(5,3)",128,0,142,0
+  43               		.stabs	"uintptr_t:t(5,10)=(5,4)",128,0,147,0
+  44               		.stabs	"int_least8_t:t(5,11)=(5,1)",128,0,159,0
+  45               		.stabs	"uint_least8_t:t(5,12)=(5,2)",128,0,164,0
+  46               		.stabs	"int_least16_t:t(5,13)=(5,3)",128,0,169,0
+  47               		.stabs	"uint_least16_t:t(5,14)=(5,4)",128,0,174,0
+  48               		.stabs	"int_least32_t:t(5,15)=(5,5)",128,0,179,0
+  49               		.stabs	"uint_least32_t:t(5,16)=(5,6)",128,0,184,0
+  50               		.stabs	"int_least64_t:t(5,17)=(5,7)",128,0,192,0
+  51               		.stabs	"uint_least64_t:t(5,18)=(5,8)",128,0,199,0
+  52               		.stabs	"int_fast8_t:t(5,19)=(5,1)",128,0,213,0
+  53               		.stabs	"uint_fast8_t:t(5,20)=(5,2)",128,0,218,0
+  54               		.stabs	"int_fast16_t:t(5,21)=(5,3)",128,0,223,0
+  55               		.stabs	"uint_fast16_t:t(5,22)=(5,4)",128,0,228,0
+  56               		.stabs	"int_fast32_t:t(5,23)=(5,5)",128,0,233,0
+  57               		.stabs	"uint_fast32_t:t(5,24)=(5,6)",128,0,238,0
+GAS LISTING /tmp/ccJC3REw.s 			page 2
+
+
+  58               		.stabs	"int_fast64_t:t(5,25)=(5,7)",128,0,246,0
+  59               		.stabs	"uint_fast64_t:t(5,26)=(5,8)",128,0,253,0
+  60               		.stabs	"intmax_t:t(5,27)=(5,7)",128,0,273,0
+  61               		.stabs	"uintmax_t:t(5,28)=(5,8)",128,0,278,0
+  62               		.stabn	162,0,0,0
+  63               		.stabn	162,0,0,0
+  64               		.stabs	"int_farptr_t:t(3,1)=(5,5)",128,0,77,0
+  65               		.stabs	"uint_farptr_t:t(3,2)=(5,6)",128,0,81,0
+  66               		.stabn	162,0,0,0
+  67               		.stabs	"/usr/lib/gcc/avr/4.6.0/../../../../avr/include/avr/io.h",130,0,0,0
+  68               		.stabs	"/usr/lib/gcc/avr/4.6.0/../../../../avr/include/avr/fuse.h",130,0,0,0
+  69               		.stabs	"__fuse_t:t(7,1)=(7,2)=s3low:(0,11),0,8;high:(0,11),8,8;extended:(0,11),16,8;;",128,0,244,0
+  70               		.stabn	162,0,0,0
+  71               		.stabn	162,0,0,0
+  72               		.stabs	"/usr/lib/gcc/avr/4.6.0/../../../../avr/include/avr/pgmspace.h",130,0,0,0
+  73               		.stabs	"/usr/lib/gcc/avr/4.6.0/include/stddef.h",130,0,0,0
+  74               		.stabs	"size_t:t(9,1)=(0,4)",128,0,212,0
+  75               		.stabn	162,0,0,0
+  76               		.stabs	"prog_void:t(8,1)=(8,2)=(8,2)",128,0,217,0
+  77               		.stabs	"prog_char:t(8,3)=(8,4)=@s8;r(8,4);0;255;",128,0,218,0
+  78               		.stabs	"prog_uchar:t(8,5)=(8,6)=@s8;r(8,6);0;255;",128,0,219,0
+  79               		.stabs	"prog_int8_t:t(8,7)=(8,8)=(0,10)",128,0,221,0
+  80               		.stabs	"prog_uint8_t:t(8,9)=(8,10)=(0,11)",128,0,222,0
+  81               		.stabs	"prog_int16_t:t(8,11)=(8,12)=(0,1)",128,0,223,0
+  82               		.stabs	"prog_uint16_t:t(8,13)=(8,14)=(0,4)",128,0,224,0
+  83               		.stabs	"prog_int32_t:t(8,15)=(8,16)=(0,3)",128,0,225,0
+  84               		.stabs	"prog_uint32_t:t(8,17)=(8,18)=(0,5)",128,0,226,0
+  85               		.stabs	"prog_int64_t:t(8,19)=(8,20)=(0,6)",128,0,228,0
+  86               		.stabs	"prog_uint64_t:t(8,21)=(8,22)=(0,7)",128,0,229,0
+  87               		.stabn	162,0,0,0
+  88               		.stabn	162,0,0,0
+  89               		.stabn	162,0,0,0
+  90               		.stabs	"timeoutctr_init:F(0,15)",36,0,6,timeoutctr_init
+  91               	.global	timeoutctr_init
+  92               		.type	timeoutctr_init, @function
+  93               	timeoutctr_init:
+  94               		.stabd	46,0,0
+   1:timeout.c     **** /* TIMEOUT FUNCTIONS */
+   2:timeout.c     **** 
+   3:timeout.c     **** #include "timeout.h"
+   4:timeout.c     **** #include "tlc.h"
+   5:timeout.c     **** 
+   6:timeout.c     **** void timeoutctr_init(void) {
+  95               		.stabn	68,0,6,.LM0-.LFBB1
+  96               	.LM0:
+  97               	.LFBB1:
+  98               	/* prologue: function */
+  99               	/* frame size = 0 */
+ 100               	/* stack size = 0 */
+ 101               	.L__stack_usage = 0
+   7:timeout.c     ****     // initialize serial timeout timer
+   8:timeout.c     **** 
+   9:timeout.c     ****     TCCR0B = _BV(CS02) | _BV(CS00);
+ 102               		.stabn	68,0,9,.LM1-.LFBB1
+ 103               	.LM1:
+ 104 0000 85E0      		ldi r24,lo8(5)
+ 105 0002 85BD      		out 69-0x20,r24
+GAS LISTING /tmp/ccJC3REw.s 			page 3
+
+
+  10:timeout.c     ****     TCNT0 = 0;
+ 106               		.stabn	68,0,10,.LM2-.LFBB1
+ 107               	.LM2:
+ 108 0004 16BC      		out 70-0x20,__zero_reg__
+ 109               	/* epilogue start */
+  11:timeout.c     **** }
+ 110               		.stabn	68,0,11,.LM3-.LFBB1
+ 111               	.LM3:
+ 112 0006 0895      		ret
+ 113               		.size	timeoutctr_init, .-timeoutctr_init
+ 114               	.Lscope1:
+ 115               		.stabs	"",36,0,0,.Lscope1-.LFBB1
+ 116               		.stabd	78,0,0
+ 117               		.stabs	"timeout_disp_init:F(0,15)",36,0,13,timeout_disp_init
+ 118               	.global	timeout_disp_init
+ 119               		.type	timeout_disp_init, @function
+ 120               	timeout_disp_init:
+ 121               		.stabd	46,0,0
+  12:timeout.c     **** 
+  13:timeout.c     **** void timeout_disp_init(void) {
+ 122               		.stabn	68,0,13,.LM4-.LFBB2
+ 123               	.LM4:
+ 124               	.LFBB2:
+ 125 0008 CF92      		push r12
+ 126 000a DF92      		push r13
+ 127 000c EF92      		push r14
+ 128 000e FF92      		push r15
+ 129 0010 0F93      		push r16
+ 130 0012 1F93      		push r17
+ 131 0014 CF93      		push r28
+ 132 0016 DF93      		push r29
+ 133               	/* prologue: function */
+ 134               	/* frame size = 0 */
+ 135               	/* stack size = 8 */
+ 136               	.L__stack_usage = 8
+  14:timeout.c     ****     uint8_t i;
+  15:timeout.c     **** #if (CTRLR_TYPE == CTRLR_RGB)
+  16:timeout.c     ****     for ( i=1 ; i<=15 ; i++ ) set(tlc[0], i, 0x000);
+ 137               		.stabn	68,0,16,.LM5-.LFBB2
+ 138               	.LM5:
+ 139 0018 01E0      		ldi r16,lo8(1)
+ 140               	.L3:
+ 141               		.stabn	68,0,16,.LM6-.LFBB2
+ 142               	.LM6:
+ 143 001a 80E0      		ldi r24,lo8(tlc)
+ 144 001c 90E0      		ldi r25,hi8(tlc)
+ 145 001e 602F      		mov r22,r16
+ 146 0020 40E0      		ldi r20,lo8(0)
+ 147 0022 50E0      		ldi r21,hi8(0)
+ 148 0024 0E94 0000 		call set
+ 149 0028 0F5F      		subi r16,lo8(-(1))
+ 150 002a 0031      		cpi r16,lo8(16)
+ 151 002c 01F4      		brne .L3
+ 152               		.stabn	68,0,16,.LM7-.LFBB2
+ 153               	.LM7:
+ 154 002e 01E0      		ldi r16,lo8(1)
+ 155               	.L4:
+GAS LISTING /tmp/ccJC3REw.s 			page 4
+
+
+  17:timeout.c     ****     for ( i=1 ; i<=15 ; i++ ) set(tlc[1], i, 0x000);
+ 156               		.stabn	68,0,17,.LM8-.LFBB2
+ 157               	.LM8:
+ 158 0030 80E0      		ldi r24,lo8(tlc+24)
+ 159 0032 90E0      		ldi r25,hi8(tlc+24)
+ 160 0034 602F      		mov r22,r16
+ 161 0036 40E0      		ldi r20,lo8(0)
+ 162 0038 50E0      		ldi r21,hi8(0)
+ 163 003a 0E94 0000 		call set
+ 164 003e 0F5F      		subi r16,lo8(-(1))
+ 165 0040 0031      		cpi r16,lo8(16)
+ 166 0042 01F4      		brne .L4
+ 167               		.stabn	68,0,17,.LM9-.LFBB2
+ 168               	.LM9:
+ 169 0044 01E0      		ldi r16,lo8(1)
+ 170               	.L5:
+  18:timeout.c     ****     for ( i=1 ; i<=15 ; i++ ) set(tlc[2], i, 0x000);
+ 171               		.stabn	68,0,18,.LM10-.LFBB2
+ 172               	.LM10:
+ 173 0046 80E0      		ldi r24,lo8(tlc+48)
+ 174 0048 90E0      		ldi r25,hi8(tlc+48)
+ 175 004a 602F      		mov r22,r16
+ 176 004c 40E0      		ldi r20,lo8(0)
+ 177 004e 50E0      		ldi r21,hi8(0)
+ 178 0050 0E94 0000 		call set
+ 179 0054 0F5F      		subi r16,lo8(-(1))
+ 180 0056 0031      		cpi r16,lo8(16)
+ 181 0058 01F4      		brne .L5
+  19:timeout.c     **** 
+  20:timeout.c     ****     uint8_t x = ( instaddr % 2 ) ? 1 : 0;
+ 182               		.stabn	68,0,20,.LM11-.LFBB2
+ 183               	.LM11:
+ 184 005a 8091 0000 		lds r24,instaddr
+ 185 005e 982F      		mov r25,r24
+ 186 0060 9170      		andi r25,lo8(1)
+  21:timeout.c     **** 
+  22:timeout.c     ****     if ( (instaddr % REAR_MIN) < REAR_MIN/2 ) {
+ 187               		.stabn	68,0,22,.LM12-.LFBB2
+ 188               	.LM12:
+ 189 0062 8770      		andi r24,lo8(7)
+ 190 0064 C92F      		mov r28,r25
+ 191 0066 D0E0      		ldi r29,lo8(0)
+ 192 0068 8430      		cpi r24,lo8(4)
+ 193 006a 00F0      		brlo .+2
+ 194 006c 00C0      		rjmp .L6
+ 195 006e 8E01      		movw r16,r28
+ 196 0070 000F      		lsl r16
+ 197 0072 111F      		rol r17
+ 198 0074 0C0F      		add r16,r28
+ 199 0076 1D1F      		adc r17,r29
+ 200 0078 000F      		lsl r16
+ 201 007a 111F      		rol r17
+ 202 007c 000F      		lsl r16
+ 203 007e 111F      		rol r17
+ 204 0080 000F      		lsl r16
+ 205 0082 111F      		rol r17
+ 206 0084 0050      		subi r16,lo8(-(tlc))
+GAS LISTING /tmp/ccJC3REw.s 			page 5
+
+
+ 207 0086 1040      		sbci r17,hi8(-(tlc))
+  23:timeout.c     ****         // left devices
+  24:timeout.c     ****         for ( i=1 ; i<=3 ; i++ ) set(tlc[x+0], i, 0x800);
+ 208               		.stabn	68,0,24,.LM13-.LFBB2
+ 209               	.LM13:
+ 210 0088 C801      		movw r24,r16
+ 211 008a 61E0      		ldi r22,lo8(1)
+ 212 008c 40E0      		ldi r20,lo8(2048)
+ 213 008e 58E0      		ldi r21,hi8(2048)
+ 214 0090 0E94 0000 		call set
+ 215 0094 C801      		movw r24,r16
+ 216 0096 62E0      		ldi r22,lo8(2)
+ 217 0098 40E0      		ldi r20,lo8(2048)
+ 218 009a 58E0      		ldi r21,hi8(2048)
+ 219 009c 0E94 0000 		call set
+ 220 00a0 C801      		movw r24,r16
+ 221 00a2 63E0      		ldi r22,lo8(3)
+ 222 00a4 40E0      		ldi r20,lo8(2048)
+ 223 00a6 58E0      		ldi r21,hi8(2048)
+ 224 00a8 0E94 0000 		call set
+ 225 00ac CE01      		movw r24,r28
+ 226 00ae 0196      		adiw r24,1
+ 227 00b0 EC01      		movw r28,r24
+ 228 00b2 CC0F      		lsl r28
+ 229 00b4 DD1F      		rol r29
+ 230 00b6 C80F      		add r28,r24
+ 231 00b8 D91F      		adc r29,r25
+ 232 00ba CC0F      		lsl r28
+ 233 00bc DD1F      		rol r29
+ 234 00be CC0F      		lsl r28
+ 235 00c0 DD1F      		rol r29
+ 236 00c2 CC0F      		lsl r28
+ 237 00c4 DD1F      		rol r29
+ 238 00c6 C050      		subi r28,lo8(-(tlc))
+ 239 00c8 D040      		sbci r29,hi8(-(tlc))
+  25:timeout.c     ****         for ( i=1 ; i<=3 ; i++ ) set(tlc[x+1], i, 0x100);
+ 240               		.stabn	68,0,25,.LM14-.LFBB2
+ 241               	.LM14:
+ 242 00ca CE01      		movw r24,r28
+ 243 00cc 61E0      		ldi r22,lo8(1)
+ 244 00ce 40E0      		ldi r20,lo8(256)
+ 245 00d0 51E0      		ldi r21,hi8(256)
+ 246 00d2 0E94 0000 		call set
+ 247 00d6 CE01      		movw r24,r28
+ 248 00d8 62E0      		ldi r22,lo8(2)
+ 249 00da 40E0      		ldi r20,lo8(256)
+ 250 00dc 51E0      		ldi r21,hi8(256)
+ 251 00de 0E94 0000 		call set
+ 252 00e2 CE01      		movw r24,r28
+ 253 00e4 63E0      		ldi r22,lo8(3)
+ 254 00e6 40E0      		ldi r20,lo8(256)
+ 255 00e8 51E0      		ldi r21,hi8(256)
+ 256 00ea 0E94 0000 		call set
+  26:timeout.c     **** 
+  27:timeout.c     ****         for ( i=4 ; i<=6 ; i++ ) set(tlc[x+0], i, 0x600);
+ 257               		.stabn	68,0,27,.LM15-.LFBB2
+ 258               	.LM15:
+GAS LISTING /tmp/ccJC3REw.s 			page 6
+
+
+ 259 00ee C801      		movw r24,r16
+ 260 00f0 64E0      		ldi r22,lo8(4)
+ 261 00f2 40E0      		ldi r20,lo8(1536)
+ 262 00f4 56E0      		ldi r21,hi8(1536)
+ 263 00f6 0E94 0000 		call set
+ 264 00fa C801      		movw r24,r16
+ 265 00fc 65E0      		ldi r22,lo8(5)
+ 266 00fe 40E0      		ldi r20,lo8(1536)
+ 267 0100 56E0      		ldi r21,hi8(1536)
+ 268 0102 0E94 0000 		call set
+ 269 0106 C801      		movw r24,r16
+ 270 0108 66E0      		ldi r22,lo8(6)
+ 271 010a 40E0      		ldi r20,lo8(1536)
+ 272 010c 56E0      		ldi r21,hi8(1536)
+ 273 010e 0E94 0000 		call set
+  28:timeout.c     ****         for ( i=4 ; i<=6 ; i++ ) set(tlc[x+1], i, 0x200);
+ 274               		.stabn	68,0,28,.LM16-.LFBB2
+ 275               	.LM16:
+ 276 0112 CE01      		movw r24,r28
+ 277 0114 64E0      		ldi r22,lo8(4)
+ 278 0116 40E0      		ldi r20,lo8(512)
+ 279 0118 52E0      		ldi r21,hi8(512)
+ 280 011a 0E94 0000 		call set
+ 281 011e CE01      		movw r24,r28
+ 282 0120 65E0      		ldi r22,lo8(5)
+ 283 0122 40E0      		ldi r20,lo8(512)
+ 284 0124 52E0      		ldi r21,hi8(512)
+ 285 0126 0E94 0000 		call set
+ 286 012a CE01      		movw r24,r28
+ 287 012c 66E0      		ldi r22,lo8(6)
+ 288 012e 40E0      		ldi r20,lo8(512)
+ 289 0130 52E0      		ldi r21,hi8(512)
+ 290 0132 0E94 0000 		call set
+  29:timeout.c     **** 
+  30:timeout.c     ****         for ( i=7 ; i<=9 ; i++ ) set(tlc[x+0], i, 0x400);
+ 291               		.stabn	68,0,30,.LM17-.LFBB2
+ 292               	.LM17:
+ 293 0136 C801      		movw r24,r16
+ 294 0138 67E0      		ldi r22,lo8(7)
+ 295 013a 40E0      		ldi r20,lo8(1024)
+ 296 013c 54E0      		ldi r21,hi8(1024)
+ 297 013e 0E94 0000 		call set
+ 298 0142 C801      		movw r24,r16
+ 299 0144 68E0      		ldi r22,lo8(8)
+ 300 0146 40E0      		ldi r20,lo8(1024)
+ 301 0148 54E0      		ldi r21,hi8(1024)
+ 302 014a 0E94 0000 		call set
+ 303 014e C801      		movw r24,r16
+ 304 0150 69E0      		ldi r22,lo8(9)
+ 305 0152 40E0      		ldi r20,lo8(1024)
+ 306 0154 54E0      		ldi r21,hi8(1024)
+ 307 0156 0E94 0000 		call set
+  31:timeout.c     ****         for ( i=7 ; i<=9 ; i++ ) set(tlc[x+1], i, 0x300);
+ 308               		.stabn	68,0,31,.LM18-.LFBB2
+ 309               	.LM18:
+ 310 015a CE01      		movw r24,r28
+ 311 015c 67E0      		ldi r22,lo8(7)
+GAS LISTING /tmp/ccJC3REw.s 			page 7
+
+
+ 312 015e 40E0      		ldi r20,lo8(768)
+ 313 0160 53E0      		ldi r21,hi8(768)
+ 314 0162 0E94 0000 		call set
+ 315 0166 CE01      		movw r24,r28
+ 316 0168 68E0      		ldi r22,lo8(8)
+ 317 016a 40E0      		ldi r20,lo8(768)
+ 318 016c 53E0      		ldi r21,hi8(768)
+ 319 016e 0E94 0000 		call set
+ 320 0172 CE01      		movw r24,r28
+ 321 0174 69E0      		ldi r22,lo8(9)
+ 322 0176 40E0      		ldi r20,lo8(768)
+ 323 0178 53E0      		ldi r21,hi8(768)
+ 324 017a 0E94 0000 		call set
+  32:timeout.c     **** 
+  33:timeout.c     ****         for ( i=10 ; i<=12 ; i++ ) set(tlc[x+0], i, 0x300);
+ 325               		.stabn	68,0,33,.LM19-.LFBB2
+ 326               	.LM19:
+ 327 017e C801      		movw r24,r16
+ 328 0180 6AE0      		ldi r22,lo8(10)
+ 329 0182 40E0      		ldi r20,lo8(768)
+ 330 0184 53E0      		ldi r21,hi8(768)
+ 331 0186 0E94 0000 		call set
+ 332 018a C801      		movw r24,r16
+ 333 018c 6BE0      		ldi r22,lo8(11)
+ 334 018e 40E0      		ldi r20,lo8(768)
+ 335 0190 53E0      		ldi r21,hi8(768)
+ 336 0192 0E94 0000 		call set
+ 337 0196 C801      		movw r24,r16
+ 338 0198 6CE0      		ldi r22,lo8(12)
+ 339 019a 40E0      		ldi r20,lo8(768)
+ 340 019c 53E0      		ldi r21,hi8(768)
+ 341 019e 0E94 0000 		call set
+  34:timeout.c     ****         for ( i=10 ; i<=12 ; i++ ) set(tlc[x+1], i, 0x300);
+ 342               		.stabn	68,0,34,.LM20-.LFBB2
+ 343               	.LM20:
+ 344 01a2 CE01      		movw r24,r28
+ 345 01a4 6AE0      		ldi r22,lo8(10)
+ 346 01a6 40E0      		ldi r20,lo8(768)
+ 347 01a8 53E0      		ldi r21,hi8(768)
+ 348 01aa 0E94 0000 		call set
+ 349 01ae CE01      		movw r24,r28
+ 350 01b0 6BE0      		ldi r22,lo8(11)
+ 351 01b2 40E0      		ldi r20,lo8(768)
+ 352 01b4 53E0      		ldi r21,hi8(768)
+ 353 01b6 0E94 0000 		call set
+ 354 01ba CE01      		movw r24,r28
+ 355 01bc 6CE0      		ldi r22,lo8(12)
+ 356 01be 40E0      		ldi r20,lo8(768)
+ 357 01c0 53E0      		ldi r21,hi8(768)
+ 358 01c2 0E94 0000 		call set
+ 359               	.L2:
+ 360               	/* epilogue start */
+  35:timeout.c     ****     } else {
+  36:timeout.c     ****         // right devices
+  37:timeout.c     ****         for ( i=1 ; i<=3 ; i++ ) set(tlc[x+0], i, 0x300);
+  38:timeout.c     ****         for ( i=1 ; i<=3 ; i++ ) set(tlc[x+1], i, 0x300);
+  39:timeout.c     **** 
+GAS LISTING /tmp/ccJC3REw.s 			page 8
+
+
+  40:timeout.c     ****         for ( i=4 ; i<=6 ; i++ ) set(tlc[x+0], i, 0x400);
+  41:timeout.c     ****         for ( i=4 ; i<=6 ; i++ ) set(tlc[x+1], i, 0x300);
+  42:timeout.c     **** 
+  43:timeout.c     ****         for ( i=7 ; i<=9 ; i++ ) set(tlc[x+0], i, 0x600);
+  44:timeout.c     ****         for ( i=7 ; i<=9 ; i++ ) set(tlc[x+1], i, 0x200);
+  45:timeout.c     **** 
+  46:timeout.c     ****         for ( i=10 ; i<=12 ; i++ ) set(tlc[x+0], i, 0x800);
+  47:timeout.c     ****         for ( i=10 ; i<=12 ; i++ ) set(tlc[x+1], i, 0x100);
+  48:timeout.c     ****     }
+  49:timeout.c     **** #elif (CTRLR_TYPE == CTRLR_UVS)
+  50:timeout.c     ****     // uv strobes should just be shut off
+  51:timeout.c     ****     for ( i=0 ; i<=15 ; i++ ) set(tlc[0], i, 0);
+  52:timeout.c     ****     for ( i=0 ; i<=15 ; i++ ) set(tlc[1], i, 0);
+  53:timeout.c     **** #endif /* CTRLR_TYPE */
+  54:timeout.c     **** }
+ 361               		.stabn	68,0,54,.LM21-.LFBB2
+ 362               	.LM21:
+ 363 01c6 DF91      		pop r29
+ 364 01c8 CF91      		pop r28
+ 365 01ca 1F91      		pop r17
+ 366 01cc 0F91      		pop r16
+ 367 01ce FF90      		pop r15
+ 368 01d0 EF90      		pop r14
+ 369 01d2 DF90      		pop r13
+ 370 01d4 CF90      		pop r12
+ 371 01d6 0895      		ret
+ 372               	.L6:
+  34:timeout.c     ****         for ( i=10 ; i<=12 ; i++ ) set(tlc[x+1], i, 0x300);
+ 373               		.stabn	68,0,34,.LM22-.LFBB2
+ 374               	.LM22:
+ 375 01d8 7E01      		movw r14,r28
+ 376 01da EE0C      		lsl r14
+ 377 01dc FF1C      		rol r15
+ 378 01de EC0E      		add r14,r28
+ 379 01e0 FD1E      		adc r15,r29
+ 380 01e2 EE0C      		lsl r14
+ 381 01e4 FF1C      		rol r15
+ 382 01e6 EE0C      		lsl r14
+ 383 01e8 FF1C      		rol r15
+ 384 01ea EE0C      		lsl r14
+ 385 01ec FF1C      		rol r15
+ 386 01ee 80E0      		ldi r24,lo8(tlc)
+ 387 01f0 90E0      		ldi r25,hi8(tlc)
+ 388 01f2 E80E      		add r14,r24
+ 389 01f4 F91E      		adc r15,r25
+  37:timeout.c     ****         for ( i=1 ; i<=3 ; i++ ) set(tlc[x+0], i, 0x300);
+ 390               		.stabn	68,0,37,.LM23-.LFBB2
+ 391               	.LM23:
+ 392 01f6 C701      		movw r24,r14
+ 393 01f8 61E0      		ldi r22,lo8(1)
+ 394 01fa 40E0      		ldi r20,lo8(768)
+ 395 01fc 53E0      		ldi r21,hi8(768)
+ 396 01fe 0E94 0000 		call set
+ 397 0202 C701      		movw r24,r14
+ 398 0204 62E0      		ldi r22,lo8(2)
+ 399 0206 40E0      		ldi r20,lo8(768)
+ 400 0208 53E0      		ldi r21,hi8(768)
+GAS LISTING /tmp/ccJC3REw.s 			page 9
+
+
+ 401 020a 0E94 0000 		call set
+ 402 020e C701      		movw r24,r14
+ 403 0210 63E0      		ldi r22,lo8(3)
+ 404 0212 40E0      		ldi r20,lo8(768)
+ 405 0214 53E0      		ldi r21,hi8(768)
+ 406 0216 0E94 0000 		call set
+  38:timeout.c     ****         for ( i=1 ; i<=3 ; i++ ) set(tlc[x+1], i, 0x300);
+ 407               		.stabn	68,0,38,.LM24-.LFBB2
+ 408               	.LM24:
+ 409 021a 2196      		adiw r28,1
+ 410 021c 8E01      		movw r16,r28
+ 411 021e 000F      		lsl r16
+ 412 0220 111F      		rol r17
+ 413 0222 0C0F      		add r16,r28
+ 414 0224 1D1F      		adc r17,r29
+ 415 0226 000F      		lsl r16
+ 416 0228 111F      		rol r17
+ 417 022a 000F      		lsl r16
+ 418 022c 111F      		rol r17
+ 419 022e 000F      		lsl r16
+ 420 0230 111F      		rol r17
+ 421 0232 0050      		subi r16,lo8(-(tlc))
+ 422 0234 1040      		sbci r17,hi8(-(tlc))
+ 423 0236 C801      		movw r24,r16
+ 424 0238 61E0      		ldi r22,lo8(1)
+ 425 023a 40E0      		ldi r20,lo8(768)
+ 426 023c 53E0      		ldi r21,hi8(768)
+ 427 023e 0E94 0000 		call set
+ 428 0242 C801      		movw r24,r16
+ 429 0244 62E0      		ldi r22,lo8(2)
+ 430 0246 40E0      		ldi r20,lo8(768)
+ 431 0248 53E0      		ldi r21,hi8(768)
+ 432 024a 0E94 0000 		call set
+ 433 024e C801      		movw r24,r16
+ 434 0250 63E0      		ldi r22,lo8(3)
+ 435 0252 40E0      		ldi r20,lo8(768)
+ 436 0254 53E0      		ldi r21,hi8(768)
+ 437 0256 0E94 0000 		call set
+ 438 025a E4E0      		ldi r30,lo8(4)
+ 439 025c DE2E      		mov r13,r30
+ 440               	.L8:
+  40:timeout.c     ****         for ( i=4 ; i<=6 ; i++ ) set(tlc[x+0], i, 0x400);
+ 441               		.stabn	68,0,40,.LM25-.LFBB2
+ 442               	.LM25:
+ 443 025e C701      		movw r24,r14
+ 444 0260 6D2D      		mov r22,r13
+ 445 0262 40E0      		ldi r20,lo8(1024)
+ 446 0264 54E0      		ldi r21,hi8(1024)
+ 447 0266 0E94 0000 		call set
+ 448 026a D394      		inc r13
+ 449 026c 97E0      		ldi r25,lo8(7)
+ 450 026e D916      		cp r13,r25
+ 451 0270 01F4      		brne .L8
+  40:timeout.c     ****         for ( i=4 ; i<=6 ; i++ ) set(tlc[x+0], i, 0x400);
+ 452               		.stabn	68,0,40,.LM26-.LFBB2
+ 453               	.LM26:
+ 454 0272 24E0      		ldi r18,lo8(4)
+GAS LISTING /tmp/ccJC3REw.s 			page 10
+
+
+ 455 0274 D22E      		mov r13,r18
+ 456               	.L9:
+  41:timeout.c     ****         for ( i=4 ; i<=6 ; i++ ) set(tlc[x+1], i, 0x300);
+ 457               		.stabn	68,0,41,.LM27-.LFBB2
+ 458               	.LM27:
+ 459 0276 C801      		movw r24,r16
+ 460 0278 6D2D      		mov r22,r13
+ 461 027a 40E0      		ldi r20,lo8(768)
+ 462 027c 53E0      		ldi r21,hi8(768)
+ 463 027e 0E94 0000 		call set
+ 464 0282 D394      		inc r13
+ 465 0284 87E0      		ldi r24,lo8(7)
+ 466 0286 D816      		cp r13,r24
+ 467 0288 01F4      		brne .L9
+  41:timeout.c     ****         for ( i=4 ; i<=6 ; i++ ) set(tlc[x+1], i, 0x300);
+ 468               		.stabn	68,0,41,.LM28-.LFBB2
+ 469               	.LM28:
+ 470 028a 97E0      		ldi r25,lo8(7)
+ 471 028c C92E      		mov r12,r25
+ 472               	.L10:
+  43:timeout.c     ****         for ( i=7 ; i<=9 ; i++ ) set(tlc[x+0], i, 0x600);
+ 473               		.stabn	68,0,43,.LM29-.LFBB2
+ 474               	.LM29:
+ 475 028e C701      		movw r24,r14
+ 476 0290 6C2D      		mov r22,r12
+ 477 0292 40E0      		ldi r20,lo8(1536)
+ 478 0294 56E0      		ldi r21,hi8(1536)
+ 479 0296 0E94 0000 		call set
+ 480 029a C394      		inc r12
+ 481 029c 9AE0      		ldi r25,lo8(10)
+ 482 029e C916      		cp r12,r25
+ 483 02a0 01F4      		brne .L10
+ 484               	.L15:
+  44:timeout.c     ****         for ( i=7 ; i<=9 ; i++ ) set(tlc[x+1], i, 0x200);
+ 485               		.stabn	68,0,44,.LM30-.LFBB2
+ 486               	.LM30:
+ 487 02a2 C801      		movw r24,r16
+ 488 02a4 6D2D      		mov r22,r13
+ 489 02a6 40E0      		ldi r20,lo8(512)
+ 490 02a8 52E0      		ldi r21,hi8(512)
+ 491 02aa 0E94 0000 		call set
+ 492 02ae D394      		inc r13
+ 493 02b0 8AE0      		ldi r24,lo8(10)
+ 494 02b2 D816      		cp r13,r24
+ 495 02b4 01F4      		brne .L15
+  44:timeout.c     ****         for ( i=7 ; i<=9 ; i++ ) set(tlc[x+1], i, 0x200);
+ 496               		.stabn	68,0,44,.LM31-.LFBB2
+ 497               	.LM31:
+ 498 02b6 8AE0      		ldi r24,lo8(10)
+ 499 02b8 C82E      		mov r12,r24
+ 500               	.L12:
+  46:timeout.c     ****         for ( i=10 ; i<=12 ; i++ ) set(tlc[x+0], i, 0x800);
+ 501               		.stabn	68,0,46,.LM32-.LFBB2
+ 502               	.LM32:
+ 503 02ba C701      		movw r24,r14
+ 504 02bc 6C2D      		mov r22,r12
+ 505 02be 40E0      		ldi r20,lo8(2048)
+GAS LISTING /tmp/ccJC3REw.s 			page 11
+
+
+ 506 02c0 58E0      		ldi r21,hi8(2048)
+ 507 02c2 0E94 0000 		call set
+ 508 02c6 C394      		inc r12
+ 509 02c8 9DE0      		ldi r25,lo8(13)
+ 510 02ca C916      		cp r12,r25
+ 511 02cc 01F4      		brne .L12
+ 512               	.L14:
+  47:timeout.c     ****         for ( i=10 ; i<=12 ; i++ ) set(tlc[x+1], i, 0x100);
+ 513               		.stabn	68,0,47,.LM33-.LFBB2
+ 514               	.LM33:
+ 515 02ce C801      		movw r24,r16
+ 516 02d0 6D2D      		mov r22,r13
+ 517 02d2 40E0      		ldi r20,lo8(256)
+ 518 02d4 51E0      		ldi r21,hi8(256)
+ 519 02d6 0E94 0000 		call set
+ 520 02da D394      		inc r13
+ 521 02dc 8DE0      		ldi r24,lo8(13)
+ 522 02de D816      		cp r13,r24
+ 523 02e0 01F4      		brne .L14
+ 524 02e2 00C0      		rjmp .L2
+ 525               		.size	timeout_disp_init, .-timeout_disp_init
+ 526               		.stabs	"x:r(5,2)",64,0,20,25
+ 527               		.stabn	192,0,0,.LFBB2-.LFBB2
+ 528               		.stabn	224,0,0,.Lscope2-.LFBB2
+ 529               	.Lscope2:
+ 530               		.stabs	"",36,0,0,.Lscope2-.LFBB2
+ 531               		.stabd	78,0,0
+ 532               		.stabs	"timeout_disp_pixcycle:F(0,15)",36,0,56,timeout_disp_pixcycle
+ 533               	.global	timeout_disp_pixcycle
+ 534               		.type	timeout_disp_pixcycle, @function
+ 535               	timeout_disp_pixcycle:
+ 536               		.stabd	46,0,0
+  55:timeout.c     **** 
+  56:timeout.c     **** void timeout_disp_pixcycle(void) {
+ 537               		.stabn	68,0,56,.LM34-.LFBB3
+ 538               	.LM34:
+ 539               	.LFBB3:
+ 540 02e4 EF92      		push r14
+ 541 02e6 FF92      		push r15
+ 542 02e8 0F93      		push r16
+ 543 02ea 1F93      		push r17
+ 544 02ec CF93      		push r28
+ 545 02ee DF93      		push r29
+ 546               	/* prologue: function */
+ 547               	/* frame size = 0 */
+ 548               	/* stack size = 6 */
+ 549               	.L__stack_usage = 6
+  57:timeout.c     **** #if (CTRLR_TYPE == CTRLR_RGB)
+  58:timeout.c     ****     uint8_t i;
+  59:timeout.c     ****     uint16_t tmp[2];
+  60:timeout.c     **** 
+  61:timeout.c     ****     uint8_t pside = ( instaddr % REAR_MIN ) < REAR_MIN/2;
+ 550               		.stabn	68,0,61,.LM35-.LFBB3
+ 551               	.LM35:
+ 552 02f0 8091 0000 		lds r24,instaddr
+ 553 02f4 8770      		andi r24,lo8(7)
+ 554 02f6 91E0      		ldi r25,lo8(1)
+GAS LISTING /tmp/ccJC3REw.s 			page 12
+
+
+ 555 02f8 8430      		cpi r24,lo8(4)
+ 556 02fa 00F0      		brlo .L27
+ 557 02fc 90E0      		ldi r25,lo8(0)
+ 558               	.L27:
+  62:timeout.c     ****     if ( ((to_direc<TIMEOUT_REVDIREC/2) && pside) || (!(to_direc<TIMEOUT_REVDIREC/2) && !pside) ) {
+ 559               		.stabn	68,0,62,.LM36-.LFBB3
+ 560               	.LM36:
+ 561 02fe 8091 0000 		lds r24,to_direc
+ 562 0302 8732      		cpi r24,lo8(39)
+ 563 0304 00F0      		brlo .+2
+ 564 0306 00C0      		rjmp .L28
+ 565               		.stabn	68,0,62,.LM37-.LFBB3
+ 566               	.LM37:
+ 567 0308 9923      		tst r25
+ 568 030a 01F4      		brne .+2
+ 569 030c 00C0      		rjmp .L30
+ 570               	.L29:
+  63:timeout.c     ****         tmp[0] = get(tlc[0], 1);
+ 571               		.stabn	68,0,63,.LM38-.LFBB3
+ 572               	.LM38:
+ 573 030e 80E0      		ldi r24,lo8(tlc)
+ 574 0310 90E0      		ldi r25,hi8(tlc)
+ 575 0312 61E0      		ldi r22,lo8(1)
+ 576 0314 0E94 0000 		call get
+ 577 0318 EC01      		movw r28,r24
+  64:timeout.c     ****         tmp[1] = get(tlc[1], 1);
+ 578               		.stabn	68,0,64,.LM39-.LFBB3
+ 579               	.LM39:
+ 580 031a 80E0      		ldi r24,lo8(tlc+24)
+ 581 031c 90E0      		ldi r25,hi8(tlc+24)
+ 582 031e 61E0      		ldi r22,lo8(1)
+ 583 0320 0E94 0000 		call get
+ 584 0324 7C01      		movw r14,r24
+  65:timeout.c     **** 
+  66:timeout.c     ****         for ( i=1 ; i<=3 ; i++ ) set(tlc[0], i, get(tlc[0], 4));
+ 585               		.stabn	68,0,66,.LM40-.LFBB3
+ 586               	.LM40:
+ 587 0326 11E0      		ldi r17,lo8(1)
+ 588               	.L31:
+ 589               		.stabn	68,0,66,.LM41-.LFBB3
+ 590               	.LM41:
+ 591 0328 80E0      		ldi r24,lo8(tlc)
+ 592 032a 90E0      		ldi r25,hi8(tlc)
+ 593 032c 64E0      		ldi r22,lo8(4)
+ 594 032e 0E94 0000 		call get
+ 595 0332 AC01      		movw r20,r24
+ 596 0334 80E0      		ldi r24,lo8(tlc)
+ 597 0336 90E0      		ldi r25,hi8(tlc)
+ 598 0338 612F      		mov r22,r17
+ 599 033a 0E94 0000 		call set
+ 600 033e 1F5F      		subi r17,lo8(-(1))
+ 601 0340 1430      		cpi r17,lo8(4)
+ 602 0342 01F4      		brne .L31
+ 603               	.L47:
+  67:timeout.c     ****         for ( i=4 ; i<=6 ; i++ ) set(tlc[0], i, get(tlc[0], 7));
+ 604               		.stabn	68,0,67,.LM42-.LFBB3
+ 605               	.LM42:
+GAS LISTING /tmp/ccJC3REw.s 			page 13
+
+
+ 606 0344 80E0      		ldi r24,lo8(tlc)
+ 607 0346 90E0      		ldi r25,hi8(tlc)
+ 608 0348 67E0      		ldi r22,lo8(7)
+ 609 034a 0E94 0000 		call get
+ 610 034e AC01      		movw r20,r24
+ 611 0350 80E0      		ldi r24,lo8(tlc)
+ 612 0352 90E0      		ldi r25,hi8(tlc)
+ 613 0354 612F      		mov r22,r17
+ 614 0356 0E94 0000 		call set
+ 615 035a 1F5F      		subi r17,lo8(-(1))
+ 616 035c 1730      		cpi r17,lo8(7)
+ 617 035e 01F4      		brne .L47
+ 618               	.L46:
+  68:timeout.c     ****         for ( i=7 ; i<=9 ; i++ ) set(tlc[0], i, get(tlc[0], 10));
+ 619               		.stabn	68,0,68,.LM43-.LFBB3
+ 620               	.LM43:
+ 621 0360 80E0      		ldi r24,lo8(tlc)
+ 622 0362 90E0      		ldi r25,hi8(tlc)
+ 623 0364 6AE0      		ldi r22,lo8(10)
+ 624 0366 0E94 0000 		call get
+ 625 036a AC01      		movw r20,r24
+ 626 036c 80E0      		ldi r24,lo8(tlc)
+ 627 036e 90E0      		ldi r25,hi8(tlc)
+ 628 0370 612F      		mov r22,r17
+ 629 0372 0E94 0000 		call set
+ 630 0376 1F5F      		subi r17,lo8(-(1))
+ 631 0378 1A30      		cpi r17,lo8(10)
+ 632 037a 01F4      		brne .L46
+  69:timeout.c     ****         for ( i=10 ; i<=12 ; i++ ) set(tlc[0], i, tmp[0]);
+ 633               		.stabn	68,0,69,.LM44-.LFBB3
+ 634               	.LM44:
+ 635 037c 80E0      		ldi r24,lo8(tlc)
+ 636 037e 90E0      		ldi r25,hi8(tlc)
+ 637 0380 6AE0      		ldi r22,lo8(10)
+ 638 0382 AE01      		movw r20,r28
+ 639 0384 0E94 0000 		call set
+ 640 0388 80E0      		ldi r24,lo8(tlc)
+ 641 038a 90E0      		ldi r25,hi8(tlc)
+ 642 038c 6BE0      		ldi r22,lo8(11)
+ 643 038e AE01      		movw r20,r28
+ 644 0390 0E94 0000 		call set
+ 645 0394 80E0      		ldi r24,lo8(tlc)
+ 646 0396 90E0      		ldi r25,hi8(tlc)
+ 647 0398 6CE0      		ldi r22,lo8(12)
+ 648 039a AE01      		movw r20,r28
+ 649 039c 0E94 0000 		call set
+ 650 03a0 11E0      		ldi r17,lo8(1)
+ 651               	.L34:
+  70:timeout.c     **** 
+  71:timeout.c     ****         for ( i=1 ; i<=3 ; i++ ) set(tlc[1], i, get(tlc[1], 4));
+ 652               		.stabn	68,0,71,.LM45-.LFBB3
+ 653               	.LM45:
+ 654 03a2 80E0      		ldi r24,lo8(tlc+24)
+ 655 03a4 90E0      		ldi r25,hi8(tlc+24)
+ 656 03a6 64E0      		ldi r22,lo8(4)
+ 657 03a8 0E94 0000 		call get
+ 658 03ac AC01      		movw r20,r24
+GAS LISTING /tmp/ccJC3REw.s 			page 14
+
+
+ 659 03ae 80E0      		ldi r24,lo8(tlc+24)
+ 660 03b0 90E0      		ldi r25,hi8(tlc+24)
+ 661 03b2 612F      		mov r22,r17
+ 662 03b4 0E94 0000 		call set
+ 663 03b8 1F5F      		subi r17,lo8(-(1))
+ 664 03ba 1430      		cpi r17,lo8(4)
+ 665 03bc 01F4      		brne .L34
+ 666               	.L45:
+  72:timeout.c     ****         for ( i=4 ; i<=6 ; i++ ) set(tlc[1], i, get(tlc[1], 7));
+ 667               		.stabn	68,0,72,.LM46-.LFBB3
+ 668               	.LM46:
+ 669 03be 80E0      		ldi r24,lo8(tlc+24)
+ 670 03c0 90E0      		ldi r25,hi8(tlc+24)
+ 671 03c2 67E0      		ldi r22,lo8(7)
+ 672 03c4 0E94 0000 		call get
+ 673 03c8 AC01      		movw r20,r24
+ 674 03ca 80E0      		ldi r24,lo8(tlc+24)
+ 675 03cc 90E0      		ldi r25,hi8(tlc+24)
+ 676 03ce 612F      		mov r22,r17
+ 677 03d0 0E94 0000 		call set
+ 678 03d4 1F5F      		subi r17,lo8(-(1))
+ 679 03d6 1730      		cpi r17,lo8(7)
+ 680 03d8 01F4      		brne .L45
+ 681               	.L44:
+  73:timeout.c     ****         for ( i=7 ; i<=9 ; i++ ) set(tlc[1], i, get(tlc[1], 10));
+ 682               		.stabn	68,0,73,.LM47-.LFBB3
+ 683               	.LM47:
+ 684 03da 80E0      		ldi r24,lo8(tlc+24)
+ 685 03dc 90E0      		ldi r25,hi8(tlc+24)
+ 686 03de 6AE0      		ldi r22,lo8(10)
+ 687 03e0 0E94 0000 		call get
+ 688 03e4 AC01      		movw r20,r24
+ 689 03e6 80E0      		ldi r24,lo8(tlc+24)
+ 690 03e8 90E0      		ldi r25,hi8(tlc+24)
+ 691 03ea 612F      		mov r22,r17
+ 692 03ec 0E94 0000 		call set
+ 693 03f0 1F5F      		subi r17,lo8(-(1))
+ 694 03f2 1A30      		cpi r17,lo8(10)
+ 695 03f4 01F4      		brne .L44
+  74:timeout.c     ****         for ( i=10 ; i<=12 ; i++ ) set(tlc[1], i, tmp[1]);
+ 696               		.stabn	68,0,74,.LM48-.LFBB3
+ 697               	.LM48:
+ 698 03f6 80E0      		ldi r24,lo8(tlc+24)
+ 699 03f8 90E0      		ldi r25,hi8(tlc+24)
+ 700 03fa 6AE0      		ldi r22,lo8(10)
+ 701 03fc A701      		movw r20,r14
+ 702 03fe 0E94 0000 		call set
+ 703 0402 80E0      		ldi r24,lo8(tlc+24)
+ 704 0404 90E0      		ldi r25,hi8(tlc+24)
+ 705 0406 6BE0      		ldi r22,lo8(11)
+ 706 0408 A701      		movw r20,r14
+ 707 040a 0E94 0000 		call set
+ 708 040e 80E0      		ldi r24,lo8(tlc+24)
+ 709 0410 90E0      		ldi r25,hi8(tlc+24)
+ 710 0412 6CE0      		ldi r22,lo8(12)
+ 711 0414 A701      		movw r20,r14
+ 712 0416 0E94 0000 		call set
+GAS LISTING /tmp/ccJC3REw.s 			page 15
+
+
+ 713               	/* epilogue start */
+  75:timeout.c     ****     } else {
+  76:timeout.c     ****         tmp[0] = get(tlc[0], 10);
+  77:timeout.c     ****         tmp[1] = get(tlc[1], 10);
+  78:timeout.c     **** 
+  79:timeout.c     ****         for ( i=10 ; i<=12 ; i++ ) set(tlc[0], i, get(tlc[0], 7));
+  80:timeout.c     ****         for ( i=7 ; i<=9 ; i++ ) set(tlc[0], i, get(tlc[0], 4));
+  81:timeout.c     ****         for ( i=4 ; i<=6 ; i++ ) set(tlc[0], i, get(tlc[0], 1));
+  82:timeout.c     ****         for ( i=1 ; i<=3 ; i++ ) set(tlc[0], i, tmp[0]);
+  83:timeout.c     **** 
+  84:timeout.c     ****         for ( i=10 ; i<=12 ; i++ ) set(tlc[1], i, get(tlc[1], 7));
+  85:timeout.c     ****         for ( i=7 ; i<=9 ; i++ ) set(tlc[1], i, get(tlc[1], 4));
+  86:timeout.c     ****         for ( i=4 ; i<=6 ; i++ ) set(tlc[1], i, get(tlc[1], 1));
+  87:timeout.c     ****         for ( i=1 ; i<=3 ; i++ ) set(tlc[1], i, tmp[1]);
+  88:timeout.c     ****     }
+  89:timeout.c     **** #elif (CTRLR_TYPE == CTRLR_UVS)
+  90:timeout.c     **** #endif /* CTRLR_TYPE */
+  91:timeout.c     **** }
+ 714               		.stabn	68,0,91,.LM49-.LFBB3
+ 715               	.LM49:
+ 716 041a DF91      		pop r29
+ 717 041c CF91      		pop r28
+ 718 041e 1F91      		pop r17
+ 719 0420 0F91      		pop r16
+ 720 0422 FF90      		pop r15
+ 721 0424 EF90      		pop r14
+ 722 0426 0895      		ret
+ 723               	.L28:
+  62:timeout.c     ****     if ( ((to_direc<TIMEOUT_REVDIREC/2) && pside) || (!(to_direc<TIMEOUT_REVDIREC/2) && !pside) ) {
+ 724               		.stabn	68,0,62,.LM50-.LFBB3
+ 725               	.LM50:
+ 726 0428 9923      		tst r25
+ 727 042a 01F4      		brne .+2
+ 728 042c 00C0      		rjmp .L29
+ 729               	.L30:
+  76:timeout.c     ****         tmp[0] = get(tlc[0], 10);
+ 730               		.stabn	68,0,76,.LM51-.LFBB3
+ 731               	.LM51:
+ 732 042e 80E0      		ldi r24,lo8(tlc)
+ 733 0430 90E0      		ldi r25,hi8(tlc)
+ 734 0432 6AE0      		ldi r22,lo8(10)
+ 735 0434 0E94 0000 		call get
+ 736 0438 EC01      		movw r28,r24
+  77:timeout.c     ****         tmp[1] = get(tlc[1], 10);
+ 737               		.stabn	68,0,77,.LM52-.LFBB3
+ 738               	.LM52:
+ 739 043a 80E0      		ldi r24,lo8(tlc+24)
+ 740 043c 90E0      		ldi r25,hi8(tlc+24)
+ 741 043e 6AE0      		ldi r22,lo8(10)
+ 742 0440 0E94 0000 		call get
+ 743 0444 7C01      		movw r14,r24
+  79:timeout.c     ****         for ( i=10 ; i<=12 ; i++ ) set(tlc[0], i, get(tlc[0], 7));
+ 744               		.stabn	68,0,79,.LM53-.LFBB3
+ 745               	.LM53:
+ 746 0446 1AE0      		ldi r17,lo8(10)
+ 747               	.L38:
+  79:timeout.c     ****         for ( i=10 ; i<=12 ; i++ ) set(tlc[0], i, get(tlc[0], 7));
+GAS LISTING /tmp/ccJC3REw.s 			page 16
+
+
+ 748               		.stabn	68,0,79,.LM54-.LFBB3
+ 749               	.LM54:
+ 750 0448 80E0      		ldi r24,lo8(tlc)
+ 751 044a 90E0      		ldi r25,hi8(tlc)
+ 752 044c 67E0      		ldi r22,lo8(7)
+ 753 044e 0E94 0000 		call get
+ 754 0452 AC01      		movw r20,r24
+ 755 0454 80E0      		ldi r24,lo8(tlc)
+ 756 0456 90E0      		ldi r25,hi8(tlc)
+ 757 0458 612F      		mov r22,r17
+ 758 045a 0E94 0000 		call set
+ 759 045e 1F5F      		subi r17,lo8(-(1))
+ 760 0460 1D30      		cpi r17,lo8(13)
+ 761 0462 01F4      		brne .L38
+  79:timeout.c     ****         for ( i=10 ; i<=12 ; i++ ) set(tlc[0], i, get(tlc[0], 7));
+ 762               		.stabn	68,0,79,.LM55-.LFBB3
+ 763               	.LM55:
+ 764 0464 07E0      		ldi r16,lo8(7)
+ 765               	.L39:
+  80:timeout.c     ****         for ( i=7 ; i<=9 ; i++ ) set(tlc[0], i, get(tlc[0], 4));
+ 766               		.stabn	68,0,80,.LM56-.LFBB3
+ 767               	.LM56:
+ 768 0466 80E0      		ldi r24,lo8(tlc)
+ 769 0468 90E0      		ldi r25,hi8(tlc)
+ 770 046a 64E0      		ldi r22,lo8(4)
+ 771 046c 0E94 0000 		call get
+ 772 0470 AC01      		movw r20,r24
+ 773 0472 80E0      		ldi r24,lo8(tlc)
+ 774 0474 90E0      		ldi r25,hi8(tlc)
+ 775 0476 602F      		mov r22,r16
+ 776 0478 0E94 0000 		call set
+ 777 047c 0F5F      		subi r16,lo8(-(1))
+ 778 047e 0A30      		cpi r16,lo8(10)
+ 779 0480 01F4      		brne .L39
+  80:timeout.c     ****         for ( i=7 ; i<=9 ; i++ ) set(tlc[0], i, get(tlc[0], 4));
+ 780               		.stabn	68,0,80,.LM57-.LFBB3
+ 781               	.LM57:
+ 782 0482 14E0      		ldi r17,lo8(4)
+ 783               	.L40:
+  81:timeout.c     ****         for ( i=4 ; i<=6 ; i++ ) set(tlc[0], i, get(tlc[0], 1));
+ 784               		.stabn	68,0,81,.LM58-.LFBB3
+ 785               	.LM58:
+ 786 0484 80E0      		ldi r24,lo8(tlc)
+ 787 0486 90E0      		ldi r25,hi8(tlc)
+ 788 0488 61E0      		ldi r22,lo8(1)
+ 789 048a 0E94 0000 		call get
+ 790 048e AC01      		movw r20,r24
+ 791 0490 80E0      		ldi r24,lo8(tlc)
+ 792 0492 90E0      		ldi r25,hi8(tlc)
+ 793 0494 612F      		mov r22,r17
+ 794 0496 0E94 0000 		call set
+ 795 049a 1F5F      		subi r17,lo8(-(1))
+ 796 049c 1730      		cpi r17,lo8(7)
+ 797 049e 01F4      		brne .L40
+  82:timeout.c     ****         for ( i=1 ; i<=3 ; i++ ) set(tlc[0], i, tmp[0]);
+ 798               		.stabn	68,0,82,.LM59-.LFBB3
+ 799               	.LM59:
+GAS LISTING /tmp/ccJC3REw.s 			page 17
+
+
+ 800 04a0 80E0      		ldi r24,lo8(tlc)
+ 801 04a2 90E0      		ldi r25,hi8(tlc)
+ 802 04a4 61E0      		ldi r22,lo8(1)
+ 803 04a6 AE01      		movw r20,r28
+ 804 04a8 0E94 0000 		call set
+ 805 04ac 80E0      		ldi r24,lo8(tlc)
+ 806 04ae 90E0      		ldi r25,hi8(tlc)
+ 807 04b0 62E0      		ldi r22,lo8(2)
+ 808 04b2 AE01      		movw r20,r28
+ 809 04b4 0E94 0000 		call set
+ 810 04b8 80E0      		ldi r24,lo8(tlc)
+ 811 04ba 90E0      		ldi r25,hi8(tlc)
+ 812 04bc 63E0      		ldi r22,lo8(3)
+ 813 04be AE01      		movw r20,r28
+ 814 04c0 0E94 0000 		call set
+ 815               	.L41:
+  84:timeout.c     ****         for ( i=10 ; i<=12 ; i++ ) set(tlc[1], i, get(tlc[1], 7));
+ 816               		.stabn	68,0,84,.LM60-.LFBB3
+ 817               	.LM60:
+ 818 04c4 80E0      		ldi r24,lo8(tlc+24)
+ 819 04c6 90E0      		ldi r25,hi8(tlc+24)
+ 820 04c8 67E0      		ldi r22,lo8(7)
+ 821 04ca 0E94 0000 		call get
+ 822 04ce AC01      		movw r20,r24
+ 823 04d0 80E0      		ldi r24,lo8(tlc+24)
+ 824 04d2 90E0      		ldi r25,hi8(tlc+24)
+ 825 04d4 602F      		mov r22,r16
+ 826 04d6 0E94 0000 		call set
+ 827 04da 0F5F      		subi r16,lo8(-(1))
+ 828 04dc 0D30      		cpi r16,lo8(13)
+ 829 04de 01F4      		brne .L41
+ 830               	.L48:
+  85:timeout.c     ****         for ( i=7 ; i<=9 ; i++ ) set(tlc[1], i, get(tlc[1], 4));
+ 831               		.stabn	68,0,85,.LM61-.LFBB3
+ 832               	.LM61:
+ 833 04e0 80E0      		ldi r24,lo8(tlc+24)
+ 834 04e2 90E0      		ldi r25,hi8(tlc+24)
+ 835 04e4 64E0      		ldi r22,lo8(4)
+ 836 04e6 0E94 0000 		call get
+ 837 04ea AC01      		movw r20,r24
+ 838 04ec 80E0      		ldi r24,lo8(tlc+24)
+ 839 04ee 90E0      		ldi r25,hi8(tlc+24)
+ 840 04f0 612F      		mov r22,r17
+ 841 04f2 0E94 0000 		call set
+ 842 04f6 1F5F      		subi r17,lo8(-(1))
+ 843 04f8 1A30      		cpi r17,lo8(10)
+ 844 04fa 01F4      		brne .L48
+  85:timeout.c     ****         for ( i=7 ; i<=9 ; i++ ) set(tlc[1], i, get(tlc[1], 4));
+ 845               		.stabn	68,0,85,.LM62-.LFBB3
+ 846               	.LM62:
+ 847 04fc 14E0      		ldi r17,lo8(4)
+ 848               	.L43:
+  86:timeout.c     ****         for ( i=4 ; i<=6 ; i++ ) set(tlc[1], i, get(tlc[1], 1));
+ 849               		.stabn	68,0,86,.LM63-.LFBB3
+ 850               	.LM63:
+ 851 04fe 80E0      		ldi r24,lo8(tlc+24)
+ 852 0500 90E0      		ldi r25,hi8(tlc+24)
+GAS LISTING /tmp/ccJC3REw.s 			page 18
+
+
+ 853 0502 61E0      		ldi r22,lo8(1)
+ 854 0504 0E94 0000 		call get
+ 855 0508 AC01      		movw r20,r24
+ 856 050a 80E0      		ldi r24,lo8(tlc+24)
+ 857 050c 90E0      		ldi r25,hi8(tlc+24)
+ 858 050e 612F      		mov r22,r17
+ 859 0510 0E94 0000 		call set
+ 860 0514 1F5F      		subi r17,lo8(-(1))
+ 861 0516 1730      		cpi r17,lo8(7)
+ 862 0518 01F4      		brne .L43
+  87:timeout.c     ****         for ( i=1 ; i<=3 ; i++ ) set(tlc[1], i, tmp[1]);
+ 863               		.stabn	68,0,87,.LM64-.LFBB3
+ 864               	.LM64:
+ 865 051a 80E0      		ldi r24,lo8(tlc+24)
+ 866 051c 90E0      		ldi r25,hi8(tlc+24)
+ 867 051e 61E0      		ldi r22,lo8(1)
+ 868 0520 A701      		movw r20,r14
+ 869 0522 0E94 0000 		call set
+ 870 0526 80E0      		ldi r24,lo8(tlc+24)
+ 871 0528 90E0      		ldi r25,hi8(tlc+24)
+ 872 052a 62E0      		ldi r22,lo8(2)
+ 873 052c A701      		movw r20,r14
+ 874 052e 0E94 0000 		call set
+ 875 0532 80E0      		ldi r24,lo8(tlc+24)
+ 876 0534 90E0      		ldi r25,hi8(tlc+24)
+ 877 0536 63E0      		ldi r22,lo8(3)
+ 878 0538 A701      		movw r20,r14
+ 879 053a 0E94 0000 		call set
+ 880               	/* epilogue start */
+ 881               		.stabn	68,0,91,.LM65-.LFBB3
+ 882               	.LM65:
+ 883 053e DF91      		pop r29
+ 884 0540 CF91      		pop r28
+ 885 0542 1F91      		pop r17
+ 886 0544 0F91      		pop r16
+ 887 0546 FF90      		pop r15
+ 888 0548 EF90      		pop r14
+ 889 054a 0895      		ret
+ 890               		.size	timeout_disp_pixcycle, .-timeout_disp_pixcycle
+ 891               		.stabs	"pside:r(5,2)",64,0,61,25
+ 892               		.stabn	192,0,0,.LFBB3-.LFBB3
+ 893               		.stabn	224,0,0,.Lscope3-.LFBB3
+ 894               	.Lscope3:
+ 895               		.stabs	"",36,0,0,.Lscope3-.LFBB3
+ 896               		.stabd	78,0,0
+ 897               		.stabs	"",100,0,0,.Letext0
+ 898               	.Letext0:
+GAS LISTING /tmp/ccJC3REw.s 			page 19
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 timeout.c
+     /tmp/ccJC3REw.s:2      *ABS*:000000000000003f __SREG__
+     /tmp/ccJC3REw.s:3      *ABS*:000000000000003e __SP_H__
+     /tmp/ccJC3REw.s:4      *ABS*:000000000000003d __SP_L__
+     /tmp/ccJC3REw.s:5      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/ccJC3REw.s:6      *ABS*:0000000000000001 __zero_reg__
+     /tmp/ccJC3REw.s:93     .text:0000000000000000 timeoutctr_init
+     /tmp/ccJC3REw.s:120    .text:0000000000000008 timeout_disp_init
+     /tmp/ccJC3REw.s:535    .text:00000000000002e4 timeout_disp_pixcycle
+
+UNDEFINED SYMBOLS
+__do_copy_data
+__do_clear_bss
+tlc
+set
+instaddr
+to_direc
+get

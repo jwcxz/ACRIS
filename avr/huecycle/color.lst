@@ -1,0 +1,507 @@
+GAS LISTING /tmp/ccEVDOvE.s 			page 1
+
+
+   1               		.file	"color.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   7               		.global __do_copy_data
+   8               		.global __do_clear_bss
+   9               		.stabs	"/home/j/projects/acris/avr/huecycle/",100,0,2,.Ltext0
+  10               		.stabs	"color.c",100,0,2,.Ltext0
+  11               		.text
+  12               	.Ltext0:
+  13               		.stabs	"gcc2_compiled.",60,0,0,0
+  14               		.stabs	"int:t(0,1)=r(0,1);-32768;32767;",128,0,0,0
+  15               		.stabs	"char:t(0,2)=@s8;r(0,2);0;255;",128,0,0,0
+  16               		.stabs	"long int:t(0,3)=@s32;r(0,3);020000000000;017777777777;",128,0,0,0
+  17               		.stabs	"unsigned int:t(0,4)=r(0,4);0;0177777;",128,0,0,0
+  18               		.stabs	"long unsigned int:t(0,5)=@s32;r(0,5);0;037777777777;",128,0,0,0
+  19               		.stabs	"long long int:t(0,6)=@s64;r(0,6);01000000000000000000000;0777777777777777777777;",128,0,0,
+  20               		.stabs	"long long unsigned int:t(0,7)=@s64;r(0,7);0;01777777777777777777777;",128,0,0,0
+  21               		.stabs	"short int:t(0,8)=r(0,8);-32768;32767;",128,0,0,0
+  22               		.stabs	"short unsigned int:t(0,9)=r(0,9);0;0177777;",128,0,0,0
+  23               		.stabs	"signed char:t(0,10)=@s8;r(0,10);-128;127;",128,0,0,0
+  24               		.stabs	"unsigned char:t(0,11)=@s8;r(0,11);0;255;",128,0,0,0
+  25               		.stabs	"float:t(0,12)=r(0,1);4;0;",128,0,0,0
+  26               		.stabs	"double:t(0,13)=r(0,1);4;0;",128,0,0,0
+  27               		.stabs	"long double:t(0,14)=r(0,1);4;0;",128,0,0,0
+  28               		.stabs	"void:t(0,15)=(0,15)",128,0,0,0
+  29               		.stabs	"color.h",130,0,0,0
+  30               		.stabs	"main.h",130,0,0,0
+  31               		.stabs	"/usr/lib/gcc/avr/4.6.0/../../../../avr/include/inttypes.h",130,0,0,0
+  32               		.stabs	"/usr/lib/gcc/avr/4.6.0/include/stdint.h",130,0,0,0
+  33               		.stabs	"/usr/lib/gcc/avr/4.6.0/../../../../avr/include/stdint.h",130,0,0,0
+  34               		.stabs	"int8_t:t(5,1)=(0,10)",128,0,121,0
+  35               		.stabs	"uint8_t:t(5,2)=(0,11)",128,0,122,0
+  36               		.stabs	"int16_t:t(5,3)=(0,1)",128,0,123,0
+  37               		.stabs	"uint16_t:t(5,4)=(0,4)",128,0,124,0
+  38               		.stabs	"int32_t:t(5,5)=(0,3)",128,0,125,0
+  39               		.stabs	"uint32_t:t(5,6)=(0,5)",128,0,126,0
+  40               		.stabs	"int64_t:t(5,7)=(0,6)",128,0,128,0
+  41               		.stabs	"uint64_t:t(5,8)=(0,7)",128,0,129,0
+  42               		.stabs	"intptr_t:t(5,9)=(5,3)",128,0,142,0
+  43               		.stabs	"uintptr_t:t(5,10)=(5,4)",128,0,147,0
+  44               		.stabs	"int_least8_t:t(5,11)=(5,1)",128,0,159,0
+  45               		.stabs	"uint_least8_t:t(5,12)=(5,2)",128,0,164,0
+  46               		.stabs	"int_least16_t:t(5,13)=(5,3)",128,0,169,0
+  47               		.stabs	"uint_least16_t:t(5,14)=(5,4)",128,0,174,0
+  48               		.stabs	"int_least32_t:t(5,15)=(5,5)",128,0,179,0
+  49               		.stabs	"uint_least32_t:t(5,16)=(5,6)",128,0,184,0
+  50               		.stabs	"int_least64_t:t(5,17)=(5,7)",128,0,192,0
+  51               		.stabs	"uint_least64_t:t(5,18)=(5,8)",128,0,199,0
+  52               		.stabs	"int_fast8_t:t(5,19)=(5,1)",128,0,213,0
+  53               		.stabs	"uint_fast8_t:t(5,20)=(5,2)",128,0,218,0
+  54               		.stabs	"int_fast16_t:t(5,21)=(5,3)",128,0,223,0
+  55               		.stabs	"uint_fast16_t:t(5,22)=(5,4)",128,0,228,0
+  56               		.stabs	"int_fast32_t:t(5,23)=(5,5)",128,0,233,0
+  57               		.stabs	"uint_fast32_t:t(5,24)=(5,6)",128,0,238,0
+GAS LISTING /tmp/ccEVDOvE.s 			page 2
+
+
+  58               		.stabs	"int_fast64_t:t(5,25)=(5,7)",128,0,246,0
+  59               		.stabs	"uint_fast64_t:t(5,26)=(5,8)",128,0,253,0
+  60               		.stabs	"intmax_t:t(5,27)=(5,7)",128,0,273,0
+  61               		.stabs	"uintmax_t:t(5,28)=(5,8)",128,0,278,0
+  62               		.stabn	162,0,0,0
+  63               		.stabn	162,0,0,0
+  64               		.stabs	"int_farptr_t:t(3,1)=(5,5)",128,0,77,0
+  65               		.stabs	"uint_farptr_t:t(3,2)=(5,6)",128,0,81,0
+  66               		.stabn	162,0,0,0
+  67               		.stabs	"/usr/lib/gcc/avr/4.6.0/../../../../avr/include/avr/io.h",130,0,0,0
+  68               		.stabs	"/usr/lib/gcc/avr/4.6.0/../../../../avr/include/avr/fuse.h",130,0,0,0
+  69               		.stabs	"__fuse_t:t(7,1)=(7,2)=s3low:(0,11),0,8;high:(0,11),8,8;extended:(0,11),16,8;;",128,0,244,0
+  70               		.stabn	162,0,0,0
+  71               		.stabn	162,0,0,0
+  72               		.stabs	"/usr/lib/gcc/avr/4.6.0/../../../../avr/include/avr/pgmspace.h",130,0,0,0
+  73               		.stabs	"/usr/lib/gcc/avr/4.6.0/include/stddef.h",130,0,0,0
+  74               		.stabs	"size_t:t(9,1)=(0,4)",128,0,212,0
+  75               		.stabn	162,0,0,0
+  76               		.stabs	"prog_void:t(8,1)=(8,2)=(8,2)",128,0,217,0
+  77               		.stabs	"prog_char:t(8,3)=(8,4)=@s8;r(8,4);0;255;",128,0,218,0
+  78               		.stabs	"prog_uchar:t(8,5)=(8,6)=@s8;r(8,6);0;255;",128,0,219,0
+  79               		.stabs	"prog_int8_t:t(8,7)=(8,8)=(0,10)",128,0,221,0
+  80               		.stabs	"prog_uint8_t:t(8,9)=(8,10)=(0,11)",128,0,222,0
+  81               		.stabs	"prog_int16_t:t(8,11)=(8,12)=(0,1)",128,0,223,0
+  82               		.stabs	"prog_uint16_t:t(8,13)=(8,14)=(0,4)",128,0,224,0
+  83               		.stabs	"prog_int32_t:t(8,15)=(8,16)=(0,3)",128,0,225,0
+  84               		.stabs	"prog_uint32_t:t(8,17)=(8,18)=(0,5)",128,0,226,0
+  85               		.stabs	"prog_int64_t:t(8,19)=(8,20)=(0,6)",128,0,228,0
+  86               		.stabs	"prog_uint64_t:t(8,21)=(8,22)=(0,7)",128,0,229,0
+  87               		.stabn	162,0,0,0
+  88               		.stabn	162,0,0,0
+  89               		.stabs	"rgb_t:t(1,1)=(1,2)=s3r:(5,2),0,8;g:(5,2),8,8;b:(5,2),16,8;;",128,0,3,0
+  90               		.stabs	"hsv_t:t(1,3)=(1,4)=s3h:(5,2),0,8;s:(5,2),8,8;v:(5,2),16,8;;",128,0,4,0
+  91               		.stabn	162,0,0,0
+  92               		.stabs	"hsv2rgb:F(0,15)",36,0,8,hsv2rgb
+  93               		.stabs	"hsv:p(1,3)",160,0,8,1
+  94               		.stabs	"r:P(0,16)=*(5,2)",64,0,8,2
+  95               		.stabs	"g:P(0,16)",64,0,8,6
+  96               		.stabs	"b:P(0,16)",64,0,8,4
+  97               	.global	hsv2rgb
+  98               		.type	hsv2rgb, @function
+  99               	hsv2rgb:
+ 100               		.stabd	46,0,0
+   1:color.c       **** /* COLOR UTILITIES */
+   2:color.c       **** 
+   3:color.c       **** #include "color.h"
+   4:color.c       **** 
+   5:color.c       **** // RGB/HSV colorspace conversions
+   6:color.c       **** // loosely based off of http://en.wikipedia.org/wiki/HSL_and_HSV
+   7:color.c       **** // but with some approximations that will improve calculation speeds
+   8:color.c       **** void hsv2rgb(hsv_t hsv, uint8_t* r, uint8_t* g, uint8_t* b) {
+ 101               		.stabn	68,0,8,.LM0-.LFBB1
+ 102               	.LM0:
+ 103               	.LFBB1:
+ 104 0000 2F92      		push r2
+ 105 0002 3F92      		push r3
+ 106 0004 4F92      		push r4
+GAS LISTING /tmp/ccEVDOvE.s 			page 3
+
+
+ 107 0006 5F92      		push r5
+ 108 0008 6F92      		push r6
+ 109 000a 7F92      		push r7
+ 110 000c 8F92      		push r8
+ 111 000e 9F92      		push r9
+ 112 0010 AF92      		push r10
+ 113 0012 BF92      		push r11
+ 114 0014 CF92      		push r12
+ 115 0016 DF92      		push r13
+ 116 0018 EF92      		push r14
+ 117 001a FF92      		push r15
+ 118 001c 0F93      		push r16
+ 119 001e 1F93      		push r17
+ 120 0020 DF93      		push r29
+ 121 0022 CF93      		push r28
+ 122 0024 00D0      		rcall .
+ 123 0026 0F92      		push __tmp_reg__
+ 124 0028 CDB7      		in r28,__SP_L__
+ 125 002a DEB7      		in r29,__SP_H__
+ 126               	/* prologue: function */
+ 127               	/* frame size = 3 */
+ 128               	/* stack size = 21 */
+ 129               	.L__stack_usage = 21
+ 130 002c 1A01      		movw r2,r20
+ 131 002e 3901      		movw r6,r18
+ 132 0030 2801      		movw r4,r16
+   9:color.c       ****     uint16_t hi = hsv.h / 42; // (360*60/256)
+  10:color.c       **** 
+  11:color.c       ****     uint8_t f = 0;
+  12:color.c       ****     if (hi == 6) hi = 0;
+ 133               		.stabn	68,0,12,.LM1-.LFBB1
+ 134               	.LM1:
+ 135 0032 372F      		mov r19,r23
+ 136 0034 482F      		mov r20,r24
+   9:color.c       ****     uint16_t hi = hsv.h / 42; // (360*60/256)
+ 137               		.stabn	68,0,9,.LM2-.LFBB1
+ 138               	.LM2:
+ 139 0036 862F      		mov r24,r22
+ 140 0038 6AE2      		ldi r22,lo8(42)
+ 141 003a 0E94 0000 		call __udivmodqi4
+ 142 003e 292F      		mov r18,r25
+ 143 0040 082F      		mov r16,r24
+ 144 0042 10E0      		ldi r17,lo8(0)
+ 145               		.stabn	68,0,12,.LM3-.LFBB1
+ 146               	.LM3:
+ 147 0044 C32E      		mov r12,r19
+ 148 0046 DD24      		clr r13
+ 149 0048 0630      		cpi r16,6
+ 150 004a 1105      		cpc r17,__zero_reg__
+ 151 004c 01F4      		brne .+2
+ 152 004e 00C0      		rjmp .L13
+  13:color.c       ****     else         f = hsv.h % 42;
+ 153               		.stabn	68,0,13,.LM4-.LFBB1
+ 154               	.LM4:
+ 155 0050 939F      		mul r25,r19
+ 156 0052 C001      		movw r24,r0
+ 157 0054 1124      		clr r1
+GAS LISTING /tmp/ccEVDOvE.s 			page 4
+
+
+ 158 0056 66ED      		ldi r22,lo8(-42)
+ 159 0058 7FEF      		ldi r23,hi8(-42)
+ 160 005a 0E94 0000 		call __divmodhi4
+ 161 005e 6150      		subi r22,lo8(-(255))
+ 162 0060 7F4F      		sbci r23,hi8(-(255))
+ 163 0062 EAE2      		ldi r30,lo8(42)
+ 164 0064 F0E0      		ldi r31,hi8(42)
+ 165 0066 E21B      		sub r30,r18
+ 166 0068 F109      		sbc r31,__zero_reg__
+ 167               	.L3:
+  14:color.c       **** 
+  15:color.c       ****     uint8_t p = ( hsv.v * (255-hsv.s) ) >> 8;
+ 168               		.stabn	68,0,15,.LM5-.LFBB1
+ 169               	.LM5:
+ 170 006a E42E      		mov r14,r20
+ 171 006c FF24      		clr r15
+ 172 006e 8FEF      		ldi r24,lo8(255)
+ 173 0070 90E0      		ldi r25,hi8(255)
+ 174 0072 8C19      		sub r24,r12
+ 175 0074 9D09      		sbc r25,r13
+ 176 0076 E89E      		mul r14,r24
+ 177 0078 9001      		movw r18,r0
+ 178 007a E99E      		mul r14,r25
+ 179 007c 300D      		add r19,r0
+ 180 007e F89E      		mul r15,r24
+ 181 0080 300D      		add r19,r0
+ 182 0082 1124      		clr r1
+ 183 0084 232F      		mov r18,r19
+ 184 0086 330F      		lsl r19
+ 185 0088 330B      		sbc r19,r19
+ 186 008a 822E      		mov r8,r18
+  16:color.c       ****     uint8_t q = ( hsv.v * (255-((f*hsv.s)/42)) ) >> 8;
+ 187               		.stabn	68,0,16,.LM6-.LFBB1
+ 188               	.LM6:
+ 189 008c E69E      		mul r14,r22
+ 190 008e C001      		movw r24,r0
+ 191 0090 E79E      		mul r14,r23
+ 192 0092 900D      		add r25,r0
+ 193 0094 F69E      		mul r15,r22
+ 194 0096 900D      		add r25,r0
+ 195 0098 1124      		clr r1
+ 196 009a A92E      		mov r10,r25
+ 197 009c BB24      		clr r11
+ 198 009e A7FC      		sbrc r10,7
+ 199 00a0 BA94      		dec r11
+ 200 00a2 9A2C      		mov r9,r10
+  17:color.c       ****     uint8_t t = ( hsv.v * (255-(((42-f) *hsv.s)/42)) ) >> 8;
+ 201               		.stabn	68,0,17,.LM7-.LFBB1
+ 202               	.LM7:
+ 203 00a4 EC9D      		mul r30,r12
+ 204 00a6 C001      		movw r24,r0
+ 205 00a8 ED9D      		mul r30,r13
+ 206 00aa 900D      		add r25,r0
+ 207 00ac FC9D      		mul r31,r12
+ 208 00ae 900D      		add r25,r0
+ 209 00b0 1124      		clr r1
+ 210 00b2 66ED      		ldi r22,lo8(-42)
+GAS LISTING /tmp/ccEVDOvE.s 			page 5
+
+
+ 211 00b4 7FEF      		ldi r23,hi8(-42)
+ 212 00b6 0E94 0000 		call __divmodhi4
+ 213 00ba 6150      		subi r22,lo8(-(255))
+ 214 00bc 7F4F      		sbci r23,hi8(-(255))
+ 215 00be E69E      		mul r14,r22
+ 216 00c0 C001      		movw r24,r0
+ 217 00c2 E79E      		mul r14,r23
+ 218 00c4 900D      		add r25,r0
+ 219 00c6 F69E      		mul r15,r22
+ 220 00c8 900D      		add r25,r0
+ 221 00ca 1124      		clr r1
+ 222 00cc 892F      		mov r24,r25
+ 223 00ce 990F      		lsl r25
+ 224 00d0 990B      		sbc r25,r25
+  18:color.c       **** 
+  19:color.c       ****     switch (hi) {
+ 225               		.stabn	68,0,19,.LM8-.LFBB1
+ 226               	.LM8:
+ 227 00d2 0230      		cpi r16,2
+ 228 00d4 1105      		cpc r17,__zero_reg__
+ 229 00d6 01F4      		brne .+2
+ 230 00d8 00C0      		rjmp .L7
+ 231 00da 0330      		cpi r16,3
+ 232 00dc 1105      		cpc r17,__zero_reg__
+ 233 00de 00F0      		brlo .L14
+ 234 00e0 0330      		cpi r16,3
+ 235 00e2 1105      		cpc r17,__zero_reg__
+ 236 00e4 01F4      		brne .+2
+ 237 00e6 00C0      		rjmp .L8
+ 238 00e8 0430      		cpi r16,4
+ 239 00ea 1105      		cpc r17,__zero_reg__
+ 240 00ec 01F0      		breq .L15
+ 241               	.L4:
+  20:color.c       ****         case 0:
+  21:color.c       ****             *r = hsv.v;
+  22:color.c       ****             *g = t;
+  23:color.c       ****             *b = p;
+  24:color.c       ****             break;
+  25:color.c       ****         case 1:
+  26:color.c       ****             *r = q;
+  27:color.c       ****             *g = hsv.v;
+  28:color.c       ****             *b = p;
+  29:color.c       ****             break;
+  30:color.c       ****         case 2:
+  31:color.c       ****             *r = p;
+  32:color.c       ****             *g = hsv.v;
+  33:color.c       ****             *b = t;
+  34:color.c       ****             break;
+  35:color.c       ****         case 3:
+  36:color.c       ****             *r = p;
+  37:color.c       ****             *g = q;
+  38:color.c       ****             *b = hsv.v;
+  39:color.c       ****             break;
+  40:color.c       ****         case 4:
+  41:color.c       ****             *r = t;
+  42:color.c       ****             *g = p;
+  43:color.c       ****             *b = hsv.v;
+GAS LISTING /tmp/ccEVDOvE.s 			page 6
+
+
+  44:color.c       ****             break;
+  45:color.c       ****         case 5:
+  46:color.c       ****         default:
+  47:color.c       ****             *r = hsv.v;
+ 242               		.stabn	68,0,47,.LM9-.LFBB1
+ 243               	.LM9:
+ 244 00ee F101      		movw r30,r2
+ 245 00f0 4083      		st Z,r20
+  48:color.c       ****             *g = p;
+ 246               		.stabn	68,0,48,.LM10-.LFBB1
+ 247               	.LM10:
+ 248 00f2 F301      		movw r30,r6
+ 249 00f4 8082      		st Z,r8
+  49:color.c       ****             *b = q;
+ 250               		.stabn	68,0,49,.LM11-.LFBB1
+ 251               	.LM11:
+ 252 00f6 F201      		movw r30,r4
+ 253 00f8 9082      		st Z,r9
+ 254               	.L1:
+ 255               	/* epilogue start */
+  50:color.c       ****             break;
+  51:color.c       ****     }
+  52:color.c       **** }
+ 256               		.stabn	68,0,52,.LM12-.LFBB1
+ 257               	.LM12:
+ 258 00fa 0F90      		pop __tmp_reg__
+ 259 00fc 0F90      		pop __tmp_reg__
+ 260 00fe 0F90      		pop __tmp_reg__
+ 261 0100 CF91      		pop r28
+ 262 0102 DF91      		pop r29
+ 263 0104 1F91      		pop r17
+ 264 0106 0F91      		pop r16
+ 265 0108 FF90      		pop r15
+ 266 010a EF90      		pop r14
+ 267 010c DF90      		pop r13
+ 268 010e CF90      		pop r12
+ 269 0110 BF90      		pop r11
+ 270 0112 AF90      		pop r10
+ 271 0114 9F90      		pop r9
+ 272 0116 8F90      		pop r8
+ 273 0118 7F90      		pop r7
+ 274 011a 6F90      		pop r6
+ 275 011c 5F90      		pop r5
+ 276 011e 4F90      		pop r4
+ 277 0120 3F90      		pop r3
+ 278 0122 2F90      		pop r2
+ 279 0124 0895      		ret
+ 280               	.L14:
+  19:color.c       ****     switch (hi) {
+ 281               		.stabn	68,0,19,.LM13-.LFBB1
+ 282               	.LM13:
+ 283 0126 0115      		cp r16,__zero_reg__
+ 284 0128 1105      		cpc r17,__zero_reg__
+ 285 012a 01F0      		breq .L5
+ 286 012c 0130      		cpi r16,1
+ 287 012e 1105      		cpc r17,__zero_reg__
+ 288 0130 01F4      		brne .L4
+GAS LISTING /tmp/ccEVDOvE.s 			page 7
+
+
+  26:color.c       ****             *r = q;
+ 289               		.stabn	68,0,26,.LM14-.LFBB1
+ 290               	.LM14:
+ 291 0132 F101      		movw r30,r2
+ 292 0134 A082      		st Z,r10
+  27:color.c       ****             *g = hsv.v;
+ 293               		.stabn	68,0,27,.LM15-.LFBB1
+ 294               	.LM15:
+ 295 0136 F301      		movw r30,r6
+ 296 0138 4083      		st Z,r20
+  28:color.c       ****             *b = p;
+ 297               		.stabn	68,0,28,.LM16-.LFBB1
+ 298               	.LM16:
+ 299 013a F201      		movw r30,r4
+ 300 013c 2083      		st Z,r18
+  29:color.c       ****             break;
+ 301               		.stabn	68,0,29,.LM17-.LFBB1
+ 302               	.LM17:
+ 303 013e 00C0      		rjmp .L1
+ 304               	.L13:
+  12:color.c       ****     if (hi == 6) hi = 0;
+ 305               		.stabn	68,0,12,.LM18-.LFBB1
+ 306               	.LM18:
+ 307 0140 EAE2      		ldi r30,lo8(42)
+ 308 0142 F0E0      		ldi r31,hi8(42)
+ 309 0144 6FEF      		ldi r22,lo8(255)
+ 310 0146 70E0      		ldi r23,hi8(255)
+ 311 0148 00E0      		ldi r16,lo8(0)
+ 312 014a 10E0      		ldi r17,hi8(0)
+ 313 014c 00C0      		rjmp .L3
+ 314               	.L5:
+  21:color.c       ****             *r = hsv.v;
+ 315               		.stabn	68,0,21,.LM19-.LFBB1
+ 316               	.LM19:
+ 317 014e F101      		movw r30,r2
+ 318 0150 4083      		st Z,r20
+  22:color.c       ****             *g = t;
+ 319               		.stabn	68,0,22,.LM20-.LFBB1
+ 320               	.LM20:
+ 321 0152 F301      		movw r30,r6
+ 322 0154 8083      		st Z,r24
+  23:color.c       ****             *b = p;
+ 323               		.stabn	68,0,23,.LM21-.LFBB1
+ 324               	.LM21:
+ 325 0156 F201      		movw r30,r4
+ 326 0158 2083      		st Z,r18
+  24:color.c       ****             break;
+ 327               		.stabn	68,0,24,.LM22-.LFBB1
+ 328               	.LM22:
+ 329 015a 00C0      		rjmp .L1
+ 330               	.L15:
+  41:color.c       ****             *r = t;
+ 331               		.stabn	68,0,41,.LM23-.LFBB1
+ 332               	.LM23:
+ 333 015c F101      		movw r30,r2
+ 334 015e 8083      		st Z,r24
+  42:color.c       ****             *g = p;
+GAS LISTING /tmp/ccEVDOvE.s 			page 8
+
+
+ 335               		.stabn	68,0,42,.LM24-.LFBB1
+ 336               	.LM24:
+ 337 0160 F301      		movw r30,r6
+ 338 0162 2083      		st Z,r18
+  43:color.c       ****             *b = hsv.v;
+ 339               		.stabn	68,0,43,.LM25-.LFBB1
+ 340               	.LM25:
+ 341 0164 F201      		movw r30,r4
+ 342 0166 4083      		st Z,r20
+  44:color.c       ****             break;
+ 343               		.stabn	68,0,44,.LM26-.LFBB1
+ 344               	.LM26:
+ 345 0168 00C0      		rjmp .L1
+ 346               	.L7:
+  31:color.c       ****             *r = p;
+ 347               		.stabn	68,0,31,.LM27-.LFBB1
+ 348               	.LM27:
+ 349 016a F101      		movw r30,r2
+ 350 016c 2083      		st Z,r18
+  32:color.c       ****             *g = hsv.v;
+ 351               		.stabn	68,0,32,.LM28-.LFBB1
+ 352               	.LM28:
+ 353 016e F301      		movw r30,r6
+ 354 0170 4083      		st Z,r20
+  33:color.c       ****             *b = t;
+ 355               		.stabn	68,0,33,.LM29-.LFBB1
+ 356               	.LM29:
+ 357 0172 F201      		movw r30,r4
+ 358 0174 8083      		st Z,r24
+  34:color.c       ****             break;
+ 359               		.stabn	68,0,34,.LM30-.LFBB1
+ 360               	.LM30:
+ 361 0176 00C0      		rjmp .L1
+ 362               	.L8:
+  36:color.c       ****             *r = p;
+ 363               		.stabn	68,0,36,.LM31-.LFBB1
+ 364               	.LM31:
+ 365 0178 F101      		movw r30,r2
+ 366 017a 2083      		st Z,r18
+  37:color.c       ****             *g = q;
+ 367               		.stabn	68,0,37,.LM32-.LFBB1
+ 368               	.LM32:
+ 369 017c F301      		movw r30,r6
+ 370 017e A082      		st Z,r10
+  38:color.c       ****             *b = hsv.v;
+ 371               		.stabn	68,0,38,.LM33-.LFBB1
+ 372               	.LM33:
+ 373 0180 F201      		movw r30,r4
+ 374 0182 4083      		st Z,r20
+  39:color.c       ****             break;
+ 375               		.stabn	68,0,39,.LM34-.LFBB1
+ 376               	.LM34:
+ 377 0184 00C0      		rjmp .L1
+ 378               		.size	hsv2rgb, .-hsv2rgb
+ 379               		.stabs	"hi:r(5,4)",64,0,9,16
+ 380               		.stabs	"p:r(5,2)",64,0,15,8
+ 381               		.stabs	"q:r(5,2)",64,0,16,9
+GAS LISTING /tmp/ccEVDOvE.s 			page 9
+
+
+ 382               		.stabn	192,0,0,.LFBB1-.LFBB1
+ 383               		.stabn	224,0,0,.Lscope1-.LFBB1
+ 384               	.Lscope1:
+ 385               		.stabs	"",36,0,0,.Lscope1-.LFBB1
+ 386               		.stabd	78,0,0
+ 387               		.stabs	"",100,0,0,.Letext0
+ 388               	.Letext0:
+GAS LISTING /tmp/ccEVDOvE.s 			page 10
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 color.c
+     /tmp/ccEVDOvE.s:2      *ABS*:000000000000003f __SREG__
+     /tmp/ccEVDOvE.s:3      *ABS*:000000000000003e __SP_H__
+     /tmp/ccEVDOvE.s:4      *ABS*:000000000000003d __SP_L__
+     /tmp/ccEVDOvE.s:5      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/ccEVDOvE.s:6      *ABS*:0000000000000001 __zero_reg__
+     /tmp/ccEVDOvE.s:99     .text:0000000000000000 hsv2rgb
+
+UNDEFINED SYMBOLS
+__do_copy_data
+__do_clear_bss
+__udivmodqi4
+__divmodhi4

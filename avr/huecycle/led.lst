@@ -1,0 +1,933 @@
+GAS LISTING /tmp/cckn1olu.s 			page 1
+
+
+   1               		.file	"led.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   7               		.global __do_copy_data
+   8               		.global __do_clear_bss
+   9               		.stabs	"/home/j/projects/acris/avr/huecycle/",100,0,2,.Ltext0
+  10               		.stabs	"led.c",100,0,2,.Ltext0
+  11               		.text
+  12               	.Ltext0:
+  13               		.stabs	"gcc2_compiled.",60,0,0,0
+  14               		.stabs	"int:t(0,1)=r(0,1);-32768;32767;",128,0,0,0
+  15               		.stabs	"char:t(0,2)=@s8;r(0,2);0;255;",128,0,0,0
+  16               		.stabs	"long int:t(0,3)=@s32;r(0,3);020000000000;017777777777;",128,0,0,0
+  17               		.stabs	"unsigned int:t(0,4)=r(0,4);0;0177777;",128,0,0,0
+  18               		.stabs	"long unsigned int:t(0,5)=@s32;r(0,5);0;037777777777;",128,0,0,0
+  19               		.stabs	"long long int:t(0,6)=@s64;r(0,6);01000000000000000000000;0777777777777777777777;",128,0,0,
+  20               		.stabs	"long long unsigned int:t(0,7)=@s64;r(0,7);0;01777777777777777777777;",128,0,0,0
+  21               		.stabs	"short int:t(0,8)=r(0,8);-32768;32767;",128,0,0,0
+  22               		.stabs	"short unsigned int:t(0,9)=r(0,9);0;0177777;",128,0,0,0
+  23               		.stabs	"signed char:t(0,10)=@s8;r(0,10);-128;127;",128,0,0,0
+  24               		.stabs	"unsigned char:t(0,11)=@s8;r(0,11);0;255;",128,0,0,0
+  25               		.stabs	"float:t(0,12)=r(0,1);4;0;",128,0,0,0
+  26               		.stabs	"double:t(0,13)=r(0,1);4;0;",128,0,0,0
+  27               		.stabs	"long double:t(0,14)=r(0,1);4;0;",128,0,0,0
+  28               		.stabs	"void:t(0,15)=(0,15)",128,0,0,0
+  29               		.stabs	"led.h",130,0,0,0
+  30               		.stabs	"main.h",130,0,0,0
+  31               		.stabs	"/usr/lib/gcc/avr/4.6.0/../../../../avr/include/inttypes.h",130,0,0,0
+  32               		.stabs	"/usr/lib/gcc/avr/4.6.0/include/stdint.h",130,0,0,0
+  33               		.stabs	"/usr/lib/gcc/avr/4.6.0/../../../../avr/include/stdint.h",130,0,0,0
+  34               		.stabs	"int8_t:t(5,1)=(0,10)",128,0,121,0
+  35               		.stabs	"uint8_t:t(5,2)=(0,11)",128,0,122,0
+  36               		.stabs	"int16_t:t(5,3)=(0,1)",128,0,123,0
+  37               		.stabs	"uint16_t:t(5,4)=(0,4)",128,0,124,0
+  38               		.stabs	"int32_t:t(5,5)=(0,3)",128,0,125,0
+  39               		.stabs	"uint32_t:t(5,6)=(0,5)",128,0,126,0
+  40               		.stabs	"int64_t:t(5,7)=(0,6)",128,0,128,0
+  41               		.stabs	"uint64_t:t(5,8)=(0,7)",128,0,129,0
+  42               		.stabs	"intptr_t:t(5,9)=(5,3)",128,0,142,0
+  43               		.stabs	"uintptr_t:t(5,10)=(5,4)",128,0,147,0
+  44               		.stabs	"int_least8_t:t(5,11)=(5,1)",128,0,159,0
+  45               		.stabs	"uint_least8_t:t(5,12)=(5,2)",128,0,164,0
+  46               		.stabs	"int_least16_t:t(5,13)=(5,3)",128,0,169,0
+  47               		.stabs	"uint_least16_t:t(5,14)=(5,4)",128,0,174,0
+  48               		.stabs	"int_least32_t:t(5,15)=(5,5)",128,0,179,0
+  49               		.stabs	"uint_least32_t:t(5,16)=(5,6)",128,0,184,0
+  50               		.stabs	"int_least64_t:t(5,17)=(5,7)",128,0,192,0
+  51               		.stabs	"uint_least64_t:t(5,18)=(5,8)",128,0,199,0
+  52               		.stabs	"int_fast8_t:t(5,19)=(5,1)",128,0,213,0
+  53               		.stabs	"uint_fast8_t:t(5,20)=(5,2)",128,0,218,0
+  54               		.stabs	"int_fast16_t:t(5,21)=(5,3)",128,0,223,0
+  55               		.stabs	"uint_fast16_t:t(5,22)=(5,4)",128,0,228,0
+  56               		.stabs	"int_fast32_t:t(5,23)=(5,5)",128,0,233,0
+  57               		.stabs	"uint_fast32_t:t(5,24)=(5,6)",128,0,238,0
+GAS LISTING /tmp/cckn1olu.s 			page 2
+
+
+  58               		.stabs	"int_fast64_t:t(5,25)=(5,7)",128,0,246,0
+  59               		.stabs	"uint_fast64_t:t(5,26)=(5,8)",128,0,253,0
+  60               		.stabs	"intmax_t:t(5,27)=(5,7)",128,0,273,0
+  61               		.stabs	"uintmax_t:t(5,28)=(5,8)",128,0,278,0
+  62               		.stabn	162,0,0,0
+  63               		.stabn	162,0,0,0
+  64               		.stabs	"int_farptr_t:t(3,1)=(5,5)",128,0,77,0
+  65               		.stabs	"uint_farptr_t:t(3,2)=(5,6)",128,0,81,0
+  66               		.stabn	162,0,0,0
+  67               		.stabs	"/usr/lib/gcc/avr/4.6.0/../../../../avr/include/avr/io.h",130,0,0,0
+  68               		.stabs	"/usr/lib/gcc/avr/4.6.0/../../../../avr/include/avr/fuse.h",130,0,0,0
+  69               		.stabs	"__fuse_t:t(7,1)=(7,2)=s3low:(0,11),0,8;high:(0,11),8,8;extended:(0,11),16,8;;",128,0,244,0
+  70               		.stabn	162,0,0,0
+  71               		.stabn	162,0,0,0
+  72               		.stabs	"/usr/lib/gcc/avr/4.6.0/../../../../avr/include/avr/pgmspace.h",130,0,0,0
+  73               		.stabs	"/usr/lib/gcc/avr/4.6.0/include/stddef.h",130,0,0,0
+  74               		.stabs	"size_t:t(9,1)=(0,4)",128,0,212,0
+  75               		.stabn	162,0,0,0
+  76               		.stabs	"prog_void:t(8,1)=(8,2)=(8,2)",128,0,217,0
+  77               		.stabs	"prog_char:t(8,3)=(8,4)=@s8;r(8,4);0;255;",128,0,218,0
+  78               		.stabs	"prog_uchar:t(8,5)=(8,6)=@s8;r(8,6);0;255;",128,0,219,0
+  79               		.stabs	"prog_int8_t:t(8,7)=(8,8)=(0,10)",128,0,221,0
+  80               		.stabs	"prog_uint8_t:t(8,9)=(8,10)=(0,11)",128,0,222,0
+  81               		.stabs	"prog_int16_t:t(8,11)=(8,12)=(0,1)",128,0,223,0
+  82               		.stabs	"prog_uint16_t:t(8,13)=(8,14)=(0,4)",128,0,224,0
+  83               		.stabs	"prog_int32_t:t(8,15)=(8,16)=(0,3)",128,0,225,0
+  84               		.stabs	"prog_uint32_t:t(8,17)=(8,18)=(0,5)",128,0,226,0
+  85               		.stabs	"prog_int64_t:t(8,19)=(8,20)=(0,6)",128,0,228,0
+  86               		.stabs	"prog_uint64_t:t(8,21)=(8,22)=(0,7)",128,0,229,0
+  87               		.stabn	162,0,0,0
+  88               		.stabn	162,0,0,0
+  89               		.stabn	162,0,0,0
+  90               		.stabs	"led_emgcy:F(0,15)",36,0,49,led_emgcy
+  91               	.global	led_emgcy
+  92               		.type	led_emgcy, @function
+  93               	led_emgcy:
+  94               		.stabd	46,0,0
+   1:led.c         **** /* LED OUTPUT CALCULATIONS */
+   2:led.c         **** 
+   3:led.c         **** #include "led.h"
+   4:led.c         **** #include "tlc.h"
+   5:led.c         **** 
+   6:led.c         **** void led_action(void) {
+   7:led.c         ****     // this is just a wrapper function that decides what to do based on the
+   8:led.c         ****     // current command
+   9:led.c         ****     
+  10:led.c         ****     switch (action) {
+  11:led.c         ****         case CMD_EMGCY:
+  12:led.c         ****             led_emgcy();
+  13:led.c         ****             break;
+  14:led.c         ****         case CMD_EVOFF:
+  15:led.c         ****             led_evoff();
+  16:led.c         ****             break;
+  17:led.c         ****         case CMD_FPANL:
+  18:led.c         ****             led_fpanl_rpanl();
+  19:led.c         ****             break;
+  20:led.c         ****         case CMD_RPANL:
+GAS LISTING /tmp/cckn1olu.s 			page 3
+
+
+  21:led.c         ****             led_fpanl_rpanl();
+  22:led.c         ****             break;
+  23:led.c         ****         case CMD_FDISP:
+  24:led.c         ****             led_set();
+  25:led.c         ****             break;
+  26:led.c         ****         case CMD_RDISP:
+  27:led.c         ****             led_set();
+  28:led.c         ****             break;
+  29:led.c         ****         case CMD_UVSET:
+  30:led.c         ****             led_uvset_whset();
+  31:led.c         ****             break;
+  32:led.c         ****         case CMD_WHSET:
+  33:led.c         ****             led_uvset_whset();
+  34:led.c         ****             break;
+  35:led.c         ****         case CMD_STRBE:
+  36:led.c         ****             led_strbe_uvstb();
+  37:led.c         ****             break;
+  38:led.c         ****         case CMD_UVSTB:
+  39:led.c         ****             led_strbe_uvstb();
+  40:led.c         ****             break;
+  41:led.c         ****         default:
+  42:led.c         ****             led_set();
+  43:led.c         ****             break;
+  44:led.c         ****     }
+  45:led.c         **** 
+  46:led.c         ****     tlc_drive();
+  47:led.c         **** }
+  48:led.c         **** 
+  49:led.c         **** void led_emgcy(void) {
+  95               		.stabn	68,0,49,.LM0-.LFBB1
+  96               	.LM0:
+  97               	.LFBB1:
+  98 0000 1F93      		push r17
+  99               	/* prologue: function */
+ 100               	/* frame size = 0 */
+ 101               	/* stack size = 1 */
+ 102               	.L__stack_usage = 1
+  50:led.c         ****     uint8_t i;
+  51:led.c         **** 
+  52:led.c         **** #if (CTRLR_TYPE == CTRLR_RGB)
+  53:led.c         ****     // set red
+  54:led.c         ****     for ( i=1 ; i<=12 ; i++ ) { set(tlc[0], i, 0x800); }
+ 103               		.stabn	68,0,54,.LM1-.LFBB1
+ 104               	.LM1:
+ 105 0002 11E0      		ldi r17,lo8(1)
+ 106               	.L2:
+ 107               		.stabn	68,0,54,.LM2-.LFBB1
+ 108               	.LM2:
+ 109 0004 80E0      		ldi r24,lo8(tlc)
+ 110 0006 90E0      		ldi r25,hi8(tlc)
+ 111 0008 612F      		mov r22,r17
+ 112 000a 40E0      		ldi r20,lo8(2048)
+ 113 000c 58E0      		ldi r21,hi8(2048)
+ 114 000e 0E94 0000 		call set
+ 115 0012 1F5F      		subi r17,lo8(-(1))
+ 116 0014 1D30      		cpi r17,lo8(13)
+ 117 0016 01F4      		brne .L2
+GAS LISTING /tmp/cckn1olu.s 			page 4
+
+
+ 118               		.stabn	68,0,54,.LM3-.LFBB1
+ 119               	.LM3:
+ 120 0018 11E0      		ldi r17,lo8(1)
+ 121               	.L3:
+  55:led.c         **** 
+  56:led.c         ****     // set grn
+  57:led.c         ****     for ( i=1 ; i<=12 ; i++ ) { set(tlc[1], i, 0x780); }
+ 122               		.stabn	68,0,57,.LM4-.LFBB1
+ 123               	.LM4:
+ 124 001a 80E0      		ldi r24,lo8(tlc+24)
+ 125 001c 90E0      		ldi r25,hi8(tlc+24)
+ 126 001e 612F      		mov r22,r17
+ 127 0020 40E8      		ldi r20,lo8(1920)
+ 128 0022 57E0      		ldi r21,hi8(1920)
+ 129 0024 0E94 0000 		call set
+ 130 0028 1F5F      		subi r17,lo8(-(1))
+ 131 002a 1D30      		cpi r17,lo8(13)
+ 132 002c 01F4      		brne .L3
+ 133               		.stabn	68,0,57,.LM5-.LFBB1
+ 134               	.LM5:
+ 135 002e 11E0      		ldi r17,lo8(1)
+ 136               	.L4:
+  58:led.c         ****         
+  59:led.c         ****     // set blu
+  60:led.c         ****     for ( i=1 ; i<=12 ; i++ ) { set(tlc[2], i, 0x800); }
+ 137               		.stabn	68,0,60,.LM6-.LFBB1
+ 138               	.LM6:
+ 139 0030 80E0      		ldi r24,lo8(tlc+48)
+ 140 0032 90E0      		ldi r25,hi8(tlc+48)
+ 141 0034 612F      		mov r22,r17
+ 142 0036 40E0      		ldi r20,lo8(2048)
+ 143 0038 58E0      		ldi r21,hi8(2048)
+ 144 003a 0E94 0000 		call set
+ 145 003e 1F5F      		subi r17,lo8(-(1))
+ 146 0040 1D30      		cpi r17,lo8(13)
+ 147 0042 01F4      		brne .L4
+ 148               	/* epilogue start */
+  61:led.c         **** #elif (CTRLR_TYPE == CTRLR_UVS)
+  62:led.c         ****     // set whites
+  63:led.c         ****     for ( i=1 ; i<=14 ; i++ ) { set(tlc[0], i, 0x800); }
+  64:led.c         ****     
+  65:led.c         ****     // shut off UVs
+  66:led.c         ****     for ( i=0 ; i<16 ; i++ ) { set(tlc[1], i, 0); }
+  67:led.c         **** #endif /* CTRLR_TYPE */
+  68:led.c         **** }
+ 149               		.stabn	68,0,68,.LM7-.LFBB1
+ 150               	.LM7:
+ 151 0044 1F91      		pop r17
+ 152 0046 0895      		ret
+ 153               		.size	led_emgcy, .-led_emgcy
+ 154               	.Lscope1:
+ 155               		.stabs	"",36,0,0,.Lscope1-.LFBB1
+ 156               		.stabd	78,0,0
+ 157               		.stabs	"led_evoff:F(0,15)",36,0,70,led_evoff
+ 158               	.global	led_evoff
+ 159               		.type	led_evoff, @function
+ 160               	led_evoff:
+GAS LISTING /tmp/cckn1olu.s 			page 5
+
+
+ 161               		.stabd	46,0,0
+  69:led.c         **** 
+  70:led.c         **** void led_evoff(void) {
+ 162               		.stabn	68,0,70,.LM8-.LFBB2
+ 163               	.LM8:
+ 164               	.LFBB2:
+ 165 0048 FF92      		push r15
+ 166 004a 0F93      		push r16
+ 167 004c 1F93      		push r17
+ 168 004e CF93      		push r28
+ 169 0050 DF93      		push r29
+ 170               	/* prologue: function */
+ 171               	/* frame size = 0 */
+ 172               	/* stack size = 5 */
+ 173               	.L__stack_usage = 5
+ 174               		.stabn	68,0,70,.LM9-.LFBB2
+ 175               	.LM9:
+ 176 0052 00E0      		ldi r16,lo8(0)
+ 177 0054 10E0      		ldi r17,hi8(0)
+ 178               	.L10:
+ 179               		.stabn	68,0,70,.LM10-.LFBB2
+ 180               	.LM10:
+ 181 0056 E801      		movw r28,r16
+ 182 0058 C050      		subi r28,lo8(-(tlc))
+ 183 005a D040      		sbci r29,hi8(-(tlc))
+ 184 005c FF24      		clr r15
+ 185               	.L11:
+  71:led.c         ****     uint8_t i, j;
+  72:led.c         ****     for ( i=0 ; i<3  ; i++ ) {
+  73:led.c         ****         for ( j=0 ; j<16 ; j++ ) { set(tlc[i], j, 0); }
+ 186               		.stabn	68,0,73,.LM11-.LFBB2
+ 187               	.LM11:
+ 188 005e CE01      		movw r24,r28
+ 189 0060 6F2D      		mov r22,r15
+ 190 0062 40E0      		ldi r20,lo8(0)
+ 191 0064 50E0      		ldi r21,hi8(0)
+ 192 0066 0E94 0000 		call set
+ 193 006a F394      		inc r15
+ 194 006c 80E1      		ldi r24,lo8(16)
+ 195 006e F816      		cp r15,r24
+ 196 0070 01F4      		brne .L11
+ 197               		.stabn	68,0,73,.LM12-.LFBB2
+ 198               	.LM12:
+ 199 0072 085E      		subi r16,lo8(-(24))
+ 200 0074 1F4F      		sbci r17,hi8(-(24))
+  72:led.c         ****     for ( i=0 ; i<3  ; i++ ) {
+ 201               		.stabn	68,0,72,.LM13-.LFBB2
+ 202               	.LM13:
+ 203 0076 0834      		cpi r16,72
+ 204 0078 1105      		cpc r17,__zero_reg__
+ 205 007a 01F4      		brne .L10
+ 206               	/* epilogue start */
+  74:led.c         ****     }
+  75:led.c         **** }
+ 207               		.stabn	68,0,75,.LM14-.LFBB2
+ 208               	.LM14:
+ 209 007c DF91      		pop r29
+GAS LISTING /tmp/cckn1olu.s 			page 6
+
+
+ 210 007e CF91      		pop r28
+ 211 0080 1F91      		pop r17
+ 212 0082 0F91      		pop r16
+ 213 0084 FF90      		pop r15
+ 214 0086 0895      		ret
+ 215               		.size	led_evoff, .-led_evoff
+ 216               		.stabs	"j:r(5,2)",64,0,71,15
+ 217               		.stabn	192,0,0,.LFBB2-.LFBB2
+ 218               		.stabn	224,0,0,.Lscope2-.LFBB2
+ 219               	.Lscope2:
+ 220               		.stabs	"",36,0,0,.Lscope2-.LFBB2
+ 221               		.stabd	78,0,0
+ 222               		.stabs	"led_fpanl_rpanl:F(0,15)",36,0,77,led_fpanl_rpanl
+ 223               	.global	led_fpanl_rpanl
+ 224               		.type	led_fpanl_rpanl, @function
+ 225               	led_fpanl_rpanl:
+ 226               		.stabd	46,0,0
+  76:led.c         **** 
+  77:led.c         **** void led_fpanl_rpanl(void) {
+ 227               		.stabn	68,0,77,.LM15-.LFBB3
+ 228               	.LM15:
+ 229               	.LFBB3:
+ 230 0088 1F93      		push r17
+ 231 008a CF93      		push r28
+ 232 008c DF93      		push r29
+ 233               	/* prologue: function */
+ 234               	/* frame size = 0 */
+ 235               	/* stack size = 3 */
+ 236               	.L__stack_usage = 3
+  78:led.c         ****     uint8_t i;
+  79:led.c         ****     uint16_t red, grn, blu;
+  80:led.c         **** 
+  81:led.c         ****     // set red
+  82:led.c         ****     red = ser2led(args[0]);
+ 237               		.stabn	68,0,82,.LM16-.LFBB3
+ 238               	.LM16:
+ 239 008e 8091 0000 		lds r24,args
+ 240 0092 0E94 0000 		call ser2led
+ 241 0096 EC01      		movw r28,r24
+  83:led.c         ****     for ( i=1 ; i<=12 ; i++ ) { set(tlc[0], i, red); }
+ 242               		.stabn	68,0,83,.LM17-.LFBB3
+ 243               	.LM17:
+ 244 0098 11E0      		ldi r17,lo8(1)
+ 245               	.L15:
+ 246               		.stabn	68,0,83,.LM18-.LFBB3
+ 247               	.LM18:
+ 248 009a 80E0      		ldi r24,lo8(tlc)
+ 249 009c 90E0      		ldi r25,hi8(tlc)
+ 250 009e 612F      		mov r22,r17
+ 251 00a0 AE01      		movw r20,r28
+ 252 00a2 0E94 0000 		call set
+ 253 00a6 1F5F      		subi r17,lo8(-(1))
+ 254 00a8 1D30      		cpi r17,lo8(13)
+ 255 00aa 01F4      		brne .L15
+  84:led.c         **** 
+  85:led.c         ****     // set grn
+  86:led.c         ****     grn = ser2led(args[1]);
+GAS LISTING /tmp/cckn1olu.s 			page 7
+
+
+ 256               		.stabn	68,0,86,.LM19-.LFBB3
+ 257               	.LM19:
+ 258 00ac 8091 0000 		lds r24,args+1
+ 259 00b0 0E94 0000 		call ser2led
+ 260 00b4 EC01      		movw r28,r24
+  87:led.c         ****     for ( i=1 ; i<=12 ; i++ ) { set(tlc[1], i, grn); }
+ 261               		.stabn	68,0,87,.LM20-.LFBB3
+ 262               	.LM20:
+ 263 00b6 11E0      		ldi r17,lo8(1)
+ 264               	.L16:
+ 265               		.stabn	68,0,87,.LM21-.LFBB3
+ 266               	.LM21:
+ 267 00b8 80E0      		ldi r24,lo8(tlc+24)
+ 268 00ba 90E0      		ldi r25,hi8(tlc+24)
+ 269 00bc 612F      		mov r22,r17
+ 270 00be AE01      		movw r20,r28
+ 271 00c0 0E94 0000 		call set
+ 272 00c4 1F5F      		subi r17,lo8(-(1))
+ 273 00c6 1D30      		cpi r17,lo8(13)
+ 274 00c8 01F4      		brne .L16
+  88:led.c         **** 
+  89:led.c         ****     // set grn
+  90:led.c         ****     blu = ser2led(args[2]);
+ 275               		.stabn	68,0,90,.LM22-.LFBB3
+ 276               	.LM22:
+ 277 00ca 8091 0000 		lds r24,args+2
+ 278 00ce 0E94 0000 		call ser2led
+ 279 00d2 EC01      		movw r28,r24
+  91:led.c         ****     for ( i=1 ; i<=12 ; i++ ) { set(tlc[2], i, blu); }
+ 280               		.stabn	68,0,91,.LM23-.LFBB3
+ 281               	.LM23:
+ 282 00d4 11E0      		ldi r17,lo8(1)
+ 283               	.L17:
+ 284               		.stabn	68,0,91,.LM24-.LFBB3
+ 285               	.LM24:
+ 286 00d6 80E0      		ldi r24,lo8(tlc+48)
+ 287 00d8 90E0      		ldi r25,hi8(tlc+48)
+ 288 00da 612F      		mov r22,r17
+ 289 00dc AE01      		movw r20,r28
+ 290 00de 0E94 0000 		call set
+ 291 00e2 1F5F      		subi r17,lo8(-(1))
+ 292 00e4 1D30      		cpi r17,lo8(13)
+ 293 00e6 01F4      		brne .L17
+ 294               	/* epilogue start */
+  92:led.c         **** }
+ 295               		.stabn	68,0,92,.LM25-.LFBB3
+ 296               	.LM25:
+ 297 00e8 DF91      		pop r29
+ 298 00ea CF91      		pop r28
+ 299 00ec 1F91      		pop r17
+ 300 00ee 0895      		ret
+ 301               		.size	led_fpanl_rpanl, .-led_fpanl_rpanl
+ 302               		.stabs	"red:r(5,4)",64,0,79,28
+ 303               		.stabs	"grn:r(5,4)",64,0,79,28
+ 304               		.stabs	"blu:r(5,4)",64,0,79,28
+ 305               		.stabn	192,0,0,.LFBB3-.LFBB3
+ 306               		.stabn	224,0,0,.Lscope3-.LFBB3
+GAS LISTING /tmp/cckn1olu.s 			page 8
+
+
+ 307               	.Lscope3:
+ 308               		.stabs	"",36,0,0,.Lscope3-.LFBB3
+ 309               		.stabd	78,0,0
+ 310               		.stabs	"led_uvset_whset:F(0,15)",36,0,94,led_uvset_whset
+ 311               	.global	led_uvset_whset
+ 312               		.type	led_uvset_whset, @function
+ 313               	led_uvset_whset:
+ 314               		.stabd	46,0,0
+  93:led.c         **** 
+  94:led.c         **** void led_uvset_whset(void) {
+ 315               		.stabn	68,0,94,.LM26-.LFBB4
+ 316               	.LM26:
+ 317               	.LFBB4:
+ 318 00f0 1F93      		push r17
+ 319 00f2 CF93      		push r28
+ 320 00f4 DF93      		push r29
+ 321               	/* prologue: function */
+ 322               	/* frame size = 0 */
+ 323               	/* stack size = 3 */
+ 324               	.L__stack_usage = 3
+  95:led.c         ****     uint8_t i;
+  96:led.c         ****     uint16_t val;
+  97:led.c         **** 
+  98:led.c         ****     val = ser2led(args[0]);
+ 325               		.stabn	68,0,98,.LM27-.LFBB4
+ 326               	.LM27:
+ 327 00f6 8091 0000 		lds r24,args
+ 328 00fa 0E94 0000 		call ser2led
+ 329 00fe EC01      		movw r28,r24
+  99:led.c         ****     if (action == CMD_UVSET) {
+ 330               		.stabn	68,0,99,.LM28-.LFBB4
+ 331               	.LM28:
+ 332 0100 8091 0000 		lds r24,action
+ 333 0104 8A3F      		cpi r24,lo8(-6)
+ 334 0106 01F0      		breq .L28
+ 100:led.c         ****         for ( i=1 ; i<=7 ; i++ ) { set(tlc[1], i, val); }
+ 101:led.c         ****     } else if (action == CMD_WHSET) {
+ 335               		.stabn	68,0,101,.LM29-.LFBB4
+ 336               	.LM29:
+ 337 0108 893F      		cpi r24,lo8(-7)
+ 338 010a 01F0      		breq .L29
+ 339               	/* epilogue start */
+ 102:led.c         ****         for ( i=1 ; i<=14 ; i++ ) { set(tlc[0], i, val); }
+ 103:led.c         ****     }
+ 104:led.c         **** }
+ 340               		.stabn	68,0,104,.LM30-.LFBB4
+ 341               	.LM30:
+ 342 010c DF91      		pop r29
+ 343 010e CF91      		pop r28
+ 344 0110 1F91      		pop r17
+ 345 0112 0895      		ret
+ 346               	.L29:
+ 101:led.c         ****     } else if (action == CMD_WHSET) {
+ 347               		.stabn	68,0,101,.LM31-.LFBB4
+ 348               	.LM31:
+ 349 0114 11E0      		ldi r17,lo8(1)
+ 350               	.L25:
+GAS LISTING /tmp/cckn1olu.s 			page 9
+
+
+ 102:led.c         ****         for ( i=1 ; i<=14 ; i++ ) { set(tlc[0], i, val); }
+ 351               		.stabn	68,0,102,.LM32-.LFBB4
+ 352               	.LM32:
+ 353 0116 80E0      		ldi r24,lo8(tlc)
+ 354 0118 90E0      		ldi r25,hi8(tlc)
+ 355 011a 612F      		mov r22,r17
+ 356 011c AE01      		movw r20,r28
+ 357 011e 0E94 0000 		call set
+ 358 0122 1F5F      		subi r17,lo8(-(1))
+ 359 0124 1F30      		cpi r17,lo8(15)
+ 360 0126 01F4      		brne .L25
+ 361               	/* epilogue start */
+ 362               		.stabn	68,0,104,.LM33-.LFBB4
+ 363               	.LM33:
+ 364 0128 DF91      		pop r29
+ 365 012a CF91      		pop r28
+ 366 012c 1F91      		pop r17
+ 367 012e 0895      		ret
+ 368               	.L28:
+  99:led.c         ****     if (action == CMD_UVSET) {
+ 369               		.stabn	68,0,99,.LM34-.LFBB4
+ 370               	.LM34:
+ 371 0130 11E0      		ldi r17,lo8(1)
+ 372               	.L23:
+ 100:led.c         ****         for ( i=1 ; i<=7 ; i++ ) { set(tlc[1], i, val); }
+ 373               		.stabn	68,0,100,.LM35-.LFBB4
+ 374               	.LM35:
+ 375 0132 80E0      		ldi r24,lo8(tlc+24)
+ 376 0134 90E0      		ldi r25,hi8(tlc+24)
+ 377 0136 612F      		mov r22,r17
+ 378 0138 AE01      		movw r20,r28
+ 379 013a 0E94 0000 		call set
+ 380 013e 1F5F      		subi r17,lo8(-(1))
+ 381 0140 1830      		cpi r17,lo8(8)
+ 382 0142 01F4      		brne .L23
+ 383               	/* epilogue start */
+ 384               		.stabn	68,0,104,.LM36-.LFBB4
+ 385               	.LM36:
+ 386 0144 DF91      		pop r29
+ 387 0146 CF91      		pop r28
+ 388 0148 1F91      		pop r17
+ 389 014a 0895      		ret
+ 390               		.size	led_uvset_whset, .-led_uvset_whset
+ 391               		.stabs	"val:r(5,4)",64,0,96,28
+ 392               		.stabn	192,0,0,.LFBB4-.LFBB4
+ 393               		.stabn	224,0,0,.Lscope4-.LFBB4
+ 394               	.Lscope4:
+ 395               		.stabs	"",36,0,0,.Lscope4-.LFBB4
+ 396               		.stabd	78,0,0
+ 397               		.stabs	"led_strbe_uvstb:F(0,15)",36,0,106,led_strbe_uvstb
+ 398               	.global	led_strbe_uvstb
+ 399               		.type	led_strbe_uvstb, @function
+ 400               	led_strbe_uvstb:
+ 401               		.stabd	46,0,0
+ 105:led.c         **** 
+ 106:led.c         **** void led_strbe_uvstb(void) {
+ 402               		.stabn	68,0,106,.LM37-.LFBB5
+GAS LISTING /tmp/cckn1olu.s 			page 10
+
+
+ 403               	.LM37:
+ 404               	.LFBB5:
+ 405               	/* prologue: function */
+ 406               	/* frame size = 0 */
+ 407               	/* stack size = 0 */
+ 408               	.L__stack_usage = 0
+ 107:led.c         **** #if (CTRLR_TYPE == CTRLR_RGB)
+ 108:led.c         ****     led_evoff();
+ 409               		.stabn	68,0,108,.LM38-.LFBB5
+ 410               	.LM38:
+ 411 014c 0E94 0000 		call led_evoff
+ 109:led.c         ****     tlc_drive();
+ 412               		.stabn	68,0,109,.LM39-.LFBB5
+ 413               	.LM39:
+ 414 0150 0E94 0000 		call tlc_drive
+ 415               	/* epilogue start */
+ 110:led.c         **** #elif (CTRLR_TYPE == CTRLR_UVS)
+ 111:led.c         ****     uint8_t i;
+ 112:led.c         **** 
+ 113:led.c         ****     if ( action == CMD_STRBE ) {
+ 114:led.c         ****         // set whites to full brightness
+ 115:led.c         ****         // XXX: use blanking instead
+ 116:led.c         ****         for ( i=1 ; i<=14 ; i++ ) { set(tlc[0], i, 0xFFF); }
+ 117:led.c         ****         
+ 118:led.c         ****         // shut off UVs
+ 119:led.c         ****         for ( i=0 ; i<16 ; i++ ) { set(tlc[1], i, 0); }
+ 120:led.c         ****     } else { // action = CMD_UVSTB
+ 121:led.c         ****         // set UVs to full brightness
+ 122:led.c         ****         for ( i=1 ; i<=7 ; i++ ) { set(tlc[1], i, 0xFFF); }
+ 123:led.c         ****         
+ 124:led.c         ****         // shut off whites
+ 125:led.c         ****         for ( i=1 ; i<=14 ; i++ ) { set(tlc[0], i, 0x0); }
+ 126:led.c         ****     }
+ 127:led.c         **** 
+ 128:led.c         ****     // this kind of breaks our general format for processing data, but the
+ 129:led.c         ****     // other option is to use a timer, which we've run out of
+ 130:led.c         ****     tlc_drive();
+ 131:led.c         ****     _delay_us(STB_PULSE);
+ 132:led.c         ****     led_evoff();
+ 133:led.c         ****     tlc_drive();
+ 134:led.c         **** #endif /* CTRLR_TYPE */
+ 135:led.c         **** }
+ 416               		.stabn	68,0,135,.LM40-.LFBB5
+ 417               	.LM40:
+ 418 0154 0895      		ret
+ 419               		.size	led_strbe_uvstb, .-led_strbe_uvstb
+ 420               	.Lscope5:
+ 421               		.stabs	"",36,0,0,.Lscope5-.LFBB5
+ 422               		.stabd	78,0,0
+ 423               		.stabs	"led_set:F(0,15)",36,0,137,led_set
+ 424               	.global	led_set
+ 425               		.type	led_set, @function
+ 426               	led_set:
+ 427               		.stabd	46,0,0
+ 136:led.c         **** 
+ 137:led.c         **** void led_set(void) {
+ 428               		.stabn	68,0,137,.LM41-.LFBB6
+GAS LISTING /tmp/cckn1olu.s 			page 11
+
+
+ 429               	.LM41:
+ 430               	.LFBB6:
+ 431 0156 AF92      		push r10
+ 432 0158 BF92      		push r11
+ 433 015a CF92      		push r12
+ 434 015c DF92      		push r13
+ 435 015e EF92      		push r14
+ 436 0160 FF92      		push r15
+ 437 0162 0F93      		push r16
+ 438 0164 1F93      		push r17
+ 439 0166 CF93      		push r28
+ 440 0168 DF93      		push r29
+ 441               	/* prologue: function */
+ 442               	/* frame size = 0 */
+ 443               	/* stack size = 10 */
+ 444               	.L__stack_usage = 10
+ 138:led.c         ****     uint8_t i;
+ 139:led.c         **** 
+ 140:led.c         **** #if (CTRLR_TYPE == CTRLR_RGB)
+ 141:led.c         ****     uint8_t j;
+ 142:led.c         ****     uint16_t red, grn, blu;
+ 143:led.c         **** 
+ 144:led.c         ****     for ( i=0 ; i<4 ; i++ ) {
+ 145:led.c         ****         red = ser2led(args[3*i]);
+ 146:led.c         ****         grn = ser2led(args[3*i+1]);
+ 147:led.c         ****         blu = ser2led(args[3*i+2]);
+ 148:led.c         **** 
+ 149:led.c         ****         for ( j=1 ; j<=3 ; j++ ) { set(tlc[0], 3*i + j, red); }
+ 150:led.c         ****         for ( j=1 ; j<=3 ; j++ ) { set(tlc[1], 3*i + j, grn); }
+ 445               		.stabn	68,0,150,.LM42-.LFBB6
+ 446               	.LM42:
+ 447 016a C0E0      		ldi r28,lo8(args+2)
+ 448 016c D0E0      		ldi r29,hi8(args+2)
+ 137:led.c         **** void led_set(void) {
+ 449               		.stabn	68,0,137,.LM43-.LFBB6
+ 450               	.LM43:
+ 451 016e 10E0      		ldi r17,lo8(0)
+ 452               	.L35:
+ 145:led.c         ****         red = ser2led(args[3*i]);
+ 453               		.stabn	68,0,145,.LM44-.LFBB6
+ 454               	.LM44:
+ 455 0170 FE01      		movw r30,r28
+ 456 0172 3297      		sbiw r30,2
+ 457 0174 8081      		ld r24,Z
+ 458 0176 0E94 0000 		call ser2led
+ 459 017a 5C01      		movw r10,r24
+ 146:led.c         ****         grn = ser2led(args[3*i+1]);
+ 460               		.stabn	68,0,146,.LM45-.LFBB6
+ 461               	.LM45:
+ 462 017c FE01      		movw r30,r28
+ 463 017e 3197      		sbiw r30,1
+ 464 0180 8081      		ld r24,Z
+ 465 0182 0E94 0000 		call ser2led
+ 466 0186 7C01      		movw r14,r24
+ 147:led.c         ****         blu = ser2led(args[3*i+2]);
+ 467               		.stabn	68,0,147,.LM46-.LFBB6
+ 468               	.LM46:
+GAS LISTING /tmp/cckn1olu.s 			page 12
+
+
+ 469 0188 8881      		ld r24,Y
+ 470 018a 0E94 0000 		call ser2led
+ 471 018e 6C01      		movw r12,r24
+ 149:led.c         ****         for ( j=1 ; j<=3 ; j++ ) { set(tlc[0], 3*i + j, red); }
+ 472               		.stabn	68,0,149,.LM47-.LFBB6
+ 473               	.LM47:
+ 474 0190 01E0      		ldi r16,lo8(1)
+ 475               	.L32:
+ 149:led.c         ****         for ( j=1 ; j<=3 ; j++ ) { set(tlc[0], 3*i + j, red); }
+ 476               		.stabn	68,0,149,.LM48-.LFBB6
+ 477               	.LM48:
+ 478 0192 612F      		mov r22,r17
+ 479 0194 600F      		add r22,r16
+ 480 0196 80E0      		ldi r24,lo8(tlc)
+ 481 0198 90E0      		ldi r25,hi8(tlc)
+ 482 019a A501      		movw r20,r10
+ 483 019c 0E94 0000 		call set
+ 484 01a0 0F5F      		subi r16,lo8(-(1))
+ 485 01a2 0430      		cpi r16,lo8(4)
+ 486 01a4 01F4      		brne .L32
+ 149:led.c         ****         for ( j=1 ; j<=3 ; j++ ) { set(tlc[0], 3*i + j, red); }
+ 487               		.stabn	68,0,149,.LM49-.LFBB6
+ 488               	.LM49:
+ 489 01a6 01E0      		ldi r16,lo8(1)
+ 490               	.L33:
+ 491               		.stabn	68,0,150,.LM50-.LFBB6
+ 492               	.LM50:
+ 493 01a8 612F      		mov r22,r17
+ 494 01aa 600F      		add r22,r16
+ 495 01ac 80E0      		ldi r24,lo8(tlc+24)
+ 496 01ae 90E0      		ldi r25,hi8(tlc+24)
+ 497 01b0 A701      		movw r20,r14
+ 498 01b2 0E94 0000 		call set
+ 499 01b6 0F5F      		subi r16,lo8(-(1))
+ 500 01b8 0430      		cpi r16,lo8(4)
+ 501 01ba 01F4      		brne .L33
+ 502               		.stabn	68,0,150,.LM51-.LFBB6
+ 503               	.LM51:
+ 504 01bc 01E0      		ldi r16,lo8(1)
+ 505               	.L34:
+ 151:led.c         ****         for ( j=1 ; j<=3 ; j++ ) { set(tlc[2], 3*i + j, blu); }
+ 506               		.stabn	68,0,151,.LM52-.LFBB6
+ 507               	.LM52:
+ 508 01be 612F      		mov r22,r17
+ 509 01c0 600F      		add r22,r16
+ 510 01c2 80E0      		ldi r24,lo8(tlc+48)
+ 511 01c4 90E0      		ldi r25,hi8(tlc+48)
+ 512 01c6 A601      		movw r20,r12
+ 513 01c8 0E94 0000 		call set
+ 514 01cc 0F5F      		subi r16,lo8(-(1))
+ 515 01ce 0430      		cpi r16,lo8(4)
+ 516 01d0 01F4      		brne .L34
+ 517               		.stabn	68,0,151,.LM53-.LFBB6
+ 518               	.LM53:
+ 519 01d2 2396      		adiw r28,3
+ 520 01d4 1D5F      		subi r17,lo8(-(3))
+ 144:led.c         ****     for ( i=0 ; i<4 ; i++ ) {
+GAS LISTING /tmp/cckn1olu.s 			page 13
+
+
+ 521               		.stabn	68,0,144,.LM54-.LFBB6
+ 522               	.LM54:
+ 523 01d6 1C30      		cpi r17,lo8(12)
+ 524 01d8 01F4      		brne .L35
+ 525               	/* epilogue start */
+ 152:led.c         **** 
+ 153:led.c         ****     }
+ 154:led.c         **** #elif (CTRLR_TYPE == CTRLR_UVS)
+ 155:led.c         ****     uint16_t uv = ser2led(args[0]);
+ 156:led.c         ****     uint16_t wh = ser2led(args[1]);
+ 157:led.c         **** 
+ 158:led.c         ****     for ( i=1 ; i<=7 ; i++ ) { set(tlc[1], i, uv); }
+ 159:led.c         ****     for ( i=1 ; i<=14 ; i++ ) { set(tlc[0], i, wh); }
+ 160:led.c         **** #endif /* CTRLR_TYPE */
+ 161:led.c         **** }
+ 526               		.stabn	68,0,161,.LM55-.LFBB6
+ 527               	.LM55:
+ 528 01da DF91      		pop r29
+ 529 01dc CF91      		pop r28
+ 530 01de 1F91      		pop r17
+ 531 01e0 0F91      		pop r16
+ 532 01e2 FF90      		pop r15
+ 533 01e4 EF90      		pop r14
+ 534 01e6 DF90      		pop r13
+ 535 01e8 CF90      		pop r12
+ 536 01ea BF90      		pop r11
+ 537 01ec AF90      		pop r10
+ 538 01ee 0895      		ret
+ 539               		.size	led_set, .-led_set
+ 540               		.stabs	"red:r(5,4)",64,0,142,10
+ 541               		.stabs	"grn:r(5,4)",64,0,142,14
+ 542               		.stabs	"blu:r(5,4)",64,0,142,12
+ 543               		.stabn	192,0,0,.LFBB6-.LFBB6
+ 544               		.stabn	224,0,0,.Lscope6-.LFBB6
+ 545               	.Lscope6:
+ 546               		.stabs	"",36,0,0,.Lscope6-.LFBB6
+ 547               		.stabd	78,0,0
+ 548               		.stabs	"led_action:F(0,15)",36,0,6,led_action
+ 549               	.global	led_action
+ 550               		.type	led_action, @function
+ 551               	led_action:
+ 552               		.stabd	46,0,0
+   6:led.c         **** void led_action(void) {
+ 553               		.stabn	68,0,6,.LM56-.LFBB7
+ 554               	.LM56:
+ 555               	.LFBB7:
+ 556               	/* prologue: function */
+ 557               	/* frame size = 0 */
+ 558               	/* stack size = 0 */
+ 559               	.L__stack_usage = 0
+  10:led.c         ****     switch (action) {
+ 560               		.stabn	68,0,10,.LM57-.LFBB7
+ 561               	.LM57:
+ 562 01f0 8091 0000 		lds r24,action
+ 563 01f4 893F      		cpi r24,lo8(-7)
+ 564 01f6 01F0      		breq .L46
+ 565 01f8 8A3F      		cpi r24,lo8(-6)
+GAS LISTING /tmp/cckn1olu.s 			page 14
+
+
+ 566 01fa 00F0      		brlo .L56
+ 567 01fc 8C3F      		cpi r24,lo8(-4)
+ 568 01fe 01F0      		breq .L48
+ 569 0200 8D3F      		cpi r24,lo8(-3)
+ 570 0202 00F0      		brlo .L57
+ 571 0204 8D3F      		cpi r24,lo8(-3)
+ 572 0206 01F0      		breq .L50
+ 573 0208 8E3F      		cpi r24,lo8(-2)
+ 574 020a 01F0      		breq .L58
+ 575               	.L41:
+  42:led.c         ****             led_set();
+ 576               		.stabn	68,0,42,.LM58-.LFBB7
+ 577               	.LM58:
+ 578 020c 0E94 0000 		call led_set
+ 579               	.L55:
+  46:led.c         ****     tlc_drive();
+ 580               		.stabn	68,0,46,.LM59-.LFBB7
+ 581               	.LM59:
+ 582 0210 0E94 0000 		call tlc_drive
+ 583               	/* epilogue start */
+  47:led.c         **** }
+ 584               		.stabn	68,0,47,.LM60-.LFBB7
+ 585               	.LM60:
+ 586 0214 0895      		ret
+ 587               	.L56:
+  10:led.c         ****     switch (action) {
+ 588               		.stabn	68,0,10,.LM61-.LFBB7
+ 589               	.LM61:
+ 590 0216 863F      		cpi r24,lo8(-10)
+ 591 0218 01F0      		breq .L41
+ 592 021a 873F      		cpi r24,lo8(-9)
+ 593 021c 00F0      		brlo .L59
+ 594 021e 873F      		cpi r24,lo8(-9)
+ 595 0220 01F0      		breq .L41
+ 596 0222 883F      		cpi r24,lo8(-8)
+ 597 0224 01F4      		brne .L41
+ 598               	.L42:
+  39:led.c         ****             led_strbe_uvstb();
+ 599               		.stabn	68,0,39,.LM62-.LFBB7
+ 600               	.LM62:
+ 601 0226 0E94 0000 		call led_strbe_uvstb
+  46:led.c         ****     tlc_drive();
+ 602               		.stabn	68,0,46,.LM63-.LFBB7
+ 603               	.LM63:
+ 604 022a 0E94 0000 		call tlc_drive
+ 605               	/* epilogue start */
+  47:led.c         **** }
+ 606               		.stabn	68,0,47,.LM64-.LFBB7
+ 607               	.LM64:
+ 608 022e 0895      		ret
+ 609               	.L57:
+  10:led.c         ****     switch (action) {
+ 610               		.stabn	68,0,10,.LM65-.LFBB7
+ 611               	.LM65:
+ 612 0230 8A3F      		cpi r24,lo8(-6)
+ 613 0232 01F0      		breq .L46
+ 614 0234 8B3F      		cpi r24,lo8(-5)
+GAS LISTING /tmp/cckn1olu.s 			page 15
+
+
+ 615 0236 01F4      		brne .L41
+ 616               	.L48:
+  21:led.c         ****             led_fpanl_rpanl();
+ 617               		.stabn	68,0,21,.LM66-.LFBB7
+ 618               	.LM66:
+ 619 0238 0E94 0000 		call led_fpanl_rpanl
+  46:led.c         ****     tlc_drive();
+ 620               		.stabn	68,0,46,.LM67-.LFBB7
+ 621               	.LM67:
+ 622 023c 0E94 0000 		call tlc_drive
+ 623               	/* epilogue start */
+  47:led.c         **** }
+ 624               		.stabn	68,0,47,.LM68-.LFBB7
+ 625               	.LM68:
+ 626 0240 0895      		ret
+ 627               	.L59:
+  10:led.c         ****     switch (action) {
+ 628               		.stabn	68,0,10,.LM69-.LFBB7
+ 629               	.LM69:
+ 630 0242 853F      		cpi r24,lo8(-11)
+ 631 0244 01F4      		brne .L41
+ 632 0246 00C0      		rjmp .L42
+ 633               	.L58:
+  12:led.c         ****             led_emgcy();
+ 634               		.stabn	68,0,12,.LM70-.LFBB7
+ 635               	.LM70:
+ 636 0248 0E94 0000 		call led_emgcy
+  13:led.c         ****             break;
+ 637               		.stabn	68,0,13,.LM71-.LFBB7
+ 638               	.LM71:
+ 639 024c 00C0      		rjmp .L55
+ 640               	.L46:
+  33:led.c         ****             led_uvset_whset();
+ 641               		.stabn	68,0,33,.LM72-.LFBB7
+ 642               	.LM72:
+ 643 024e 0E94 0000 		call led_uvset_whset
+  46:led.c         ****     tlc_drive();
+ 644               		.stabn	68,0,46,.LM73-.LFBB7
+ 645               	.LM73:
+ 646 0252 0E94 0000 		call tlc_drive
+ 647               	/* epilogue start */
+  47:led.c         **** }
+ 648               		.stabn	68,0,47,.LM74-.LFBB7
+ 649               	.LM74:
+ 650 0256 0895      		ret
+ 651               	.L50:
+  15:led.c         ****             led_evoff();
+ 652               		.stabn	68,0,15,.LM75-.LFBB7
+ 653               	.LM75:
+ 654 0258 0E94 0000 		call led_evoff
+  16:led.c         ****             break;
+ 655               		.stabn	68,0,16,.LM76-.LFBB7
+ 656               	.LM76:
+ 657 025c 00C0      		rjmp .L55
+ 658               		.size	led_action, .-led_action
+ 659               	.Lscope7:
+ 660               		.stabs	"",36,0,0,.Lscope7-.LFBB7
+GAS LISTING /tmp/cckn1olu.s 			page 16
+
+
+ 661               		.stabd	78,0,0
+ 662               		.stabs	"",100,0,0,.Letext0
+ 663               	.Letext0:
+GAS LISTING /tmp/cckn1olu.s 			page 17
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 led.c
+     /tmp/cckn1olu.s:2      *ABS*:000000000000003f __SREG__
+     /tmp/cckn1olu.s:3      *ABS*:000000000000003e __SP_H__
+     /tmp/cckn1olu.s:4      *ABS*:000000000000003d __SP_L__
+     /tmp/cckn1olu.s:5      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/cckn1olu.s:6      *ABS*:0000000000000001 __zero_reg__
+     /tmp/cckn1olu.s:93     .text:0000000000000000 led_emgcy
+     /tmp/cckn1olu.s:160    .text:0000000000000048 led_evoff
+     /tmp/cckn1olu.s:225    .text:0000000000000088 led_fpanl_rpanl
+     /tmp/cckn1olu.s:313    .text:00000000000000f0 led_uvset_whset
+     /tmp/cckn1olu.s:400    .text:000000000000014c led_strbe_uvstb
+     /tmp/cckn1olu.s:426    .text:0000000000000156 led_set
+     /tmp/cckn1olu.s:551    .text:00000000000001f0 led_action
+
+UNDEFINED SYMBOLS
+__do_copy_data
+__do_clear_bss
+tlc
+set
+args
+ser2led
+action
+tlc_drive

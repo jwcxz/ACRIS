@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPCB (2010-04-21 BZR 23xx)-stable date = Wed 25 May 2011 01:24:24 AM EDT
+Cmp-Mod V01 Created by CvPCB (2010-04-21 BZR 23xx)-stable date = Wed 25 May 2011 08:29:16 PM EDT
 
 BeginCmp
 TimeStamp = /4DDBFDFD;
@@ -60,21 +60,21 @@ BeginCmp
 TimeStamp = /4D1A525A;
 Reference = C9;
 ValeurCmp = 100nF;
-IdModule  = C1;
+IdModule  = SM0805;
 EndCmp
 
 BeginCmp
 TimeStamp = /4D1A474A;
 Reference = C10;
 ValeurCmp = 22pF;
-IdModule  = C1;
+IdModule  = SM0805;
 EndCmp
 
 BeginCmp
 TimeStamp = /4D1A474D;
 Reference = C11;
 ValeurCmp = 22pF;
-IdModule  = C1;
+IdModule  = SM0805;
 EndCmp
 
 BeginCmp
@@ -123,7 +123,7 @@ BeginCmp
 TimeStamp = /4D1A428B;
 Reference = IC2;
 ValeurCmp = SN75176B;
-IdModule  = DIP-8__300;
+IdModule  = SOIC8;
 EndCmp
 
 BeginCmp
@@ -155,17 +155,17 @@ IdModule  = JACK_ALIM;
 EndCmp
 
 BeginCmp
-TimeStamp = /4DDBFFBF;
+TimeStamp = /4DDD4F59;
 Reference = JP1;
 ValeurCmp = JUMPER;
-IdModule  = SIL-2;
+IdModule  = SM1206;
 EndCmp
 
 BeginCmp
 TimeStamp = /4DDBFF64;
 Reference = JP2;
 ValeurCmp = JUMPER;
-IdModule  = SIL-2;
+IdModule  = SM1206;
 EndCmp
 
 BeginCmp
@@ -431,21 +431,21 @@ BeginCmp
 TimeStamp = /4D1A4475;
 Reference = TLC1;
 ValeurCmp = TLC5940;
-IdModule  = DIP-28__300;
+IdModule  = TSSOP-28;
 EndCmp
 
 BeginCmp
 TimeStamp = /4D1A469F;
 Reference = TLC2;
 ValeurCmp = TLC5940;
-IdModule  = DIP-28__300;
+IdModule  = TSSOP-28;
 EndCmp
 
 BeginCmp
 TimeStamp = /4D1A46AA;
 Reference = TLC3;
 ValeurCmp = TLC5940;
-IdModule  = DIP-28__300;
+IdModule  = TSSOP-28;
 EndCmp
 
 BeginCmp
@@ -459,7 +459,7 @@ BeginCmp
 TimeStamp = /4D1A4743;
 Reference = X1;
 ValeurCmp = CRYSTAL;
-IdModule  = HC-49V;
+IdModule  = SM1206;
 EndCmp
 
 EndListe
