@@ -1,4 +1,4 @@
-EESchema Schematic File Version 2  date Thu 26 May 2011 09:10:42 PM EDT
+EESchema Schematic File Version 2  date Wed 01 Jun 2011 04:57:20 PM EDT
 LIBS:power
 LIBS:device
 LIBS:transistors
@@ -39,7 +39,7 @@ EELAYER END
 $Descr A 11000 8500
 Sheet 1 1
 Title "4-RGB LED Controller Board"
-Date "26 may 2011"
+Date "1 jun 2011"
 Rev "1.5"
 Comp "J. Colosimo"
 Comment1 ""
@@ -715,7 +715,7 @@ L R R9
 U 1 1 4DDC0C79
 P 6350 3950
 F 0 "R9" V 6430 3950 50  0000 C CNN
-F 1 "290" V 6350 3950 50  0000 C CNN
+F 1 "1K" V 6350 3950 50  0000 C CNN
 	1    6350 3950
 	0    1    1    0   
 $EndComp
@@ -742,7 +742,7 @@ L R R8
 U 1 1 4DDC0C6E
 P 6350 3750
 F 0 "R8" V 6430 3750 50  0000 C CNN
-F 1 "290" V 6350 3750 50  0000 C CNN
+F 1 "1K" V 6350 3750 50  0000 C CNN
 	1    6350 3750
 	0    1    1    0   
 $EndComp
@@ -751,7 +751,7 @@ L R R7
 U 1 1 4DDC0C45
 P 6350 3550
 F 0 "R7" V 6430 3550 50  0000 C CNN
-F 1 "290" V 6350 3550 50  0000 C CNN
+F 1 "1K" V 6350 3550 50  0000 C CNN
 	1    6350 3550
 	0    1    1    0   
 $EndComp
@@ -778,7 +778,7 @@ L R R6
 U 1 1 4DDC0B97
 P 6350 3350
 F 0 "R6" V 6430 3350 50  0000 C CNN
-F 1 "290" V 6350 3350 50  0000 C CNN
+F 1 "1K" V 6350 3350 50  0000 C CNN
 	1    6350 3350
 	0    1    1    0   
 $EndComp
@@ -833,7 +833,7 @@ L R R1
 U 1 1 4DDC0401
 P 4200 1300
 F 0 "R1" V 4280 1300 50  0000 C CNN
-F 1 "290" V 4200 1300 50  0000 C CNN
+F 1 "1K" V 4200 1300 50  0000 C CNN
 	1    4200 1300
 	1    0    0    -1  
 $EndComp

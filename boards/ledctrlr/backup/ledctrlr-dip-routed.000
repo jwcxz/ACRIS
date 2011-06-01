@@ -1,4 +1,4 @@
-PCBNEW-BOARD Version 1 date Sun 29 May 2011 09:04:02 PM EDT
+PCBNEW-BOARD Version 1 date Sun 29 May 2011 10:03:38 PM EDT
 
 # Created by Pcbnew(2010-04-21 BZR 23xx)-stable
 
@@ -9,7 +9,7 @@ EnabledLayers 1FFF8001
 Links 170
 NoConn 1
 Di 4247 4624 28453 37320
-Ndraw 5
+Ndraw 7
 Ntrack 431
 Nzone 0
 BoardThickness 630
@@ -3477,6 +3477,16 @@ Ne 0 ""
 Po 0 0
 $EndPAD
 $EndMODULE  1pin
+$TEXTPCB
+Te "J Colosimo :: jwcxz.com"
+Po 10000 35600 300 400 75 0
+De 21 1 0 Normal
+$EndTEXTPCB
+$TEXTPCB
+Te "LED Controller v1.5   JWC"
+Po 27200 27500 600 800 120 900
+De 21 1 0 Normal
+$EndTEXTPCB
 $DRAWSEGMENT
 Po 0 28100 37000 28100 4700 150
 De 28 0 900 0 0
@@ -4369,7 +4379,7 @@ ZLayer 15
 ZAux 9 E
 ZClearance 200 I
 ZMinThickness 100
-ZOptions 1 16 F 200 200
+ZOptions 1 16 S 200 200
 ZCorner 8500 19900 0
 ZCorner 8700 19000 0
 ZCorner 9900 17800 0
@@ -4454,7 +4464,7 @@ ZLayer 0
 ZAux 4 E
 ZClearance 200 I
 ZMinThickness 100
-ZOptions 1 16 F 200 200
+ZOptions 1 16 S 200 200
 ZCorner 28100 37000 0
 ZCorner 28100 4700 0
 ZCorner 4700 4700 0
