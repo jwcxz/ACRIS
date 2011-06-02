@@ -2,7 +2,7 @@ Goals:
     - fast startup time
         - listen for chatter on the line at startup; if there isn't any after
           some time interval, then go to application
-        - also check first byte of RRW to see if a valid application exists.
+        - also check first byte of RWW to see if a valid application exists.
           if not, then stay in bootloader mode
     - set address in EEPROM
     - program new code
@@ -17,5 +17,5 @@ Protocol:
     B   2       [High][Low] -- set divisor of the UART in EEPROM
     P   2       [Addr][Page...] - Send program one page at a time
     V   0       Verify -- If the code is bad, then write 0xFF to the first
-                byte of the RRW so that the bootloader knows not to go to the
+                byte of the RWW so that the bootloader knows not to go to the
                 application
