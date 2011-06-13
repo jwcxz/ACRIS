@@ -45,6 +45,13 @@
 
 #include "main.h"
 
+// page buffer (gets filled when 
+static uint8_t page_buf[PAGESIZE];
+static uint8_t* page_buf_ptr;
+
+// baud rate divisor
+static uint16_t baud;
+
 /* Main Loop */
 int main(void) {
 
@@ -80,34 +87,68 @@ void process_rx(void) {
                     curstate = SM_ADDR;
                     break;
                 case CMD_BAUD:
-                    curstate = SM_BAUD;
+                    curstate = SM_BAUD_H;
                     break;
                 case CMD_PROG:
-                    curstate = SM_PROG;
+                    curstate = SM_PROG_A;
                     break;
                 default:
                     curstate = SM_IDLE;
             }
+            break;
+
         case SM_ADDR:
             addr_set(data);
             curstate = SM_IDLE;
             break;
-        case SM_BAUD:
-            baud_h = data;
-            curstate = SM_BAUD2;
+
+        case SM_BAUD_H:
+            baud = (data << 8);   // high byte of baud rate
+            curstate = SM_BAUD_L;
             break;
-        case SM_BAUD2
-            baud_l = data;
-            curstate = SM_BAUD3;
+        case SM_BAUD_L:
+            baud |= data;         // low byte of baud rate
+            curstate = SM_BAUD_D;
             break;
-        case SM_BAUD3:
-            baud_d = data;
+        case SM_BAUD_D:
+            // TODO: save some space by always setting double to 1
+            baud_set(data);
             curstate = SM_IDLE;
             break;
-        case SM_PROG:
-            // TODO
-            *pagebuf++ = data;
+
+        case SM_PROG_A:
+            page_addr = data;
+            // reset page buffer pointer
+            page_buf_ptr = page_buf;
+            curstate = SM_PROG_D;
+        case SM_PROG_D:
+            *page_buf_ptr++ = data;
+            if ( page_buf_ptr - page_buf == PAGESIZE ) {
+                // we hit the last byte of the page, so the next byte is the
+                // checksum
+                curstate = SM_PROG_V;
+            } else {
+                curstate = SM_PROG_D;
+            }
             break;
+        case SM_PROG_V:
+            curstate = SM_IDLE;
+
+            for ( i=0 ; i<PAGESIZE ; i++ ) {
+                csum += page_buf[i];
+            }
+            csum = ~csum;
+
+            if ( csum == data ) {
+                // checksum verifies, so write the page
+                write_page();
+            } else {
+                // damnit...
+                // TODO: we can be slightly smarter (if it's the first address,
+                // we technically haven't corrupted anything yet)
+                give_up(1);
+            }
+
         default:
             curstate = SM_IDLE;
             break;
@@ -115,19 +156,45 @@ void process_rx(void) {
 }
 
 /* Reached an unrecoverable error, so:
- *  - Light up the LEDs in the pattern "1001" indicating an error
+ *  - Light up the LEDs indicating an error
  *  - If corrupted, then write 0xFF to the first page in order to prevent the
  *    bootloader from trying to run the application at the beginning.
  *  - Go back and wait for new data.
  */
 void give_up(uint8_t corrupted) {
-    // set LED's to "shit hit the fan"
-    led_set(0x9);
-
     // if application data was corrupted, fill the first page with 0xFF
     if (corrupted) {
+        // set LEDs to "shit really hit the fan"
+        led_set(0xA);
+        // TODO: fill the first page with 0xFF
+    } else {
+        // set LEDs to "shit slightly hit the fan"
+        led_set(0x9);
     }
 
     // return to waiting for data
+    curstate = SM_IDLE;     // reset state machine
     receive_data();
+}
+
+/* Set the instrument address */
+void addr_set(uint8_t address) {
+    // wait for eeprom to become ready
+    eeprom_busy_wait();
+
+    // write address to the address byte
+    eeprom_write_byte(EEPROM_INST_ADDR, address);
+}
+
+/* Set the application communication baud rate */
+void baud_set(uint8_t dbl) {
+    eeprom_busy_wait();
+    eeprom_write_word(EEPROM_BAUD_RATE, baud);
+    eeprom_busy_wait();
+    eeprom_write_byte(EEPROM_BAUD_DBLE, dbl);
+}
+
+/* Write a page of data from the page buffer */
+void write_page(void) {
+    
 }
