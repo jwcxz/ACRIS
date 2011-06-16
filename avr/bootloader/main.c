@@ -13,17 +13,28 @@
  *  2. downloading of program to device
  *  3. set address of instrument
  *  4. set the transmission baud rate (via the divisor)
- *  5. program verification
+ *  5. set a mask (only operate on some devices)
+ *  6. view the instrument address on the debug LEDs
+ *  7. program verification
  *
  *  Transmission is done through a serial protocol:
  *  Fn  Args    Description
  *  ___ _______ ____________________________________________________
- *  N   0       NOP -- sent to wake bootloader up
- *  170 0       NOP -- alias for 'N' (send a lot of these to aid in clock recovery)
+ *  170 0       SYNC -- start of a packet
+ *
+ *  N   0       NOP -- sent to wake bootloader up (or you can use SYNC)
  *
  *  A   1       Set 1-byte address of the device in EEPROM
  *
  *  B   2       [High][Low][Double?] -- set divisor and U2XN of the UART in EEPROM
+ *
+ *  D   0       Show the high nibble of the instrument address on the debug LEDs
+ *
+ *  E   0       Show the low nibble of the instrument address on the debug LEDs
+ *
+ *  M   1       [InstAddr] Instrument address to work with for all following commands
+ *                  0xFF - all instruments
+ *                  0xF0-0xFE - blocks of 16
  *
  *  P   2       [Addr][Page...] - Send program one page at a time
  *                  To simplify the bootloader, it does NOT take an Intel HEX
@@ -44,6 +55,8 @@
  */
 
 #include "main.h"
+#include "eeprom.h"
+#include "dbgled.h"
 
 // page buffer (gets filled when 
 static uint8_t page_buf[PAGESIZE];
@@ -51,6 +64,9 @@ static uint8_t* page_buf_ptr;
 
 // baud rate divisor
 static uint16_t baud;
+
+// device address mask
+static uint8_t addrmask = AM_ALL;
 
 /* Main Loop */
 int main(void) {
@@ -66,7 +82,7 @@ int main(void) {
 /* Loop, waiting for data */
 void receive_data(void) {
     while (1) {
-        if ( uart_data_rdy() ) { process_rx(); }
+        if ( uart_data_rdy() ) process_rx();
     }
 }
 
@@ -75,83 +91,108 @@ void process_rx(void) {
     uint8_t data;
     data = uart_rx();
 
-    switch (curstate) {
-        case SM_IDLE:
-            switch (data) {
-                case CMD_NOP1:
-                case CMD_NOP2:
-                default:
-                    curstate = SM_IDLE;
-                    break;
-                case CMD_ADDR:
-                    curstate = SM_ADDR;
-                    break;
-                case CMD_BAUD:
-                    curstate = SM_BAUD_H;
-                    break;
-                case CMD_PROG:
-                    curstate = SM_PROG_A;
-                    break;
-                default:
-                    curstate = SM_IDLE;
-            }
-            break;
+    if ( data != CMD_NOP ) {
+        switch (curstate) {
+            case CST_IDLE:
+                if ( data == CMD_SYNC ) cmdstate = CST_SYNC;
+                else cmdstate = CST_IDLE;
+                break;
+            case CST_SYNC:
+                // if we get a mask request, then always honor it
+                if ( data == CMD_MASK ) cmdstate = CST_MASK;
+                else if ( data == CMD_SYNC ) cmdstate = CST_SYNC;
+                else if ( applies_to_me() ) {
+                    switch (data) {
+                        case CMD_ADDR:
+                            curstate = CST_ADDR;
+                            break;
+                        case CMD_BAUD:
+                            curstate = CST_BAUD_H;
+                            break;
+                        case CMD_PROG:
+                            curstate = CST_PROG_A;
+                            break;
+                        default:
+                            curstate = CST_IDLE;
+                            break;
+                    }
+                } else {
+                    // no action applied to me, so wait for the next packet
+                    // (maybe it'll be a new mask)
+                    cmdstate = CST_IDLE;
+                }
+                break;
 
-        case SM_ADDR:
-            addr_set(data);
-            curstate = SM_IDLE;
-            break;
+            case CST_MASK:
+                mask = data;
+                cmdstate = CST_IDLE;
+                break;
 
-        case SM_BAUD_H:
-            baud = (data << 8);   // high byte of baud rate
-            curstate = SM_BAUD_L;
-            break;
-        case SM_BAUD_L:
-            baud |= data;         // low byte of baud rate
-            curstate = SM_BAUD_D;
-            break;
-        case SM_BAUD_D:
-            // TODO: save some space by always setting double to 1
-            baud_set(data);
-            curstate = SM_IDLE;
-            break;
+            case CST_ADDR:
+                addr_set(data);
+                curstate = CST_IDLE;
+                break;
 
-        case SM_PROG_A:
-            page_addr = data;
-            // reset page buffer pointer
-            page_buf_ptr = page_buf;
-            curstate = SM_PROG_D;
-        case SM_PROG_D:
-            *page_buf_ptr++ = data;
-            if ( page_buf_ptr - page_buf == PAGESIZE ) {
-                // we hit the last byte of the page, so the next byte is the
-                // checksum
-                curstate = SM_PROG_V;
-            } else {
-                curstate = SM_PROG_D;
-            }
-            break;
-        case SM_PROG_V:
-            curstate = SM_IDLE;
+            case CST_DISP_ADDR_H:
+                dbg_set(instaddr>>4);
+                curstate = CST_IDLE;
+                break;
+            case CST_DISP_ADDR_L:
+                dbg_set(instaddr&0x0F);
+                curstate = CST_IDLE;
+                break;
 
-            for ( i=0 ; i<PAGESIZE ; i++ ) {
-                csum += page_buf[i];
-            }
-            csum = ~csum;
+            case CST_BAUD_H:
+                baud = (data << 8);   // high byte of baud rate
+                curstate = CST_BAUD_L;
+                break;
+            case CST_BAUD_L:
+                baud |= data;         // low byte of baud rate
+                curstate = CST_BAUD_D;
+                break;
+            case CST_BAUD_D:
+                // TODO: save some space by always setting double to 1
+                baud_set(data);
+                curstate = CST_IDLE;
+                break;
 
-            if ( csum == data ) {
-                // checksum verifies, so write the page
-                write_page();
-            } else {
-                // damnit...
-                // TODO: we can be slightly smarter (if it's the first address,
-                // we technically haven't corrupted anything yet)
-                give_up(1);
-            }
+            case CST_PROG_A:
+                page_addr = data;
+                // reset page buffer pointer
+                page_buf_ptr = page_buf;
+                curstate = CST_PROG_D;
+            case CST_PROG_D:
+                *page_buf_ptr++ = data;
+                if ( page_buf_ptr - page_buf == PAGESIZE ) {
+                    // we hit the last byte of the page, so the next byte is the
+                    // checksum
+                    curstate = CST_PROG_V;
+                } else {
+                    curstate = CST_PROG_D;
+                }
+                break;
+            case CST_PROG_V:
+                curstate = CST_IDLE;
 
-        default:
-            curstate = SM_IDLE;
-            break;
+                for ( i=0 ; i<PAGESIZE ; i++ ) {
+                    csum += page_buf[i];
+                }
+                csum = ~csum;
+
+                if ( csum == data ) {
+                    // checksum verifies, so write the page
+                    write_page();
+                } else {
+                    // damnit...
+                    // TODO: we can be slightly smarter (if it's the first address,
+                    // we technically haven't corrupted anything yet)
+                    give_up(1);
+                }
+
+            default:
+                curstate = CST_IDLE;
+                break;
+        }
     }
 }
 
@@ -165,11 +206,11 @@ void give_up(uint8_t corrupted) {
     // if application data was corrupted, fill the first page with 0xFF
     if (corrupted) {
         // set LEDs to "shit really hit the fan"
-        led_set(0xA);
+        dbg_set(0xA);
         // TODO: fill the first page with 0xFF
     } else {
         // set LEDs to "shit slightly hit the fan"
-        led_set(0x9);
+        dbg_set(0x9);
     }
 
     // return to waiting for data
@@ -197,4 +238,23 @@ void baud_set(uint8_t dbl) {
 /* Write a page of data from the page buffer */
 void write_page(void) {
     
+}
+
+uint8_t applies_to_me(void) {
+    if ( instaddr == 0xFF ) {
+        // eeprom address hasn't been set yet, so listen to everything
+        return 1;
+    } else if ( mask == AM_ALL ) {
+        // 0xFF = all addresses
+        return 1
+    } else if ( instaddr == mask ) {
+        // we specifically targeted this device
+        return 1;
+    } else if ( mask >= 0xF0 && ( instaddr >= (mask&0x0F)*16 && 
+                instaddr <= (mask&0x0F)*16+15 ) ) {
+        // the devices matches in block mode
+        return 1;
+    } else {
+        return 0;
+    }
 }
