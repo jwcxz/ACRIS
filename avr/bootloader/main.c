@@ -73,7 +73,6 @@ static uint8_t addrmask = AM_ALL;
 
 /* Main Loop */
 int main(void) {
-
     // set up uart for 9600 baud communication with no parity
 
     // set up timer to go to application mode if no data has been received
@@ -236,6 +235,10 @@ void give_up(uint8_t corrupted) {
 
 /* Set the instrument address */
 void addr_set(uint8_t address) {
+    // TODO: maybe move this to the generic eeprom.h file?  I didn't because
+    // the main code doesn't use it (yet?), so it's just wasted space (or does
+    // it get optimized out?).
+
     // wait for eeprom to become ready
     eeprom_busy_wait();
 
@@ -253,7 +256,33 @@ void baud_set(uint8_t dbl) {
 
 /* Write a page of data from the page buffer */
 void write_page(void) {
-    
+    uint16_t i,w;
+    uint8_t sreg;
+
+    // disable interrupts
+    sreg = SREG;
+    cli();
+
+    boot_page_erase_safe(page_addr);
+    boot_spm_busy_wait();
+
+    page_buf_ptr = page_buf;
+    for ( i=0 ; i<PAGESIZE ; i+=2 ) {
+        // make word
+        w = *page_buf_ptr++;
+        w |= (*page_buf_ptr++)<<8;
+
+        boot_page_fill_safe(page_addr+i, w);
+    }
+
+    boot_page_write_safe(page);
+    boot_spm_busy_wait();
+
+    // TODO: move this to only operate on the last page
+    boot_rww_enable_safe();
+
+    // re-enable interrupts
+    SREG = sreg;
 }
 
 /* Verify the flash */
