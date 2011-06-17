@@ -58,9 +58,12 @@
 #include "eeprom.h"
 #include "dbgled.h"
 
-// page buffer (gets filled when 
+// page buffer
 static uint8_t page_buf[PAGESIZE];
 static uint8_t* page_buf_ptr;
+
+// instrument address
+static uint8_t instaddr;
 
 // baud rate divisor
 static uint16_t baud;
@@ -98,20 +101,38 @@ void process_rx(void) {
                 else cmdstate = CST_IDLE;
                 break;
             case CST_SYNC:
-                // if we get a mask request, then always honor it
-                if ( data == CMD_MASK ) cmdstate = CST_MASK;
-                else if ( data == CMD_SYNC ) cmdstate = CST_SYNC;
-                else if ( applies_to_me() ) {
+                if ( data == CMD_SYNC ) {
+                    cmdstate = CST_SYNC;
+                } else if ( data == CMD_MASK ) {
+                    // if we get a mask request, then always honor it
+                    cmdstate = CST_MASK;
+                } else if ( applies_to_me() ) {
                     switch (data) {
+                        case CMD_DISP_ADDR_H:
+                            dbg_set(instaddr>>4);
+                            curstate = CST_IDLE;
+                            break;
+                        case CMD_DISP_ADDR_L:
+                            dbg_set(instaddr&0x0F);
+                            curstate = CST_IDLE;
+                            break;
+
                         case CMD_ADDR:
                             curstate = CST_ADDR;
                             break;
+
                         case CMD_BAUD:
                             curstate = CST_BAUD_H;
                             break;
+
                         case CMD_PROG:
                             curstate = CST_PROG_A;
                             break;
+
+                        case CMD_VRFY:
+                            curstate = CST_VRFY;
+                            break;
+
                         default:
                             curstate = CST_IDLE;
                             break;
@@ -130,15 +151,6 @@ void process_rx(void) {
 
             case CST_ADDR:
                 addr_set(data);
-                curstate = CST_IDLE;
-                break;
-
-            case CST_DISP_ADDR_H:
-                dbg_set(instaddr>>4);
-                curstate = CST_IDLE;
-                break;
-            case CST_DISP_ADDR_L:
-                dbg_set(instaddr&0x0F);
                 curstate = CST_IDLE;
                 break;
 
@@ -188,6 +200,10 @@ void process_rx(void) {
                     // we technically haven't corrupted anything yet)
                     give_up(1);
                 }
+
+            case CST_VRFY:
+                verify_flash(data);
+                break;
 
             default:
                 curstate = CST_IDLE;
@@ -240,6 +256,12 @@ void write_page(void) {
     
 }
 
+/* Verify the flash */
+void verify_flash(uint8_t checksum) {
+
+}
+
+/* Check to see if the mask applies to this instrument */
 uint8_t applies_to_me(void) {
     if ( instaddr == 0xFF ) {
         // eeprom address hasn't been set yet, so listen to everything
