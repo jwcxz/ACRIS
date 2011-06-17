@@ -78,19 +78,6 @@ void receive_data(void) {
 
     inbyte = uart_rx();
 
-    /* process for adding new commands:
-     * 1. update this state machine (the cmdstate switch)
-     *      to add args, set numargs and set cmdstate = CST_ARGS
-     *      otherwise, go to CST_IDLE if it doesn't apply to you
-     *      or, if there are no args, set cmdstate = CST_IDLE and call
-     *      led_action()
-     * 2. update led_action() in led.c with the function that should be called
-     *    given a command.  led_action() is just a wrapper function, but it
-     *    makes the code a bit cleaner
-     * 3. create your action function, prefix with led_ and name it the name of
-     *    the 5-character action keyword
-     */
-
     if ( inbyte == CMD_SYNC )  {
         cmdstate = CST_SYNC;
     } else {
@@ -103,9 +90,36 @@ void receive_data(void) {
                 action = inbyte;
                 argptr = args;
 
+                if ( inbyte == CMD_DOALL || inbyte == instaddr ) {
+                    numargs = 15;
+                    cmdstate = CST_ARGS;
+                } else if ( (inbyte >= 0xF0 && inbyte <= 0xFE) && 
+                            (instaddr >= (inbyte&0x0F)*16 && 
+                                instaddr <= (inbyte&0x0F)*16+15))
+                    numargs = 15;
+                    cmdstate = CST_ARGS;
+                } else {
+                    cmdstate = CST_IDLE;
+                }
+
+                /* a more robust method (that allows you to define your own
+                 * commands)
+                 *
+                 *      process for adding new commands:
+                 *      1. update this state machine (the cmdstate switch)
+                 *           to add args, set numargs and set cmdstate = CST_ARGS
+                 *           otherwise, go to CST_IDLE if it doesn't apply to you
+                 *           or, if there are no args, set cmdstate = CST_IDLE and call
+                 *           led_action()
+                 *      2. update led_action() in led.c with the function that should be called
+                 *         given a command.  led_action() is just a wrapper function, but it
+                 *         makes the code a bit cleaner
+                 *      3. create your action function, prefix with led_ and name it the name of
+                 *         the 5-character action keyword
+                 * / // <- XXX
                 switch (inbyte) {
                     case CMD_DOALL:
-                        numargs = 12;
+                        numargs = 15;
                         cmdstate = CST_ARGS;
 
                         led_action();
@@ -128,6 +142,7 @@ void receive_data(void) {
                         }
                         break;
                 }
+                // */
                 break;
 
             case CST_ARGS:
