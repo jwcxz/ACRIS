@@ -1,4 +1,11 @@
-/* TLC CONTROL */
+/* A C R I S   P R O J E C T ********
+ * LED Controller                   *
+ * http://jwcxz.com/projects/acris  *
+ *                                  *
+ * J. Colosimo -- http://jwcxz.com/ *
+ *                                  *
+ * TLC array modification, control  *
+ ************************************/
 
 #include "tlc.h"
 

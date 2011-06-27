@@ -4,11 +4,13 @@
  *                                  *
  * J. Colosimo -- http://jwcxz.com/ *
  *                                  *
- * useful macros                    *
+ * debug LED control                *
  ************************************/
 
-#define _ON(port,pin)  (port |= _BV(pin))
-#define _OFF(port,pin) (port &= ~_BV(pin))
-#define _BVON(port,pins)  (port |= pins)
-#define _BVOFF(port,pins) (port &= pins)
-#define _VAL(byte,pos) ((byte>>pos)&1)
+#include "main.h"
+
+void show_addr(void);
+void dbg_set(uint8_t);
+void dbg_on(uint8_t);
+void dbg_off(uint8_t);
+void dbg_init(void);

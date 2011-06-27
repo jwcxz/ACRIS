@@ -1,9 +1,22 @@
+/* A C R I S   P R O J E C T ********
+ * LED Controller                   *
+ * http://jwcxz.com/projects/acris  *
+ *                                  *
+ * J. Colosimo -- http://jwcxz.com/ *
+ *                                  *
+ * constants configuration          *
+ ************************************/
+
 #define SYSCLK 20000000UL
 #define F_CPU 20000000UL
 
+#define EEPROM_INST_ADDR (uint8_t*) 1
+#define EEPROM_BAUD_RATE (uint16_t*) 2
+#define EEPROM_BAUD_DBLE (uint8_t*) 4
+
 // uart baud rate prescale (if nothing found on the EEPROM)
-#define BAUD_PRESCALE 64    // 38400
-#define UARTDBL 1
+#define DEF_BAUD_PRESCALE 64    // 38400
+#define DEF_BAUD_DOUBLE 1
 
 // set the speed of the latch pulse
 #define XLATPD      1
@@ -38,9 +51,8 @@
 #define UARTWR_PIN  PD2     // 4
 #define UARTWR_DDR  DDRD
 
-#define DBGLED_PRT  PORTB
-#define DBGLED_DDR  DDRB
-#define DBGLED_BASE 1
+#define DBGLED_PRT  PORTC
+#define DBGLED_DDR  DDRC
 
 /* UART BUFFER DATA */
 #define UART_RX_BUFSZ   128
@@ -56,4 +68,3 @@
 
 // for strobing
 //#define STB_PULSE       500UL
-

@@ -17,3 +17,25 @@
 #include <avr/pgmspace.h>
 #include <avr/boot.h>
 #include <avr/eeprom.h>
+
+#define PAGESIZE 128
+#define AM_ALL 255
+#define CMD_NOP 'N'
+#define CMD_SYNC 170
+#define CMD_ADDR 'A'
+#define CMD_BAUD 'B'
+#define CMD_DISP_ADDR_H 'D'
+#define CMD_DISP_ADDR_L 'E'
+#define CMD_MASK 'M'
+#define CMD_PROG 'P'
+#define CMD_VRFY 'V'
+
+int main(void);
+void receive_data(void);
+void process_rx(void);
+void give_up(uint8_t);
+void addr_set(uint8_t);
+void baud_set(uint8_t);
+void write_page(void);
+void verify_flash(uint8_t);
+uint8_t applies_to_me(void);

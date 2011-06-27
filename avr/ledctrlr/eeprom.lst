@@ -1,0 +1,307 @@
+GAS LISTING /tmp/ccBgxMfW.s 			page 1
+
+
+   1               		.file	"eeprom.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   7               		.global __do_copy_data
+   8               		.global __do_clear_bss
+   9               		.stabs	"/home/j/projects/acris/avr/ledctrlr/",100,0,2,.Ltext0
+  10               		.stabs	"eeprom.c",100,0,2,.Ltext0
+  11               		.text
+  12               	.Ltext0:
+  13               		.stabs	"gcc2_compiled.",60,0,0,0
+  14               		.stabs	"int:t(0,1)=r(0,1);-32768;32767;",128,0,0,0
+  15               		.stabs	"char:t(0,2)=@s8;r(0,2);0;255;",128,0,0,0
+  16               		.stabs	"long int:t(0,3)=@s32;r(0,3);020000000000;017777777777;",128,0,0,0
+  17               		.stabs	"unsigned int:t(0,4)=r(0,4);0;0177777;",128,0,0,0
+  18               		.stabs	"long unsigned int:t(0,5)=@s32;r(0,5);0;037777777777;",128,0,0,0
+  19               		.stabs	"long long int:t(0,6)=@s64;r(0,6);01000000000000000000000;0777777777777777777777;",128,0,0,
+  20               		.stabs	"long long unsigned int:t(0,7)=@s64;r(0,7);0;01777777777777777777777;",128,0,0,0
+  21               		.stabs	"short int:t(0,8)=r(0,8);-32768;32767;",128,0,0,0
+  22               		.stabs	"short unsigned int:t(0,9)=r(0,9);0;0177777;",128,0,0,0
+  23               		.stabs	"signed char:t(0,10)=@s8;r(0,10);-128;127;",128,0,0,0
+  24               		.stabs	"unsigned char:t(0,11)=@s8;r(0,11);0;255;",128,0,0,0
+  25               		.stabs	"float:t(0,12)=r(0,1);4;0;",128,0,0,0
+  26               		.stabs	"double:t(0,13)=r(0,1);4;0;",128,0,0,0
+  27               		.stabs	"long double:t(0,14)=r(0,1);4;0;",128,0,0,0
+  28               		.stabs	"void:t(0,15)=(0,15)",128,0,0,0
+  29               		.stabs	"eeprom.h",130,0,0,0
+  30               		.stabs	"main.h",130,0,0,0
+  31               		.stabs	"/usr/lib/gcc/avr/4.6.0/../../../../avr/include/inttypes.h",130,0,0,0
+  32               		.stabs	"/usr/lib/gcc/avr/4.6.0/include/stdint.h",130,0,0,0
+  33               		.stabs	"/usr/lib/gcc/avr/4.6.0/../../../../avr/include/stdint.h",130,0,0,0
+  34               		.stabs	"int8_t:t(5,1)=(0,10)",128,0,121,0
+  35               		.stabs	"uint8_t:t(5,2)=(0,11)",128,0,122,0
+  36               		.stabs	"int16_t:t(5,3)=(0,1)",128,0,123,0
+  37               		.stabs	"uint16_t:t(5,4)=(0,4)",128,0,124,0
+  38               		.stabs	"int32_t:t(5,5)=(0,3)",128,0,125,0
+  39               		.stabs	"uint32_t:t(5,6)=(0,5)",128,0,126,0
+  40               		.stabs	"int64_t:t(5,7)=(0,6)",128,0,128,0
+  41               		.stabs	"uint64_t:t(5,8)=(0,7)",128,0,129,0
+  42               		.stabs	"intptr_t:t(5,9)=(5,3)",128,0,142,0
+  43               		.stabs	"uintptr_t:t(5,10)=(5,4)",128,0,147,0
+  44               		.stabs	"int_least8_t:t(5,11)=(5,1)",128,0,159,0
+  45               		.stabs	"uint_least8_t:t(5,12)=(5,2)",128,0,164,0
+  46               		.stabs	"int_least16_t:t(5,13)=(5,3)",128,0,169,0
+  47               		.stabs	"uint_least16_t:t(5,14)=(5,4)",128,0,174,0
+  48               		.stabs	"int_least32_t:t(5,15)=(5,5)",128,0,179,0
+  49               		.stabs	"uint_least32_t:t(5,16)=(5,6)",128,0,184,0
+  50               		.stabs	"int_least64_t:t(5,17)=(5,7)",128,0,192,0
+  51               		.stabs	"uint_least64_t:t(5,18)=(5,8)",128,0,199,0
+  52               		.stabs	"int_fast8_t:t(5,19)=(5,1)",128,0,213,0
+  53               		.stabs	"uint_fast8_t:t(5,20)=(5,2)",128,0,218,0
+  54               		.stabs	"int_fast16_t:t(5,21)=(5,3)",128,0,223,0
+  55               		.stabs	"uint_fast16_t:t(5,22)=(5,4)",128,0,228,0
+  56               		.stabs	"int_fast32_t:t(5,23)=(5,5)",128,0,233,0
+  57               		.stabs	"uint_fast32_t:t(5,24)=(5,6)",128,0,238,0
+GAS LISTING /tmp/ccBgxMfW.s 			page 2
+
+
+  58               		.stabs	"int_fast64_t:t(5,25)=(5,7)",128,0,246,0
+  59               		.stabs	"uint_fast64_t:t(5,26)=(5,8)",128,0,253,0
+  60               		.stabs	"intmax_t:t(5,27)=(5,7)",128,0,273,0
+  61               		.stabs	"uintmax_t:t(5,28)=(5,8)",128,0,278,0
+  62               		.stabn	162,0,0,0
+  63               		.stabn	162,0,0,0
+  64               		.stabs	"int_farptr_t:t(3,1)=(5,5)",128,0,77,0
+  65               		.stabs	"uint_farptr_t:t(3,2)=(5,6)",128,0,81,0
+  66               		.stabn	162,0,0,0
+  67               		.stabs	"/usr/lib/gcc/avr/4.6.0/../../../../avr/include/avr/io.h",130,0,0,0
+  68               		.stabs	"/usr/lib/gcc/avr/4.6.0/../../../../avr/include/avr/fuse.h",130,0,0,0
+  69               		.stabs	"__fuse_t:t(7,1)=(7,2)=s3low:(0,11),0,8;high:(0,11),8,8;extended:(0,11),16,8;;",128,0,244,0
+  70               		.stabn	162,0,0,0
+  71               		.stabn	162,0,0,0
+  72               		.stabs	"/usr/lib/gcc/avr/4.6.0/../../../../avr/include/avr/pgmspace.h",130,0,0,0
+  73               		.stabs	"/usr/lib/gcc/avr/4.6.0/include/stddef.h",130,0,0,0
+  74               		.stabs	"size_t:t(9,1)=(0,4)",128,0,212,0
+  75               		.stabn	162,0,0,0
+  76               		.stabs	"prog_void:t(8,1)=(8,2)=(8,2)",128,0,217,0
+  77               		.stabs	"prog_char:t(8,3)=(8,4)=@s8;r(8,4);0;255;",128,0,218,0
+  78               		.stabs	"prog_uchar:t(8,5)=(8,6)=@s8;r(8,6);0;255;",128,0,219,0
+  79               		.stabs	"prog_int8_t:t(8,7)=(8,8)=(0,10)",128,0,221,0
+  80               		.stabs	"prog_uint8_t:t(8,9)=(8,10)=(0,11)",128,0,222,0
+  81               		.stabs	"prog_int16_t:t(8,11)=(8,12)=(0,1)",128,0,223,0
+  82               		.stabs	"prog_uint16_t:t(8,13)=(8,14)=(0,4)",128,0,224,0
+  83               		.stabs	"prog_int32_t:t(8,15)=(8,16)=(0,3)",128,0,225,0
+  84               		.stabs	"prog_uint32_t:t(8,17)=(8,18)=(0,5)",128,0,226,0
+  85               		.stabs	"prog_int64_t:t(8,19)=(8,20)=(0,6)",128,0,228,0
+  86               		.stabs	"prog_uint64_t:t(8,21)=(8,22)=(0,7)",128,0,229,0
+  87               		.stabn	162,0,0,0
+  88               		.stabn	162,0,0,0
+  89               		.stabn	162,0,0,0
+  90               		.stabs	"/usr/lib/gcc/avr/4.6.0/../../../../avr/include/avr/eeprom.h",130,0,0,0
+  91               		.stabs	"/usr/lib/gcc/avr/4.6.0/include/stddef.h",130,0,0,0
+  92               		.stabs	"ptrdiff_t:t(11,1)=(0,1)",128,0,150,0
+  93               		.stabs	"wchar_t:t(11,2)=(0,1)",128,0,324,0
+  94               		.stabn	162,0,0,0
+  95               		.stabn	162,0,0,0
+  96               		.stabs	"get_addr:F(5,2)",36,0,13,get_addr
+  97               	.global	get_addr
+  98               		.type	get_addr, @function
+  99               	get_addr:
+ 100               		.stabd	46,0,0
+   1:eeprom.c      **** /* A C R I S   P R O J E C T ********
+   2:eeprom.c      ****  * LED Controller                   *
+   3:eeprom.c      ****  * http://jwcxz.com/projects/acris  *
+   4:eeprom.c      ****  *                                  *
+   5:eeprom.c      ****  * J. Colosimo -- http://jwcxz.com/ *
+   6:eeprom.c      ****  *                                  *
+   7:eeprom.c      ****  * EEPROM writing and reading       *
+   8:eeprom.c      ****  ************************************/
+   9:eeprom.c      **** 
+  10:eeprom.c      **** #include "eeprom.h"
+  11:eeprom.c      **** #include <avr/eeprom.h>
+  12:eeprom.c      **** 
+  13:eeprom.c      **** uint8_t get_addr(void) {
+ 101               		.stabn	68,0,13,.LM0-.LFBB1
+GAS LISTING /tmp/ccBgxMfW.s 			page 3
+
+
+ 102               	.LM0:
+ 103               	.LFBB1:
+ 104               	/* prologue: function */
+ 105               	/* frame size = 0 */
+ 106               	/* stack size = 0 */
+ 107               	.L__stack_usage = 0
+ 108               	.L2:
+  14:eeprom.c      ****     uint8_t tmp;
+  15:eeprom.c      ****     eeprom_busy_wait();
+ 109               		.stabn	68,0,15,.LM1-.LFBB1
+ 110               	.LM1:
+ 111 0000 F999      		sbic 63-0x20,1
+ 112 0002 00C0      		rjmp .L2
+  16:eeprom.c      ****     tmp = eeprom_read_byte(EEPROM_INST_ADDR);
+ 113               		.stabn	68,0,16,.LM2-.LFBB1
+ 114               	.LM2:
+ 115 0004 81E0      		ldi r24,lo8(1)
+ 116 0006 90E0      		ldi r25,hi8(1)
+ 117 0008 0E94 0000 		call __eerd_byte_m168p
+  17:eeprom.c      **** 
+  18:eeprom.c      ****                         // v return 0 if instaddr hasn't been set
+  19:eeprom.c      ****     if ( tmp == 0xFF ) return 0;
+ 118               		.stabn	68,0,19,.LM3-.LFBB1
+ 119               	.LM3:
+ 120 000c 8F3F      		cpi r24,lo8(-1)
+ 121 000e 01F0      		breq .L6
+  20:eeprom.c      ****     else return tmp;
+  21:eeprom.c      **** }
+ 122               		.stabn	68,0,21,.LM4-.LFBB1
+ 123               	.LM4:
+ 124 0010 0895      		ret
+ 125               	.L6:
+  19:eeprom.c      ****     if ( tmp == 0xFF ) return 0;
+ 126               		.stabn	68,0,19,.LM5-.LFBB1
+ 127               	.LM5:
+ 128 0012 80E0      		ldi r24,lo8(0)
+ 129               		.stabn	68,0,21,.LM6-.LFBB1
+ 130               	.LM6:
+ 131 0014 0895      		ret
+ 132               		.size	get_addr, .-get_addr
+ 133               		.stabs	"tmp:r(5,2)",64,0,14,24
+ 134               		.stabn	192,0,0,.LFBB1-.LFBB1
+ 135               		.stabn	224,0,0,.Lscope1-.LFBB1
+ 136               	.Lscope1:
+ 137               		.stabs	"",36,0,0,.Lscope1-.LFBB1
+ 138               		.stabd	78,0,0
+ 139               		.stabs	"get_baud:F(5,4)",36,0,23,get_baud
+ 140               	.global	get_baud
+ 141               		.type	get_baud, @function
+ 142               	get_baud:
+ 143               		.stabd	46,0,0
+  22:eeprom.c      **** 
+  23:eeprom.c      **** uint16_t get_baud(void) {
+ 144               		.stabn	68,0,23,.LM7-.LFBB2
+ 145               	.LM7:
+ 146               	.LFBB2:
+ 147               	/* prologue: function */
+GAS LISTING /tmp/ccBgxMfW.s 			page 4
+
+
+ 148               	/* frame size = 0 */
+ 149               	/* stack size = 0 */
+ 150               	.L__stack_usage = 0
+ 151               	.L8:
+  24:eeprom.c      ****     uint16_t tmp;
+  25:eeprom.c      ****     eeprom_busy_wait();
+ 152               		.stabn	68,0,25,.LM8-.LFBB2
+ 153               	.LM8:
+ 154 0016 F999      		sbic 63-0x20,1
+ 155 0018 00C0      		rjmp .L8
+  26:eeprom.c      ****     tmp = eeprom_read_word(EEPROM_BAUD_RATE);
+ 156               		.stabn	68,0,26,.LM9-.LFBB2
+ 157               	.LM9:
+ 158 001a 82E0      		ldi r24,lo8(2)
+ 159 001c 90E0      		ldi r25,hi8(2)
+ 160 001e 0E94 0000 		call __eerd_word_m168p
+  27:eeprom.c      **** 
+  28:eeprom.c      ****                         // v return default prescale if not set
+  29:eeprom.c      ****     if ( tmp == 0xFFFF ) return DEF_BAUD_PRESCALE;
+ 161               		.stabn	68,0,29,.LM10-.LFBB2
+ 162               	.LM10:
+ 163 0022 2FEF      		ldi r18,hi8(-1)
+ 164 0024 8F3F      		cpi r24,lo8(-1)
+ 165 0026 9207      		cpc r25,r18
+ 166 0028 01F0      		breq .L11
+  30:eeprom.c      ****     else return tmp;
+  31:eeprom.c      **** }
+ 167               		.stabn	68,0,31,.LM11-.LFBB2
+ 168               	.LM11:
+ 169 002a 0895      		ret
+ 170               	.L11:
+  29:eeprom.c      ****     if ( tmp == 0xFFFF ) return DEF_BAUD_PRESCALE;
+ 171               		.stabn	68,0,29,.LM12-.LFBB2
+ 172               	.LM12:
+ 173 002c 80E4      		ldi r24,lo8(64)
+ 174 002e 90E0      		ldi r25,hi8(64)
+ 175               		.stabn	68,0,31,.LM13-.LFBB2
+ 176               	.LM13:
+ 177 0030 0895      		ret
+ 178               		.size	get_baud, .-get_baud
+ 179               		.stabs	"tmp:r(5,4)",64,0,24,24
+ 180               		.stabn	192,0,0,.LFBB2-.LFBB2
+ 181               		.stabn	224,0,0,.Lscope2-.LFBB2
+ 182               	.Lscope2:
+ 183               		.stabs	"",36,0,0,.Lscope2-.LFBB2
+ 184               		.stabd	78,0,0
+ 185               		.stabs	"get_baud_dbl:F(5,2)",36,0,33,get_baud_dbl
+ 186               	.global	get_baud_dbl
+ 187               		.type	get_baud_dbl, @function
+ 188               	get_baud_dbl:
+ 189               		.stabd	46,0,0
+  32:eeprom.c      **** 
+  33:eeprom.c      **** uint8_t get_baud_dbl(void) {
+ 190               		.stabn	68,0,33,.LM14-.LFBB3
+ 191               	.LM14:
+ 192               	.LFBB3:
+ 193               	/* prologue: function */
+GAS LISTING /tmp/ccBgxMfW.s 			page 5
+
+
+ 194               	/* frame size = 0 */
+ 195               	/* stack size = 0 */
+ 196               	.L__stack_usage = 0
+ 197               	.L13:
+  34:eeprom.c      ****     uint8_t tmp;
+  35:eeprom.c      ****     eeprom_busy_wait();
+ 198               		.stabn	68,0,35,.LM15-.LFBB3
+ 199               	.LM15:
+ 200 0032 F999      		sbic 63-0x20,1
+ 201 0034 00C0      		rjmp .L13
+  36:eeprom.c      ****     tmp = eeprom_read_byte(EEPROM_BAUD_DBLE);
+ 202               		.stabn	68,0,36,.LM16-.LFBB3
+ 203               	.LM16:
+ 204 0036 84E0      		ldi r24,lo8(4)
+ 205 0038 90E0      		ldi r25,hi8(4)
+ 206 003a 0E94 0000 		call __eerd_byte_m168p
+  37:eeprom.c      **** 
+  38:eeprom.c      ****                         // v return default double if not set
+  39:eeprom.c      ****     if ( tmp == 0xFF ) return DEF_BAUD_DOUBLE;
+ 207               		.stabn	68,0,39,.LM17-.LFBB3
+ 208               	.LM17:
+ 209 003e 8F3F      		cpi r24,lo8(-1)
+ 210 0040 01F0      		breq .L16
+  40:eeprom.c      ****     else return tmp;
+  41:eeprom.c      **** }
+ 211               		.stabn	68,0,41,.LM18-.LFBB3
+ 212               	.LM18:
+ 213 0042 0895      		ret
+ 214               	.L16:
+  39:eeprom.c      ****     if ( tmp == 0xFF ) return DEF_BAUD_DOUBLE;
+ 215               		.stabn	68,0,39,.LM19-.LFBB3
+ 216               	.LM19:
+ 217 0044 81E0      		ldi r24,lo8(1)
+ 218               		.stabn	68,0,41,.LM20-.LFBB3
+ 219               	.LM20:
+ 220 0046 0895      		ret
+ 221               		.size	get_baud_dbl, .-get_baud_dbl
+ 222               		.stabs	"tmp:r(5,2)",64,0,34,24
+ 223               		.stabn	192,0,0,.LFBB3-.LFBB3
+ 224               		.stabn	224,0,0,.Lscope3-.LFBB3
+ 225               	.Lscope3:
+ 226               		.stabs	"",36,0,0,.Lscope3-.LFBB3
+ 227               		.stabd	78,0,0
+ 228               		.stabs	"",100,0,0,.Letext0
+ 229               	.Letext0:
+GAS LISTING /tmp/ccBgxMfW.s 			page 6
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 eeprom.c
+     /tmp/ccBgxMfW.s:2      *ABS*:000000000000003f __SREG__
+     /tmp/ccBgxMfW.s:3      *ABS*:000000000000003e __SP_H__
+     /tmp/ccBgxMfW.s:4      *ABS*:000000000000003d __SP_L__
+     /tmp/ccBgxMfW.s:5      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/ccBgxMfW.s:6      *ABS*:0000000000000001 __zero_reg__
+     /tmp/ccBgxMfW.s:99     .text:0000000000000000 get_addr
+     /tmp/ccBgxMfW.s:142    .text:0000000000000016 get_baud
+     /tmp/ccBgxMfW.s:188    .text:0000000000000032 get_baud_dbl
+
+UNDEFINED SYMBOLS
+__do_copy_data
+__do_clear_bss
+__eerd_byte_m168p
+__eerd_word_m168p

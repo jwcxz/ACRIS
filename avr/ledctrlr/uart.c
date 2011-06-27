@@ -1,6 +1,15 @@
-/* UART FUNCTIONS */
+/* A C R I S   P R O J E C T ********
+ * LED Controller                   *
+ * http://jwcxz.com/projects/acris  *
+ *                                  *
+ * J. Colosimo -- http://jwcxz.com/ *
+ *                                  *
+ * UART interface                   *
+ ************************************/
 
 #include "uart.h"
+#include "dbgled.h"
+#include "eeprom.h"
 
 void uart_init(void) {
     // set rs485 tristate to "read"

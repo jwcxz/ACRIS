@@ -4,11 +4,11 @@
  *                                  *
  * J. Colosimo -- http://jwcxz.com/ *
  *                                  *
- * useful macros                    *
+ * EEPROM writing and reading       *
  ************************************/
 
-#define _ON(port,pin)  (port |= _BV(pin))
-#define _OFF(port,pin) (port &= ~_BV(pin))
-#define _BVON(port,pins)  (port |= pins)
-#define _BVOFF(port,pins) (port &= pins)
-#define _VAL(byte,pos) ((byte>>pos)&1)
+#include "main.h"
+
+uint8_t get_addr(void);
+uint16_t get_baud(void);
+uint8_t get_baud_dbl(void);

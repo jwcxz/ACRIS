@@ -1,4 +1,11 @@
-/* LED OUTPUT CALCULATIONS */
+/* A C R I S   P R O J E C T ********
+ * LED Controller                   *
+ * http://jwcxz.com/projects/acris  *
+ *                                  *
+ * J. Colosimo -- http://jwcxz.com/ *
+ *                                  *
+ * LED actions                      *
+ ************************************/
 
 #include "led.h"
 #include "tlc.h"

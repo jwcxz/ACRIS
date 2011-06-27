@@ -57,13 +57,14 @@
 #include "main.h"
 #include "eeprom.h"
 #include "dbgled.h"
+#include "uart.h"
 
 // page buffer
 static uint8_t page_buf[PAGESIZE];
 static uint8_t* page_buf_ptr;
 
 // instrument address
-static uint8_t instaddr;
+uint8_t instaddr;
 
 // baud rate divisor
 static uint16_t baud;
@@ -73,6 +74,8 @@ static uint8_t addrmask = AM_ALL;
 
 /* Main Loop */
 int main(void) {
+    instaddr = get_addr();
+
     // set up uart for 9600 baud communication with no parity
 
     // set up timer to go to application mode if no data has been received

@@ -1,20 +1,19 @@
 /* A C R I S   P R O J E C T ********
- * LED Controller Bootloader        *
+ * LED Controller                   *
  * http://jwcxz.com/projects/acris  *
  *                                  *
  * J. Colosimo -- http://jwcxz.com/ *
  *                                  *
- * LED controller main loop file    *
+ * LED controller main loop         *
  ************************************/
 
 #include "main.h"
 
-#include "led.h"
-#include "timeout.h"
-#include "tlc.h"
-#include "uart.h"
 #include "dbgled.h"
 #include "eeprom.h"
+#include "led.h"
+#include "tlc.h"
+#include "uart.h"
 
 volatile uint8_t uart_rxbuf[UART_RX_BUFSZ];
 volatile uint8_t *uart_rxbuf_iptr = uart_rxbuf;
@@ -26,12 +25,10 @@ uint8_t instaddr = 0;
 
 volatile uint8_t tlc[3][24];
 
-uint8_t action;          // current action
-uint8_t numargs;         // number of arguments to expect
-uint8_t args[15];        // array to store arguments XXX: the array size
-                         // needs to be changed if we ever expect more
-                         // than 12 args
-uint8_t* argptr = args;  //   associated pointer
+uint8_t action;         // current action
+uint8_t numargs;        // number of arguments to expect
+uint8_t args[15];       // array to store arguments
+uint8_t* argptr = args; //   ... associated pointer
 
 /* COMMAND PROCESSOR STATE MACHINE */
 #define CST_IDLE    0
@@ -40,8 +37,11 @@ uint8_t* argptr = args;  //   associated pointer
 static uint8_t cmdstate;
 
 int main(void) {
+    // initialize debug LEDs
+    dbg_init();
+
     // get the address of the device
-    get_addr();
+    instaddr = get_addr();
 
     // initialize TLC
     tlc_init();
@@ -51,9 +51,8 @@ int main(void) {
 
     // show address of the device on the debug LEDs
     dbg_set(0xFF);
-    _delay_ms(500);
+    _delay_ms(100);
     show_addr();
-    _delay_ms(500);
 
     // enable interrupts
     sei();
@@ -79,6 +78,8 @@ void receive_data(void) {
     inbyte = uart_rx();
 
     if ( inbyte == CMD_SYNC )  {
+        // the sync byte is always treated as a trigger to reset the state
+        // machine -- never send it as an argument
         cmdstate = CST_SYNC;
     } else {
         switch (cmdstate) {
@@ -90,12 +91,15 @@ void receive_data(void) {
                 action = inbyte;
                 argptr = args;
 
-                if ( inbyte == CMD_DOALL || inbyte == instaddr ) {
+                if ( inbyte == instaddr ) {
                     numargs = 15;
                     cmdstate = CST_ARGS;
                 } else if ( (inbyte >= 0xF0 && inbyte <= 0xFE) && 
                             (instaddr >= (inbyte&0x0F)*16 && 
-                                instaddr <= (inbyte&0x0F)*16+15))
+                                instaddr <= (inbyte&0x0F)*16+15)) {
+                    numargs = 15;
+                    cmdstate = CST_ARGS;
+                } else if ( inbyte == CMD_DOALL ) {
                     numargs = 15;
                     cmdstate = CST_ARGS;
                 } else {
