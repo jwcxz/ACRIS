@@ -1,0 +1,87 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+ASMFILES	../ledctrlr/Makefile	/^ASMFILES=$(filter %.S, $(PRJSRC))$/;"	m
+ASMFLAGS	../ledctrlr/Makefile	/^ASMFLAGS =-I. $(INC) -mmcu=$(MCU)        \\$/;"	m
+AVRDUDE	../ledctrlr/Makefile	/^AVRDUDE=avrdude -F$/;"	m
+AVRDUDE_PORT	../ledctrlr/Makefile	/^AVRDUDE_PORT=\/dev\/ttyS0$/;"	m
+AVRDUDE_PROGRAMMERID	../ledctrlr/Makefile	/^AVRDUDE_PROGRAMMERID=ponyser$/;"	m
+AVR_EFUSE	../ledctrlr/Makefile	/^AVR_EFUSE=0xf9$/;"	m
+AVR_HFUSE	../ledctrlr/Makefile	/^AVR_HFUSE=0xdf$/;"	m
+AVR_LFUSE	../ledctrlr/Makefile	/^AVR_LFUSE=0xce$/;"	m
+BIGCFILES	../ledctrlr/Makefile	/^BIGCFILES=$(filter %.C, $(PRJSRC))$/;"	m
+CC	../ledctrlr/Makefile	/^CC=avr-gcc$/;"	m
+CCFILES	../ledctrlr/Makefile	/^CCFILES=$(filter %.cc, $(PRJSRC))$/;"	m
+CFILES	../ledctrlr/Makefile	/^CFILES=$(filter %.c, $(PRJSRC))$/;"	m
+CFLAGS	../ledctrlr/Makefile	/^CFLAGS=-I. $(INC) -g -mmcu=$(MCU) -O$(OPTLEVEL) \\$/;"	m
+CPPFILES	../ledctrlr/Makefile	/^CPPFILES=$(filter %.cpp, $(PRJSRC))$/;"	m
+CPPFLAGS	../ledctrlr/Makefile	/^CPPFLAGS=-fno-exceptions               \\$/;"	m
+CST_ARGS	../ledctrlr/main.c	36;"	d	file:
+CST_ARGS	../ledctrlr/main.h	51;"	d
+CST_IDLE	../ledctrlr/main.c	34;"	d	file:
+CST_IDLE	../ledctrlr/main.h	49;"	d
+CST_SYNC	../ledctrlr/main.c	35;"	d	file:
+CST_SYNC	../ledctrlr/main.h	50;"	d
+DUMPTRG	../ledctrlr/Makefile	/^DUMPTRG=$(PROJECTNAME).s$/;"	m
+GDBINITFILE	../ledctrlr/Makefile	/^GDBINITFILE=gdbinit-$(PROJECTNAME)$/;"	m
+GENASMFILES	../ledctrlr/Makefile	/^GENASMFILES=$(filter %.s, $(OBJDEPS:.o=.s)) $/;"	m
+HEXFORMAT	../ledctrlr/Makefile	/^HEXFORMAT=ihex$/;"	m
+HEXROMTRG	../ledctrlr/Makefile	/^HEXROMTRG=$(PROJECTNAME).hex $/;"	m
+HEXTRG	../ledctrlr/Makefile	/^HEXTRG=$(HEXROMTRG) $(PROJECTNAME).ee.hex$/;"	m
+INC	../ledctrlr/Makefile	/^INC=$/;"	m
+ISR	../ledctrlr/uart.c	/^ISR(USART_RX_vect) {$/;"	f
+LDFLAGS	../ledctrlr/Makefile	/^LDFLAGS=-Wl,-Map,$(TRG).map -mmcu=$(MCU) \\$/;"	m
+LIBS	../ledctrlr/Makefile	/^LIBS=$/;"	m
+LST	../ledctrlr/Makefile	/^LST=$(filter %.lst, $(OBJDEPS:.o=.lst))$/;"	m
+MCU	../ledctrlr/Makefile	/^MCU=atmega168p$/;"	m
+OBJCOPY	../ledctrlr/Makefile	/^OBJCOPY=avr-objcopy$/;"	m
+OBJDEPS	../ledctrlr/Makefile	/^OBJDEPS=$(CFILES:.c=.o)    \\$/;"	m
+OBJDUMP	../ledctrlr/Makefile	/^OBJDUMP=avr-objdump$/;"	m
+OPTLEVEL	../ledctrlr/Makefile	/^OPTLEVEL=2$/;"	m
+PRJSRC	../ledctrlr/Makefile	/^PRJSRC=main.c dbgled.c eeprom.c led.c tlc.c uart.c$/;"	m
+PROGRAMMER_MCU	../ledctrlr/Makefile	/^PROGRAMMER_MCU=m168$/;"	m
+PROJECTNAME	../ledctrlr/Makefile	/^PROJECTNAME=ledctrlr$/;"	m
+REMOVE	../ledctrlr/Makefile	/^REMOVE=rm -f$/;"	m
+SIZE	../ledctrlr/Makefile	/^SIZE=avr-size$/;"	m
+TRG	../ledctrlr/Makefile	/^TRG=$(PROJECTNAME).out$/;"	m
+_BVOFF	../ledctrlr/macros.h	13;"	d
+_BVON	../ledctrlr/macros.h	12;"	d
+_OFF	../ledctrlr/macros.h	11;"	d
+_ON	../ledctrlr/macros.h	10;"	d
+_VAL	../ledctrlr/macros.h	14;"	d
+action	../ledctrlr/main.c	/^uint8_t action;         \/\/ current action$/;"	v
+argptr	../ledctrlr/main.c	/^uint8_t* argptr = args; \/\/   ... associated pointer$/;"	v
+args	../ledctrlr/main.c	/^uint8_t args[15];       \/\/ array to store arguments$/;"	v
+cmdstate	../ledctrlr/main.c	/^static uint8_t cmdstate;$/;"	v	file:
+dbg_init	../ledctrlr/dbgled.c	/^void dbg_init(void) {$/;"	f
+dbg_off	../ledctrlr/dbgled.c	/^void dbg_off(uint8_t val) {$/;"	f
+dbg_on	../ledctrlr/dbgled.c	/^void dbg_on(uint8_t val) {$/;"	f
+dbg_set	../ledctrlr/dbgled.c	/^void dbg_set(uint8_t val) {$/;"	f
+get	../ledctrlr/tlc.c	/^uint16_t get(volatile uint8_t driver[], uint8_t posn) {$/;"	f
+get_addr	../ledctrlr/eeprom.c	/^uint8_t get_addr(void) {$/;"	f
+get_baud	../ledctrlr/eeprom.c	/^uint16_t get_baud(void) {$/;"	f
+get_baud_dbl	../ledctrlr/eeprom.c	/^uint8_t get_baud_dbl(void) {$/;"	f
+instaddr	../ledctrlr/main.c	/^uint8_t instaddr = 0;$/;"	v
+led_action	../ledctrlr/led.c	/^void led_action(void) {$/;"	f
+led_set	../ledctrlr/led.c	/^void led_set(void) {$/;"	f
+main	../ledctrlr/main.c	/^int main(void) {$/;"	f
+numargs	../ledctrlr/main.c	/^uint8_t numargs;        \/\/ number of arguments to expect$/;"	v
+receive_data	../ledctrlr/main.c	/^void receive_data(void) {$/;"	f
+rxen	../ledctrlr/main.c	/^volatile uint8_t rxen = 0;$/;"	v
+ser2led	../ledctrlr/tlc.c	/^uint16_t ser2led(uint8_t ser) {$/;"	f
+set	../ledctrlr/tlc.c	/^void set(volatile uint8_t driver[], uint8_t posn, uint16_t value) {$/;"	f
+set_output	../ledctrlr/tlc.c	/^void set_output(uint8_t chan, uint8_t led, uint16_t val) {$/;"	f
+show_addr	../ledctrlr/dbgled.c	/^void show_addr(void) {$/;"	f
+tlc	../ledctrlr/main.c	/^volatile uint8_t tlc[3][24];$/;"	v
+tlc_drive	../ledctrlr/tlc.c	/^void tlc_drive(void) {$/;"	f
+tlc_init	../ledctrlr/tlc.c	/^void tlc_init(void) {$/;"	f
+uart_data_rdy	../ledctrlr/uart.c	/^uint8_t uart_data_rdy(void) {$/;"	f
+uart_init	../ledctrlr/uart.c	/^void uart_init(void) {$/;"	f
+uart_rx	../ledctrlr/uart.c	/^uint8_t uart_rx(void) {$/;"	f
+uart_rxbuf	../ledctrlr/main.c	/^volatile uint8_t uart_rxbuf[UART_RX_BUFSZ];$/;"	v
+uart_rxbuf_count	../ledctrlr/main.c	/^volatile uint8_t uart_rxbuf_count = 0;$/;"	v
+uart_rxbuf_iptr	../ledctrlr/main.c	/^volatile uint8_t *uart_rxbuf_iptr = uart_rxbuf;$/;"	v
+uart_rxbuf_optr	../ledctrlr/main.c	/^volatile uint8_t *uart_rxbuf_optr = uart_rxbuf;$/;"	v

@@ -1,0 +1,341 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+AM_ALL	bootloader/main.h	22;"	d
+ASMFILES	bootloader/Makefile	/^ASMFILES=$(filter %.S, $(PRJSRC))$/;"	m
+ASMFILES	huecycle/Makefile	/^ASMFILES=$(filter %.S, $(PRJSRC))$/;"	m
+ASMFILES	ledctrlr/Makefile	/^ASMFILES=$(filter %.S, $(PRJSRC))$/;"	m
+ASMFLAGS	bootloader/Makefile	/^ASMFLAGS =-I. $(INC) -mmcu=$(MCU)        \\$/;"	m
+ASMFLAGS	huecycle/Makefile	/^ASMFLAGS =-I. $(INC) -mmcu=$(MCU)        \\$/;"	m
+ASMFLAGS	ledctrlr/Makefile	/^ASMFLAGS =-I. $(INC) -mmcu=$(MCU)        \\$/;"	m
+AVRDUDE	bootloader/Makefile	/^AVRDUDE=avrdude -F$/;"	m
+AVRDUDE	huecycle/Makefile	/^AVRDUDE=avrdude -F$/;"	m
+AVRDUDE	ledctrlr/Makefile	/^AVRDUDE=avrdude -F$/;"	m
+AVRDUDE_PORT	bootloader/Makefile	/^AVRDUDE_PORT=\/dev\/ttyS0$/;"	m
+AVRDUDE_PORT	huecycle/Makefile	/^AVRDUDE_PORT=\/dev\/ttyS0$/;"	m
+AVRDUDE_PORT	ledctrlr/Makefile	/^AVRDUDE_PORT=\/dev\/ttyS0$/;"	m
+AVRDUDE_PROGRAMMERID	bootloader/Makefile	/^AVRDUDE_PROGRAMMERID=ponyser$/;"	m
+AVRDUDE_PROGRAMMERID	huecycle/Makefile	/^AVRDUDE_PROGRAMMERID=ponyser$/;"	m
+AVRDUDE_PROGRAMMERID	ledctrlr/Makefile	/^AVRDUDE_PROGRAMMERID=ponyser$/;"	m
+AVR_EFUSE	bootloader/Makefile	/^AVR_EFUSE=0xf9$/;"	m
+AVR_EFUSE	huecycle/Makefile	/^AVR_EFUSE=0xf9$/;"	m
+AVR_EFUSE	ledctrlr/Makefile	/^AVR_EFUSE=0xf9$/;"	m
+AVR_HFUSE	bootloader/Makefile	/^AVR_HFUSE=0xdf$/;"	m
+AVR_HFUSE	huecycle/Makefile	/^AVR_HFUSE=0xdf$/;"	m
+AVR_HFUSE	ledctrlr/Makefile	/^AVR_HFUSE=0xdf$/;"	m
+AVR_LFUSE	bootloader/Makefile	/^AVR_LFUSE=0xce$/;"	m
+AVR_LFUSE	huecycle/Makefile	/^AVR_LFUSE=0xce$/;"	m
+AVR_LFUSE	ledctrlr/Makefile	/^AVR_LFUSE=0xce$/;"	m
+BAUD_PRESCALE	huecycle/config.h	25;"	d
+BIGCFILES	bootloader/Makefile	/^BIGCFILES=$(filter %.C, $(PRJSRC))$/;"	m
+BIGCFILES	huecycle/Makefile	/^BIGCFILES=$(filter %.C, $(PRJSRC))$/;"	m
+BIGCFILES	ledctrlr/Makefile	/^BIGCFILES=$(filter %.C, $(PRJSRC))$/;"	m
+BLANK_DDR	huecycle/config.h	59;"	d
+BLANK_DDR	ledctrlr/config.h	44;"	d
+BLANK_PIN	huecycle/config.h	57;"	d
+BLANK_PIN	ledctrlr/config.h	42;"	d
+BLANK_PRT	huecycle/config.h	58;"	d
+BLANK_PRT	ledctrlr/config.h	43;"	d
+CC	bootloader/Makefile	/^CC=avr-gcc$/;"	m
+CC	huecycle/Makefile	/^CC=avr-gcc$/;"	m
+CC	ledctrlr/Makefile	/^CC=avr-gcc$/;"	m
+CCFILES	bootloader/Makefile	/^CCFILES=$(filter %.cc, $(PRJSRC))$/;"	m
+CCFILES	huecycle/Makefile	/^CCFILES=$(filter %.cc, $(PRJSRC))$/;"	m
+CCFILES	ledctrlr/Makefile	/^CCFILES=$(filter %.cc, $(PRJSRC))$/;"	m
+CFILES	bootloader/Makefile	/^CFILES=$(filter %.c, $(PRJSRC))$/;"	m
+CFILES	huecycle/Makefile	/^CFILES=$(filter %.c, $(PRJSRC))$/;"	m
+CFILES	ledctrlr/Makefile	/^CFILES=$(filter %.c, $(PRJSRC))$/;"	m
+CFLAGS	bootloader/Makefile	/^CFLAGS=-I. $(INC) -g -mmcu=$(MCU) -O$(OPTLEVEL) \\$/;"	m
+CFLAGS	huecycle/Makefile	/^CFLAGS=-I. $(INC) -g -mmcu=$(MCU) -O$(OPTLEVEL) \\$/;"	m
+CFLAGS	ledctrlr/Makefile	/^CFLAGS=-I. $(INC) -g -mmcu=$(MCU) -O$(OPTLEVEL) \\$/;"	m
+CMD_ADDR	bootloader/main.h	25;"	d
+CMD_BAUD	bootloader/main.h	26;"	d
+CMD_DISP_ADDR_H	bootloader/main.h	27;"	d
+CMD_DISP_ADDR_L	bootloader/main.h	28;"	d
+CMD_DOALL	ledctrlr/config.h	63;"	d
+CMD_EMGCY	huecycle/config.h	82;"	d
+CMD_EVOFF	huecycle/config.h	83;"	d
+CMD_FDISP	huecycle/config.h	89;"	d
+CMD_FPANL	huecycle/config.h	84;"	d
+CMD_MASK	bootloader/main.h	29;"	d
+CMD_NOP	bootloader/main.h	23;"	d
+CMD_PROG	bootloader/main.h	30;"	d
+CMD_RDISP	huecycle/config.h	90;"	d
+CMD_RPANL	huecycle/config.h	85;"	d
+CMD_STRBE	huecycle/config.h	88;"	d
+CMD_SYNC	bootloader/main.h	24;"	d
+CMD_SYNC	huecycle/config.h	81;"	d
+CMD_SYNC	ledctrlr/config.h	62;"	d
+CMD_UVSET	huecycle/config.h	86;"	d
+CMD_UVSTB	huecycle/config.h	91;"	d
+CMD_VRFY	bootloader/main.h	31;"	d
+CMD_WHSET	huecycle/config.h	87;"	d
+CPPFILES	bootloader/Makefile	/^CPPFILES=$(filter %.cpp, $(PRJSRC))$/;"	m
+CPPFILES	huecycle/Makefile	/^CPPFILES=$(filter %.cpp, $(PRJSRC))$/;"	m
+CPPFILES	ledctrlr/Makefile	/^CPPFILES=$(filter %.cpp, $(PRJSRC))$/;"	m
+CPPFLAGS	bootloader/Makefile	/^CPPFLAGS=-fno-exceptions               \\$/;"	m
+CPPFLAGS	huecycle/Makefile	/^CPPFLAGS=-fno-exceptions               \\$/;"	m
+CPPFLAGS	ledctrlr/Makefile	/^CPPFLAGS=-fno-exceptions               \\$/;"	m
+CST_ARGS	huecycle/main.c	37;"	d	file:
+CST_ARGS	ledctrlr/main.c	36;"	d	file:
+CST_ARGS	ledctrlr/main.h	51;"	d
+CST_IDLE	huecycle/main.c	35;"	d	file:
+CST_IDLE	ledctrlr/main.c	34;"	d	file:
+CST_IDLE	ledctrlr/main.h	49;"	d
+CST_SYNC	huecycle/main.c	36;"	d	file:
+CST_SYNC	ledctrlr/main.c	35;"	d	file:
+CST_SYNC	ledctrlr/main.h	50;"	d
+CTRLR_RGB	huecycle/config.h	1;"	d
+CTRLR_TYPE	huecycle/config.h	4;"	d
+CTRLR_TYPE	huecycle/main.h	11;"	d
+CTRLR_UVS	huecycle/config.h	2;"	d
+DBGLED_DDR	ledctrlr/config.h	55;"	d
+DBGLED_PRT	ledctrlr/config.h	54;"	d
+DBG_OVFLWERR	ledctrlr/config.h	67;"	d
+DBG_PRTYERR	ledctrlr/config.h	66;"	d
+DEF_BAUD_DOUBLE	ledctrlr/config.h	19;"	d
+DEF_BAUD_PRESCALE	ledctrlr/config.h	18;"	d
+DIP_DDR	huecycle/config.h	69;"	d
+DIP_MSK	huecycle/config.h	67;"	d
+DIP_PIN	huecycle/config.h	66;"	d
+DIP_PRT	huecycle/config.h	65;"	d
+DIP_SHFT	huecycle/config.h	68;"	d
+DUMPTRG	bootloader/Makefile	/^DUMPTRG=$(PROJECTNAME).s$/;"	m
+DUMPTRG	huecycle/Makefile	/^DUMPTRG=$(PROJECTNAME).s$/;"	m
+DUMPTRG	ledctrlr/Makefile	/^DUMPTRG=$(PROJECTNAME).s$/;"	m
+EEPROM_BAUD_DBLE	ledctrlr/config.h	15;"	d
+EEPROM_BAUD_RATE	ledctrlr/config.h	14;"	d
+EEPROM_INST_ADDR	ledctrlr/config.h	13;"	d
+FIX0	huecycle/config.h	9;"	d
+FIX1	huecycle/config.h	10;"	d
+FIX3	huecycle/config.h	11;"	d
+FIX5	huecycle/config.h	12;"	d
+FIX9	huecycle/config.h	13;"	d
+FIXBOARD	huecycle/config.h	15;"	d
+F_CPU	huecycle/config.h	18;"	d
+F_CPU	ledctrlr/config.h	11;"	d
+GDBINITFILE	bootloader/Makefile	/^GDBINITFILE=gdbinit-$(PROJECTNAME)$/;"	m
+GDBINITFILE	huecycle/Makefile	/^GDBINITFILE=gdbinit-$(PROJECTNAME)$/;"	m
+GDBINITFILE	ledctrlr/Makefile	/^GDBINITFILE=gdbinit-$(PROJECTNAME)$/;"	m
+GENASMFILES	bootloader/Makefile	/^GENASMFILES=$(filter %.s, $(OBJDEPS:.o=.s)) $/;"	m
+GENASMFILES	huecycle/Makefile	/^GENASMFILES=$(filter %.s, $(OBJDEPS:.o=.s)) $/;"	m
+GENASMFILES	ledctrlr/Makefile	/^GENASMFILES=$(filter %.s, $(OBJDEPS:.o=.s)) $/;"	m
+GSCLK_DDR	huecycle/config.h	63;"	d
+GSCLK_DDR	ledctrlr/config.h	48;"	d
+GSCLK_PIN	huecycle/config.h	61;"	d
+GSCLK_PIN	ledctrlr/config.h	46;"	d
+GSCLK_PRT	huecycle/config.h	62;"	d
+GSCLK_PRT	ledctrlr/config.h	47;"	d
+HEXFORMAT	bootloader/Makefile	/^HEXFORMAT=ihex$/;"	m
+HEXFORMAT	huecycle/Makefile	/^HEXFORMAT=ihex$/;"	m
+HEXFORMAT	ledctrlr/Makefile	/^HEXFORMAT=ihex$/;"	m
+HEXROMTRG	bootloader/Makefile	/^HEXROMTRG=$(PROJECTNAME).hex $/;"	m
+HEXROMTRG	huecycle/Makefile	/^HEXROMTRG=$(PROJECTNAME).hex $/;"	m
+HEXROMTRG	ledctrlr/Makefile	/^HEXROMTRG=$(PROJECTNAME).hex $/;"	m
+HEXTRG	bootloader/Makefile	/^HEXTRG=$(HEXROMTRG) $(PROJECTNAME).ee.hex$/;"	m
+HEXTRG	huecycle/Makefile	/^HEXTRG=$(HEXROMTRG) $(PROJECTNAME).ee.hex$/;"	m
+HEXTRG	ledctrlr/Makefile	/^HEXTRG=$(HEXROMTRG) $(PROJECTNAME).ee.hex$/;"	m
+INC	bootloader/Makefile	/^INC=-I..\/ledctrlr$/;"	m
+INC	huecycle/Makefile	/^INC=$/;"	m
+INC	ledctrlr/Makefile	/^INC=$/;"	m
+ISR	huecycle/uart.c	/^ISR(USART_RX_vect) {$/;"	f
+ISR	ledctrlr/uart.c	/^ISR(USART_RX_vect) {$/;"	f
+LDFLAGS	bootloader/Makefile	/^LDFLAGS=-Wl,-Map,$(TRG).map -mmcu=$(MCU) \\$/;"	m
+LDFLAGS	huecycle/Makefile	/^LDFLAGS=-Wl,-Map,$(TRG).map -mmcu=$(MCU) \\$/;"	m
+LDFLAGS	ledctrlr/Makefile	/^LDFLAGS=-Wl,-Map,$(TRG).map -mmcu=$(MCU) \\$/;"	m
+LIBS	bootloader/Makefile	/^LIBS=$/;"	m
+LIBS	huecycle/Makefile	/^LIBS=$/;"	m
+LIBS	ledctrlr/Makefile	/^LIBS=$/;"	m
+LST	bootloader/Makefile	/^LST=$(filter %.lst, $(OBJDEPS:.o=.lst))$/;"	m
+LST	huecycle/Makefile	/^LST=$(filter %.lst, $(OBJDEPS:.o=.lst))$/;"	m
+LST	ledctrlr/Makefile	/^LST=$(filter %.lst, $(OBJDEPS:.o=.lst))$/;"	m
+MCU	bootloader/Makefile	/^MCU=atmega168p$/;"	m
+MCU	huecycle/Makefile	/^MCU=atmega168p$/;"	m
+MCU	ledctrlr/Makefile	/^MCU=atmega168p$/;"	m
+OBJCOPY	bootloader/Makefile	/^OBJCOPY=avr-objcopy$/;"	m
+OBJCOPY	huecycle/Makefile	/^OBJCOPY=avr-objcopy$/;"	m
+OBJCOPY	ledctrlr/Makefile	/^OBJCOPY=avr-objcopy$/;"	m
+OBJDEPS	bootloader/Makefile	/^OBJDEPS=$(CFILES:.c=.o)    \\$/;"	m
+OBJDEPS	huecycle/Makefile	/^OBJDEPS=$(CFILES:.c=.o)    \\$/;"	m
+OBJDEPS	ledctrlr/Makefile	/^OBJDEPS=$(CFILES:.c=.o)    \\$/;"	m
+OBJDUMP	bootloader/Makefile	/^OBJDUMP=avr-objdump$/;"	m
+OBJDUMP	huecycle/Makefile	/^OBJDUMP=avr-objdump$/;"	m
+OBJDUMP	ledctrlr/Makefile	/^OBJDUMP=avr-objdump$/;"	m
+OPTLEVEL	bootloader/Makefile	/^OPTLEVEL=2$/;"	m
+OPTLEVEL	huecycle/Makefile	/^OPTLEVEL=2$/;"	m
+OPTLEVEL	ledctrlr/Makefile	/^OPTLEVEL=2$/;"	m
+PAGESIZE	bootloader/main.h	21;"	d
+PRJSRC	bootloader/Makefile	/^PRJSRC=main.c eeprom.c uart.c$/;"	m
+PRJSRC	huecycle/Makefile	/^PRJSRC=main.c led.c timeout.c tlc.c uart.c color.c$/;"	m
+PRJSRC	ledctrlr/Makefile	/^PRJSRC=main.c dbgled.c eeprom.c led.c tlc.c uart.c$/;"	m
+PROGRAMMER_MCU	bootloader/Makefile	/^PROGRAMMER_MCU=m168$/;"	m
+PROGRAMMER_MCU	huecycle/Makefile	/^PROGRAMMER_MCU=m168$/;"	m
+PROGRAMMER_MCU	ledctrlr/Makefile	/^PROGRAMMER_MCU=m168$/;"	m
+PROJECTNAME	bootloader/Makefile	/^PROJECTNAME=ledbtldr$/;"	m
+PROJECTNAME	huecycle/Makefile	/^PROJECTNAME=huecycle$/;"	m
+PROJECTNAME	ledctrlr/Makefile	/^PROJECTNAME=ledctrlr$/;"	m
+REAR_MIN	huecycle/config.h	95;"	d
+REMOVE	bootloader/Makefile	/^REMOVE=rm -f$/;"	m
+REMOVE	huecycle/Makefile	/^REMOVE=rm -f$/;"	m
+REMOVE	ledctrlr/Makefile	/^REMOVE=rm -f$/;"	m
+SCLK_DDR	huecycle/config.h	46;"	d
+SCLK_DDR	ledctrlr/config.h	31;"	d
+SCLK_PIN	huecycle/config.h	44;"	d
+SCLK_PIN	ledctrlr/config.h	29;"	d
+SCLK_PRT	huecycle/config.h	45;"	d
+SCLK_PRT	ledctrlr/config.h	30;"	d
+SDAT_DDR	huecycle/config.h	42;"	d
+SDAT_DDR	ledctrlr/config.h	27;"	d
+SDAT_PIN	huecycle/config.h	40;"	d
+SDAT_PIN	ledctrlr/config.h	25;"	d
+SDAT_PRT	huecycle/config.h	41;"	d
+SDAT_PRT	ledctrlr/config.h	26;"	d
+SDSS_DDR	huecycle/config.h	51;"	d
+SDSS_DDR	ledctrlr/config.h	36;"	d
+SDSS_PIN	huecycle/config.h	49;"	d
+SDSS_PIN	ledctrlr/config.h	34;"	d
+SDSS_PRT	huecycle/config.h	50;"	d
+SDSS_PRT	ledctrlr/config.h	35;"	d
+SIZE	bootloader/Makefile	/^SIZE=avr-size$/;"	m
+SIZE	huecycle/Makefile	/^SIZE=avr-size$/;"	m
+SIZE	ledctrlr/Makefile	/^SIZE=avr-size$/;"	m
+STB_PULSE	huecycle/config.h	98;"	d
+SYSCLK	huecycle/config.h	17;"	d
+SYSCLK	ledctrlr/config.h	10;"	d
+TIMEOUT_MAX	huecycle/config.h	35;"	d
+TIMEOUT_PIXCYCLE	huecycle/config.h	36;"	d
+TIMEOUT_REVDIREC	huecycle/config.h	37;"	d
+TRG	bootloader/Makefile	/^TRG=$(PROJECTNAME).out$/;"	m
+TRG	huecycle/Makefile	/^TRG=$(PROJECTNAME).out$/;"	m
+TRG	ledctrlr/Makefile	/^TRG=$(PROJECTNAME).out$/;"	m
+UARTDBL	huecycle/config.h	28;"	d
+UARTWR_DDR	huecycle/config.h	73;"	d
+UARTWR_DDR	ledctrlr/config.h	52;"	d
+UARTWR_PIN	huecycle/config.h	72;"	d
+UARTWR_PIN	ledctrlr/config.h	51;"	d
+UARTWR_PRT	huecycle/config.h	71;"	d
+UARTWR_PRT	ledctrlr/config.h	50;"	d
+UART_RX_BUFSZ	huecycle/config.h	77;"	d
+UART_RX_BUFSZ	ledctrlr/config.h	58;"	d
+UART_TX_BUFSZ	huecycle/config.h	78;"	d
+UVST_MIN	huecycle/config.h	96;"	d
+XLATPD	huecycle/config.h	31;"	d
+XLATPD	ledctrlr/config.h	22;"	d
+XLAT_DDR	huecycle/config.h	55;"	d
+XLAT_DDR	ledctrlr/config.h	40;"	d
+XLAT_PIN	huecycle/config.h	53;"	d
+XLAT_PIN	ledctrlr/config.h	38;"	d
+XLAT_PRT	huecycle/config.h	54;"	d
+XLAT_PRT	ledctrlr/config.h	39;"	d
+_	huecycle/hsv2rgb.py	/^    _ = hsv2rgb(h*360\/255., s\/255., v\/255.);$/;"	v
+_BVOFF	huecycle/macros.h	4;"	d
+_BVOFF	ledctrlr/macros.h	13;"	d
+_BVON	huecycle/macros.h	3;"	d
+_BVON	ledctrlr/macros.h	12;"	d
+_OFF	huecycle/macros.h	2;"	d
+_OFF	ledctrlr/macros.h	11;"	d
+_ON	huecycle/macros.h	1;"	d
+_ON	ledctrlr/macros.h	10;"	d
+_VAL	huecycle/macros.h	5;"	d
+_VAL	ledctrlr/macros.h	14;"	d
+action	huecycle/main.c	/^uint8_t action;          \/\/ current action$/;"	v
+action	ledctrlr/main.c	/^uint8_t action;         \/\/ current action$/;"	v
+addr_set	bootloader/main.c	/^void addr_set(uint8_t address) {$/;"	f
+addrmask	bootloader/main.c	/^static uint8_t addrmask = AM_ALL;$/;"	v	file:
+applies_to_me	bootloader/main.c	/^uint8_t applies_to_me(void) {$/;"	f
+argptr	huecycle/main.c	/^uint8_t* argptr = args;  \/\/   associated pointer$/;"	v
+argptr	ledctrlr/main.c	/^uint8_t* argptr = args; \/\/   ... associated pointer$/;"	v
+args	huecycle/main.c	/^uint8_t args[12];        \/\/ array to store arguments XXX: the array size$/;"	v
+args	ledctrlr/main.c	/^uint8_t args[15];       \/\/ array to store arguments$/;"	v
+b	huecycle/color.h	/^typedef struct {uint8_t r, g, b;} rgb_t;$/;"	m	struct:__anon1
+baud	bootloader/main.c	/^static uint16_t baud;$/;"	v	file:
+baud_set	bootloader/main.c	/^void baud_set(uint8_t dbl) {$/;"	f
+cmdstate	huecycle/main.c	/^static uint8_t cmdstate;$/;"	v	file:
+cmdstate	ledctrlr/main.c	/^static uint8_t cmdstate;$/;"	v	file:
+dbg_init	ledctrlr/dbgled.c	/^void dbg_init(void) {$/;"	f
+dbg_off	ledctrlr/dbgled.c	/^void dbg_off(uint8_t val) {$/;"	f
+dbg_on	ledctrlr/dbgled.c	/^void dbg_on(uint8_t val) {$/;"	f
+dbg_set	ledctrlr/dbgled.c	/^void dbg_set(uint8_t val) {$/;"	f
+g	huecycle/color.h	/^typedef struct {uint8_t r, g, b;} rgb_t;$/;"	m	struct:__anon1
+get	huecycle/tlc.c	/^uint16_t get(volatile uint8_t driver[], uint8_t posn) {$/;"	f
+get	ledctrlr/tlc.c	/^uint16_t get(volatile uint8_t driver[], uint8_t posn) {$/;"	f
+get_addr	huecycle/main.c	/^void get_addr(void) {$/;"	f
+get_addr	ledctrlr/eeprom.c	/^uint8_t get_addr(void) {$/;"	f
+get_baud	ledctrlr/eeprom.c	/^uint16_t get_baud(void) {$/;"	f
+get_baud_dbl	ledctrlr/eeprom.c	/^uint8_t get_baud_dbl(void) {$/;"	f
+give_up	bootloader/main.c	/^void give_up(uint8_t corrupted) {$/;"	f
+h	huecycle/color.h	/^typedef struct {uint8_t h, s, v;} hsv_t;$/;"	m	struct:__anon2
+h2r	huecycle/hsv2rgb.py	/^def h2r(h,s,v):$/;"	f
+hsv2rgb	huecycle/color.c	/^void hsv2rgb(hsv_t hsv, uint8_t* r, uint8_t* g, uint8_t* b) {$/;"	f
+hsv2rgb	huecycle/hsv2rgb.py	/^def hsv2rgb(h, s, v):$/;"	f
+hsv_t	huecycle/color.h	/^typedef struct {uint8_t h, s, v;} hsv_t;$/;"	t	typeref:struct:__anon2
+instaddr	bootloader/main.c	/^uint8_t instaddr;$/;"	v
+instaddr	huecycle/main.c	/^uint8_t instaddr = 0;$/;"	v
+instaddr	ledctrlr/main.c	/^uint8_t instaddr = 0;$/;"	v
+led_action	huecycle/led.c	/^void led_action(void) {$/;"	f
+led_action	ledctrlr/led.c	/^void led_action(void) {$/;"	f
+led_emgcy	huecycle/led.c	/^void led_emgcy(void) {$/;"	f
+led_evoff	huecycle/led.c	/^void led_evoff(void) {$/;"	f
+led_fpanl_rpanl	huecycle/led.c	/^void led_fpanl_rpanl(void) {$/;"	f
+led_set	huecycle/led.c	/^void led_set(void) {$/;"	f
+led_set	ledctrlr/led.c	/^void led_set(void) {$/;"	f
+led_strbe_uvstb	huecycle/led.c	/^void led_strbe_uvstb(void) {$/;"	f
+led_uvset_whset	huecycle/led.c	/^void led_uvset_whset(void) {$/;"	f
+main	bootloader/main.c	/^int main(void) {$/;"	f
+main	huecycle/main.c	/^int main(void) {$/;"	f
+main	ledctrlr/main.c	/^int main(void) {$/;"	f
+math	huecycle/hsv2rgb.py	/^import math$/;"	i
+numargs	huecycle/main.c	/^uint8_t numargs;         \/\/ number of arguments to expect$/;"	v
+numargs	ledctrlr/main.c	/^uint8_t numargs;        \/\/ number of arguments to expect$/;"	v
+page_buf	bootloader/main.c	/^static uint8_t page_buf[PAGESIZE];$/;"	v	file:
+page_buf_ptr	bootloader/main.c	/^static uint8_t* page_buf_ptr;$/;"	v	file:
+process_rx	bootloader/main.c	/^void process_rx(void) {$/;"	f
+r	huecycle/color.h	/^typedef struct {uint8_t r, g, b;} rgb_t;$/;"	m	struct:__anon1
+receive_data	bootloader/main.c	/^void receive_data(void) {$/;"	f
+receive_data	huecycle/main.c	/^void receive_data(void) {$/;"	f
+receive_data	ledctrlr/main.c	/^void receive_data(void) {$/;"	f
+rgb_t	huecycle/color.h	/^typedef struct {uint8_t r, g, b;} rgb_t;$/;"	t	typeref:struct:__anon1
+rxen	huecycle/main.c	/^volatile uint8_t rxen = 0;$/;"	v
+rxen	ledctrlr/main.c	/^volatile uint8_t rxen = 0;$/;"	v
+s	huecycle/color.h	/^typedef struct {uint8_t h, s, v;} hsv_t;$/;"	m	struct:__anon2
+s	huecycle/hsv2rgb.py	/^s = 255$/;"	v
+ser2led	huecycle/tlc.c	/^uint16_t ser2led(uint8_t ser) {$/;"	f
+ser2led	ledctrlr/tlc.c	/^uint16_t ser2led(uint8_t ser) {$/;"	f
+set	huecycle/tlc.c	/^void set(volatile uint8_t driver[], uint8_t posn, uint16_t value) {$/;"	f
+set	ledctrlr/tlc.c	/^void set(volatile uint8_t driver[], uint8_t posn, uint16_t value) {$/;"	f
+set_output	huecycle/tlc.c	/^void set_output(uint8_t chan, uint8_t led, uint16_t val) {$/;"	f
+set_output	ledctrlr/tlc.c	/^void set_output(uint8_t chan, uint8_t led, uint16_t val) {$/;"	f
+show_addr	ledctrlr/dbgled.c	/^void show_addr(void) {$/;"	f
+timed_out	huecycle/main.c	/^uint8_t timed_out;               \/\/ 1 when we're in timeout mode$/;"	v
+timeout_disp_init	huecycle/timeout.c	/^void timeout_disp_init(void) {$/;"	f
+timeout_disp_pixcycle	huecycle/timeout.c	/^void timeout_disp_pixcycle(void) {$/;"	f
+timeoutctr_init	huecycle/timeout.c	/^void timeoutctr_init(void) {$/;"	f
+tlc	huecycle/main.c	/^volatile uint8_t tlc[2][24];$/;"	v
+tlc	huecycle/main.c	/^volatile uint8_t tlc[3][24];$/;"	v
+tlc	ledctrlr/main.c	/^volatile uint8_t tlc[3][24];$/;"	v
+tlc_drive	huecycle/tlc.c	/^void tlc_drive(void) {$/;"	f
+tlc_drive	ledctrlr/tlc.c	/^void tlc_drive(void) {$/;"	f
+tlc_init	huecycle/tlc.c	/^void tlc_init(void) {$/;"	f
+tlc_init	ledctrlr/tlc.c	/^void tlc_init(void) {$/;"	f
+to_direc	huecycle/main.c	/^uint8_t to_direc = 1;            \/\/ 0 when shifting outward, FF when$/;"	v
+uart_data_rdy	huecycle/uart.c	/^uint8_t uart_data_rdy(void) {$/;"	f
+uart_data_rdy	ledctrlr/uart.c	/^uint8_t uart_data_rdy(void) {$/;"	f
+uart_init	huecycle/uart.c	/^void uart_init(void) {$/;"	f
+uart_init	ledctrlr/uart.c	/^void uart_init(void) {$/;"	f
+uart_rx	huecycle/uart.c	/^uint8_t uart_rx(void) {$/;"	f
+uart_rx	ledctrlr/uart.c	/^uint8_t uart_rx(void) {$/;"	f
+uart_rxbuf	huecycle/main.c	/^volatile uint8_t uart_rxbuf[UART_RX_BUFSZ];$/;"	v
+uart_rxbuf	ledctrlr/main.c	/^volatile uint8_t uart_rxbuf[UART_RX_BUFSZ];$/;"	v
+uart_rxbuf_count	huecycle/main.c	/^volatile uint8_t uart_rxbuf_count = 0;$/;"	v
+uart_rxbuf_count	ledctrlr/main.c	/^volatile uint8_t uart_rxbuf_count = 0;$/;"	v
+uart_rxbuf_iptr	huecycle/main.c	/^volatile uint8_t *uart_rxbuf_iptr = uart_rxbuf;$/;"	v
+uart_rxbuf_iptr	ledctrlr/main.c	/^volatile uint8_t *uart_rxbuf_iptr = uart_rxbuf;$/;"	v
+uart_rxbuf_optr	huecycle/main.c	/^volatile uint8_t *uart_rxbuf_optr = uart_rxbuf;$/;"	v
+uart_rxbuf_optr	ledctrlr/main.c	/^volatile uint8_t *uart_rxbuf_optr = uart_rxbuf;$/;"	v
+v	huecycle/color.h	/^typedef struct {uint8_t h, s, v;} hsv_t;$/;"	m	struct:__anon2
+v	huecycle/hsv2rgb.py	/^v = 128$/;"	v
+verify_flash	bootloader/main.c	/^void verify_flash(uint8_t checksum) {$/;"	f
+write_page	bootloader/main.c	/^void write_page(void) {$/;"	f

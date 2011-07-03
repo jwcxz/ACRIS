@@ -30,6 +30,28 @@
 #define CMD_PROG 'P'
 #define CMD_VRFY 'V'
 
+#define CST_IDLE 0
+#define CST_SYNC 1
+#define CST_MASK 2
+#define CST_ADDR 3
+#define CST_BAUD_H 4
+#define CST_BAUD_L 5
+#define CST_BAUD_D 6
+#define CST_PROG_A 7
+#define CST_PROG_D 8
+#define CST_PROG_V 9
+#define CST_VRFY 10
+
+
+/* UART BUFFERS */
+extern volatile uint8_t uart_rxbuf[UART_RX_BUFSZ];
+extern volatile uint8_t *uart_rxbuf_iptr;
+extern volatile uint8_t *uart_rxbuf_optr;
+extern volatile uint8_t uart_rxbuf_count;
+
+/* GLOBAL VARIABLES */
+extern uint8_t instaddr;    // instrument address
+
 int main(void);
 void receive_data(void);
 void process_rx(void);

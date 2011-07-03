@@ -17,6 +17,7 @@
 // uart baud rate prescale (if nothing found on the EEPROM)
 #define DEF_BAUD_PRESCALE 64    // 38400
 #define DEF_BAUD_DOUBLE 1
+#define DEF_BAUD_PRESCALE_SLOW 16    // 9600
 
 // set the speed of the latch pulse
 #define XLATPD      1

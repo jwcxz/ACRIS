@@ -59,9 +59,19 @@
 #include "dbgled.h"
 #include "uart.h"
 
+// uart buffer
+volatile uint8_t uart_rxbuf[UART_RX_BUFSZ];
+volatile uint8_t *uart_rxbuf_iptr = uart_rxbuf;
+volatile uint8_t *uart_rxbuf_optr = uart_rxbuf;
+volatile uint8_t uart_rxbuf_count = 0;
+
+// current command state
+static uint8_t curstate = CST_IDLE;
+
 // page buffer
 static uint8_t page_buf[PAGESIZE];
 static uint8_t* page_buf_ptr;
+static uint8_t page_addr;
 
 // instrument address
 uint8_t instaddr;
@@ -70,18 +80,34 @@ uint8_t instaddr;
 static uint16_t baud;
 
 // device address mask
-static uint8_t addrmask = AM_ALL;
+static uint8_t mask = AM_ALL;
 
 /* Main Loop */
 int main(void) {
     instaddr = get_addr();
 
     // set up uart for 9600 baud communication with no parity
+	UBRR0H = (unsigned char) (DEF_BAUD_PRESCALE_SLOW>>8);
+	UBRR0L = (unsigned char) DEF_BAUD_PRESCALE_SLOW;
+    UCSR0A = ( _BV(U2X0) );
+	UCSR0B = ( _BV(RXCIE0) | _BV(RXEN0) );
+	UCSR0C = ( _BV(UCSZ01) | _BV(UCSZ00) );
 
-    // set up timer to go to application mode if no data has been received
+    // reset the pointers and buffer count
+	uart_rxbuf_iptr = uart_rxbuf;
+	uart_rxbuf_optr = uart_rxbuf;
+    uart_rxbuf_count = 0;
 
-    // go into receive data loop
-    receive_data();
+    // switch to application mode if there's no data on the UART
+    if ( !uart_data_rdy() ) {
+        cli();
+        asm("jmp 0000");
+    } else {
+        // otherwise, go into receive data loop
+        receive_data();
+    }
+
+    return 0;
 }
 
 /* Loop, waiting for data */
@@ -93,21 +119,22 @@ void receive_data(void) {
 
 /* Processed a received byte */
 void process_rx(void) {
-    uint8_t data;
+    uint8_t data, i;
+    uint8_t csum = 0;
     data = uart_rx();
 
     if ( data != CMD_NOP ) {
         switch (curstate) {
             case CST_IDLE:
-                if ( data == CMD_SYNC ) cmdstate = CST_SYNC;
-                else cmdstate = CST_IDLE;
+                if ( data == CMD_SYNC ) curstate = CST_SYNC;
+                else curstate = CST_IDLE;
                 break;
             case CST_SYNC:
                 if ( data == CMD_SYNC ) {
-                    cmdstate = CST_SYNC;
+                    curstate = CST_SYNC;
                 } else if ( data == CMD_MASK ) {
                     // if we get a mask request, then always honor it
-                    cmdstate = CST_MASK;
+                    curstate = CST_MASK;
                 } else if ( applies_to_me() ) {
                     switch (data) {
                         case CMD_DISP_ADDR_H:
@@ -142,13 +169,13 @@ void process_rx(void) {
                 } else {
                     // no action applied to me, so wait for the next packet
                     // (maybe it'll be a new mask)
-                    cmdstate = CST_IDLE;
+                    curstate = CST_IDLE;
                 }
                 break;
 
             case CST_MASK:
                 mask = data;
-                cmdstate = CST_IDLE;
+                curstate = CST_IDLE;
                 break;
 
             case CST_ADDR:
@@ -232,7 +259,7 @@ void give_up(uint8_t corrupted) {
     }
 
     // return to waiting for data
-    curstate = SM_IDLE;     // reset state machine
+    curstate = CST_IDLE;    // reset state machine
     receive_data();
 }
 
@@ -278,7 +305,7 @@ void write_page(void) {
         boot_page_fill_safe(page_addr+i, w);
     }
 
-    boot_page_write_safe(page);
+    boot_page_write_safe(page_addr);
     boot_spm_busy_wait();
 
     // TODO: move this to only operate on the last page
@@ -300,7 +327,7 @@ uint8_t applies_to_me(void) {
         return 1;
     } else if ( mask == AM_ALL ) {
         // 0xFF = all addresses
-        return 1
+        return 1;
     } else if ( instaddr == mask ) {
         // we specifically targeted this device
         return 1;

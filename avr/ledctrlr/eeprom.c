@@ -14,10 +14,7 @@ uint8_t get_addr(void) {
     uint8_t tmp;
     eeprom_busy_wait();
     tmp = eeprom_read_byte(EEPROM_INST_ADDR);
-
-                        // v return 0 if instaddr hasn't been set
-    if ( tmp == 0xFF ) return 0;
-    else return tmp;
+    return tmp
 }
 
 uint16_t get_baud(void) {
