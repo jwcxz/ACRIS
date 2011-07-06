@@ -82,17 +82,17 @@ AVR_EFUSE=0xf9
 
 # Name of our project
 # (use a single word, e.g. 'myproject')
-PROJECTNAME=ledbtldr
+PROJECTNAME=ledctrlr
 
 # Source files
 # List C/C++/Assembly source files:
 # (list all files to compile, e.g. 'a.c b.cpp as.S'):
 # Use .cc, .cpp or .C suffix for C++ files, use .S 
 # (NOT .s !!!) for assembly source code files.
-PRJSRC=main.c dbgled.c eeprom.c uart.c
+PRJSRC=main.c dbgled.c eeprom.c led.c tlc.c uart.c
 
 # additional includes (e.g. -I/path/to/mydir)
-INC=-I../ledctrlr
+INC=
 
 # libraries to link in (e.g. -lmylib)
 LIBS=
@@ -165,8 +165,7 @@ ASMFLAGS =-I. $(INC) -mmcu=$(MCU)        \
 
 # linker
 LDFLAGS=-Wl,-Map,$(TRG).map -mmcu=$(MCU) \
-	-lm $(LIBS) \
-	-Wl,--section-start=.text=0x3000
+	-lm $(LIBS)
 
 ##### executables ####
 CC=avr-gcc

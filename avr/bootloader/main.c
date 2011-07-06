@@ -64,13 +64,14 @@ volatile uint8_t uart_rxbuf[UART_RX_BUFSZ];
 volatile uint8_t *uart_rxbuf_iptr = uart_rxbuf;
 volatile uint8_t *uart_rxbuf_optr = uart_rxbuf;
 volatile uint8_t uart_rxbuf_count = 0;
+volatile uint8_t rxen = 1;
 
 // current command state
 static uint8_t curstate = CST_IDLE;
 
 // page buffer
 static uint8_t page_buf[PAGESIZE];
-static uint8_t* page_buf_ptr;
+static uint8_t *page_buf_ptr;
 static uint8_t page_addr;
 
 // instrument address
@@ -87,8 +88,8 @@ int main(void) {
     instaddr = get_addr();
 
     // set up uart for 9600 baud communication with no parity
-	UBRR0H = (unsigned char) (DEF_BAUD_PRESCALE_SLOW>>8);
-	UBRR0L = (unsigned char) DEF_BAUD_PRESCALE_SLOW;
+	UBRR0H = (uint8_t) (DEF_BAUD_PRESCALE_SLOW>>8);
+	UBRR0L = (uint8_t) DEF_BAUD_PRESCALE_SLOW;
     UCSR0A = ( _BV(U2X0) );
 	UCSR0B = ( _BV(RXCIE0) | _BV(RXEN0) );
 	UCSR0C = ( _BV(UCSZ01) | _BV(UCSZ00) );
@@ -97,6 +98,11 @@ int main(void) {
 	uart_rxbuf_iptr = uart_rxbuf;
 	uart_rxbuf_optr = uart_rxbuf;
     uart_rxbuf_count = 0;
+
+    sei();
+
+    // wait just a bit to get some data
+    _delay_ms(1);
 
     // switch to application mode if there's no data on the UART
     if ( !uart_data_rdy() ) {
@@ -130,12 +136,10 @@ void process_rx(void) {
                 else curstate = CST_IDLE;
                 break;
             case CST_SYNC:
-                if ( data == CMD_SYNC ) {
-                    curstate = CST_SYNC;
-                } else if ( data == CMD_MASK ) {
+                if ( data == CMD_SYNC ) curstate = CST_SYNC;
                     // if we get a mask request, then always honor it
-                    curstate = CST_MASK;
-                } else if ( applies_to_me() ) {
+                else if ( data == CMD_MASK ) curstate = CST_MASK;
+                else if ( applies_to_me() ) {
                     switch (data) {
                         case CMD_DISP_ADDR_H:
                             dbg_set(instaddr>>4);
@@ -166,11 +170,10 @@ void process_rx(void) {
                             curstate = CST_IDLE;
                             break;
                     }
-                } else {
-                    // no action applied to me, so wait for the next packet
-                    // (maybe it'll be a new mask)
-                    curstate = CST_IDLE;
-                }
+                } 
+                // otherwise, no action applied to me, so wait for the next
+                // packet (maybe it'll be a new mask)
+                else curstate = CST_IDLE;
                 break;
 
             case CST_MASK:
@@ -317,7 +320,7 @@ void write_page(void) {
 
 /* Verify the flash */
 void verify_flash(uint8_t checksum) {
-
+    // TODO: not implemented yet
 }
 
 /* Check to see if the mask applies to this instrument */

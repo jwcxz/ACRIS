@@ -21,7 +21,7 @@
 #define PAGESIZE 128
 #define AM_ALL 255
 #define CMD_NOP 'N'
-#define CMD_SYNC 170
+//#define CMD_SYNC 170
 #define CMD_ADDR 'A'
 #define CMD_BAUD 'B'
 #define CMD_DISP_ADDR_H 'D'
@@ -48,6 +48,7 @@ extern volatile uint8_t uart_rxbuf[UART_RX_BUFSZ];
 extern volatile uint8_t *uart_rxbuf_iptr;
 extern volatile uint8_t *uart_rxbuf_optr;
 extern volatile uint8_t uart_rxbuf_count;
+extern volatile uint8_t rxen;
 
 /* GLOBAL VARIABLES */
 extern uint8_t instaddr;    // instrument address

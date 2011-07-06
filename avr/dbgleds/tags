@@ -4,7 +4,6 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.8	//
-AM_ALL	main.h	22;"	d
 ASMFILES	Makefile	/^ASMFILES=$(filter %.S, $(PRJSRC))$/;"	m
 ASMFLAGS	Makefile	/^ASMFLAGS =-I. $(INC) -mmcu=$(MCU)        \\$/;"	m
 AVRDUDE	Makefile	/^AVRDUDE=avrdude -F$/;"	m
@@ -13,39 +12,38 @@ AVRDUDE_PROGRAMMERID	Makefile	/^AVRDUDE_PROGRAMMERID=ponyser$/;"	m
 AVR_EFUSE	Makefile	/^AVR_EFUSE=0xf9$/;"	m
 AVR_HFUSE	Makefile	/^AVR_HFUSE=0xdf$/;"	m
 AVR_LFUSE	Makefile	/^AVR_LFUSE=0xce$/;"	m
+BAUD_PRESCALE	config.h	5;"	d
 BIGCFILES	Makefile	/^BIGCFILES=$(filter %.C, $(PRJSRC))$/;"	m
+BLANK_DDR	config.h	31;"	d
+BLANK_PIN	config.h	29;"	d
+BLANK_PRT	config.h	30;"	d
 CC	Makefile	/^CC=avr-gcc$/;"	m
 CCFILES	Makefile	/^CCFILES=$(filter %.cc, $(PRJSRC))$/;"	m
 CFILES	Makefile	/^CFILES=$(filter %.c, $(PRJSRC))$/;"	m
 CFLAGS	Makefile	/^CFLAGS=-I. $(INC) -g -mmcu=$(MCU) -O$(OPTLEVEL) \\$/;"	m
-CMD_ADDR	main.h	25;"	d
-CMD_BAUD	main.h	26;"	d
-CMD_DISP_ADDR_H	main.h	27;"	d
-CMD_DISP_ADDR_L	main.h	28;"	d
-CMD_MASK	main.h	29;"	d
-CMD_NOP	main.h	23;"	d
-CMD_PROG	main.h	30;"	d
-CMD_VRFY	main.h	31;"	d
+CMD_DOALL	config.h	51;"	d
+CMD_SYNC	config.h	50;"	d
 CPPFILES	Makefile	/^CPPFILES=$(filter %.cpp, $(PRJSRC))$/;"	m
 CPPFLAGS	Makefile	/^CPPFLAGS=-fno-exceptions               \\$/;"	m
-CST_ADDR	main.h	36;"	d
-CST_BAUD_D	main.h	39;"	d
-CST_BAUD_H	main.h	37;"	d
-CST_BAUD_L	main.h	38;"	d
-CST_IDLE	main.h	33;"	d
-CST_MASK	main.h	35;"	d
-CST_PROG_A	main.h	40;"	d
-CST_PROG_D	main.h	41;"	d
-CST_PROG_V	main.h	42;"	d
-CST_SYNC	main.h	34;"	d
-CST_VRFY	main.h	43;"	d
+CST_ARGS	main.c	39;"	d	file:
+CST_IDLE	main.c	37;"	d	file:
+CST_SYNC	main.c	38;"	d	file:
+DBGLED_BASE	config.h	43;"	d
+DBGLED_DDR	config.h	42;"	d
+DBGLED_PRT	config.h	41;"	d
+DBG_OVFLWERR	config.h	55;"	d
+DBG_PRTYERR	config.h	54;"	d
 DUMPTRG	Makefile	/^DUMPTRG=$(PROJECTNAME).s$/;"	m
+F_CPU	config.h	2;"	d
 GDBINITFILE	Makefile	/^GDBINITFILE=gdbinit-$(PROJECTNAME)$/;"	m
 GENASMFILES	Makefile	/^GENASMFILES=$(filter %.s, $(OBJDEPS:.o=.s)) $/;"	m
+GSCLK_DDR	config.h	35;"	d
+GSCLK_PIN	config.h	33;"	d
+GSCLK_PRT	config.h	34;"	d
 HEXFORMAT	Makefile	/^HEXFORMAT=ihex$/;"	m
 HEXROMTRG	Makefile	/^HEXROMTRG=$(PROJECTNAME).hex $/;"	m
 HEXTRG	Makefile	/^HEXTRG=$(HEXROMTRG) $(PROJECTNAME).ee.hex$/;"	m
-INC	Makefile	/^INC=-I..\/ledctrlr$/;"	m
+INC	Makefile	/^INC=$/;"	m
 ISR	uart.c	/^ISR(USART_RX_vect) {$/;"	f
 LDFLAGS	Makefile	/^LDFLAGS=-Wl,-Map,$(TRG).map -mmcu=$(MCU) \\$/;"	m
 LIBS	Makefile	/^LIBS=$/;"	m
@@ -55,36 +53,57 @@ OBJCOPY	Makefile	/^OBJCOPY=avr-objcopy$/;"	m
 OBJDEPS	Makefile	/^OBJDEPS=$(CFILES:.c=.o)    \\$/;"	m
 OBJDUMP	Makefile	/^OBJDUMP=avr-objdump$/;"	m
 OPTLEVEL	Makefile	/^OPTLEVEL=2$/;"	m
-PAGESIZE	main.h	21;"	d
-PRJSRC	Makefile	/^PRJSRC=main.c dbgled.c eeprom.c uart.c$/;"	m
+PRJSRC	Makefile	/^PRJSRC=main.c led.c timeout.c tlc.c uart.c$/;"	m
 PROGRAMMER_MCU	Makefile	/^PROGRAMMER_MCU=m168$/;"	m
-PROJECTNAME	Makefile	/^PROJECTNAME=ledbtldr$/;"	m
+PROJECTNAME	Makefile	/^PROJECTNAME=ledctrlr$/;"	m
 REMOVE	Makefile	/^REMOVE=rm -f$/;"	m
+SCLK_DDR	config.h	18;"	d
+SCLK_PIN	config.h	16;"	d
+SCLK_PRT	config.h	17;"	d
+SDAT_DDR	config.h	14;"	d
+SDAT_PIN	config.h	12;"	d
+SDAT_PRT	config.h	13;"	d
+SDSS_DDR	config.h	23;"	d
+SDSS_PIN	config.h	21;"	d
+SDSS_PRT	config.h	22;"	d
 SIZE	Makefile	/^SIZE=avr-size$/;"	m
+SYSCLK	config.h	1;"	d
 TRG	Makefile	/^TRG=$(PROJECTNAME).out$/;"	m
-addr_set	main.c	/^void addr_set(uint8_t address) {$/;"	f
-applies_to_me	main.c	/^uint8_t applies_to_me(void) {$/;"	f
-baud	main.c	/^static uint16_t baud;$/;"	v	file:
-baud_set	main.c	/^void baud_set(uint8_t dbl) {$/;"	f
-curstate	main.c	/^static uint8_t curstate = CST_IDLE;$/;"	v	file:
-dbg_init	dbgled.c	/^void dbg_init(void) {$/;"	f
-dbg_off	dbgled.c	/^void dbg_off(uint8_t val) {$/;"	f
-dbg_on	dbgled.c	/^void dbg_on(uint8_t val) {$/;"	f
-dbg_set	dbgled.c	/^void dbg_set(uint8_t val) {$/;"	f
-get_addr	eeprom.c	/^uint8_t get_addr(void) {$/;"	f
-get_baud	eeprom.c	/^uint16_t get_baud(void) {$/;"	f
-get_baud_dbl	eeprom.c	/^uint8_t get_baud_dbl(void) {$/;"	f
-give_up	main.c	/^void give_up(uint8_t corrupted) {$/;"	f
-instaddr	main.c	/^uint8_t instaddr;$/;"	v
+UARTDBL	config.h	6;"	d
+UARTWR_DDR	config.h	39;"	d
+UARTWR_PIN	config.h	38;"	d
+UARTWR_PRT	config.h	37;"	d
+UART_RX_BUFSZ	config.h	46;"	d
+XLATPD	config.h	9;"	d
+XLAT_DDR	config.h	27;"	d
+XLAT_PIN	config.h	25;"	d
+XLAT_PRT	config.h	26;"	d
+_BVOFF	macros.h	4;"	d
+_BVON	macros.h	3;"	d
+_OFF	macros.h	2;"	d
+_ON	macros.h	1;"	d
+_VAL	macros.h	5;"	d
+action	main.c	/^uint8_t action;          \/\/ current action$/;"	v
+argptr	main.c	/^uint8_t* argptr = args;  \/\/   associated pointer$/;"	v
+args	main.c	/^uint8_t args[15];        \/\/ array to store arguments XXX: the array size$/;"	v
+cmdstate	main.c	/^static uint8_t cmdstate;$/;"	v	file:
+get	tlc.c	/^uint16_t get(volatile uint8_t driver[], uint8_t posn) {$/;"	f
+instaddr	main.c	/^uint8_t instaddr = 0;$/;"	v
+led_action	led.c	/^void led_action(void) {$/;"	f
+led_set	led.c	/^void led_set(void) {$/;"	f
 main	main.c	/^int main(void) {$/;"	f
-mask	main.c	/^static uint8_t mask = AM_ALL;$/;"	v	file:
-page_addr	main.c	/^static uint8_t page_addr;$/;"	v	file:
-page_buf	main.c	/^static uint8_t page_buf[PAGESIZE];$/;"	v	file:
-page_buf_ptr	main.c	/^static uint8_t* page_buf_ptr;$/;"	v	file:
-process_rx	main.c	/^void process_rx(void) {$/;"	f
+numargs	main.c	/^uint8_t numargs;         \/\/ number of arguments to expect$/;"	v
 receive_data	main.c	/^void receive_data(void) {$/;"	f
-rxen	main.c	/^volatile uint8_t rxen = 1;$/;"	v
-show_addr	dbgled.c	/^void show_addr(void) {$/;"	f
+rxen	main.c	/^volatile uint8_t rxen = 0;$/;"	v
+ser2led	tlc.c	/^uint16_t ser2led(uint8_t ser) {$/;"	f
+set	tlc.c	/^void set(volatile uint8_t driver[], uint8_t posn, uint16_t value) {$/;"	f
+set_output	tlc.c	/^void set_output(uint8_t chan, uint8_t led, uint16_t val) {$/;"	f
+timeout_disp_init	timeout.c	/^void timeout_disp_init(void) {$/;"	f
+timeout_disp_pixcycle	timeout.c	/^void timeout_disp_pixcycle(void) {$/;"	f
+timeoutctr_init	timeout.c	/^void timeoutctr_init(void) {$/;"	f
+tlc	main.c	/^volatile uint8_t tlc[3][24];$/;"	v
+tlc_drive	tlc.c	/^void tlc_drive(void) {$/;"	f
+tlc_init	tlc.c	/^void tlc_init(void) {$/;"	f
 uart_data_rdy	uart.c	/^uint8_t uart_data_rdy(void) {$/;"	f
 uart_init	uart.c	/^void uart_init(void) {$/;"	f
 uart_rx	uart.c	/^uint8_t uart_rx(void) {$/;"	f
@@ -92,5 +111,3 @@ uart_rxbuf	main.c	/^volatile uint8_t uart_rxbuf[UART_RX_BUFSZ];$/;"	v
 uart_rxbuf_count	main.c	/^volatile uint8_t uart_rxbuf_count = 0;$/;"	v
 uart_rxbuf_iptr	main.c	/^volatile uint8_t *uart_rxbuf_iptr = uart_rxbuf;$/;"	v
 uart_rxbuf_optr	main.c	/^volatile uint8_t *uart_rxbuf_optr = uart_rxbuf;$/;"	v
-verify_flash	main.c	/^void verify_flash(uint8_t checksum) {$/;"	f
-write_page	main.c	/^void write_page(void) {$/;"	f
