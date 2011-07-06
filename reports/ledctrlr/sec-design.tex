@@ -1,0 +1,250 @@
+% vim: ft=tex
+% SECTION: DESIGN
+
+I used Kicad\footnote{http://kicad.org} for schematic capture and board design.
+All of the design files can be found on the LED controller page of the ACRIS
+Project.\footnote{http://jwcxz.com/projects/acris/ledctrlr.php}
+
+\subsection{LED Drivers}
+    TI's TLC5940 is a device that reads serial data from some source and
+    uses it to individually set the PWM duty cycle for 16 constant current
+    sinks.  Each of the 16 output channels can sink up to a maximum of
+    120mA.  Channels can be tied together in order to sink more current.
+
+    There are several operational quirks regarding the TLC5940.  The
+    chip requires an external clock source to set the PWM frequency; it
+    does not have an auto-reloading timer, so the \pin{blank} pin must be
+    twiddled every 4096 ticks of the \pin{gsclk} clock.  These chips are
+    also extremely sensitive to static discharge and overvoltage on any
+    pin, even the sink pins.  Finally, the \pin{iref} pin is connected to a
+    resistor that sets the maximum current sink of the chip.  It is
+    determined by equation~\ref{eqn:design:elec:iref}.
+
+    \begin{align}
+        \label{eqn:design:elec:iref}
+        I_\textrm{max} = \frac{1.24}{R_\textrm{IREF}} \cdot 31.5
+    \end{align}
+
+    So, for RGB LEDs, we chose to use a $330\Omega$ resistor in order to
+    yield a per-channel current of 118.3mA; we then tied three of these
+    outputs together to yield around 355mA current sink capability.  For
+    the UV and white LEDs, we tied 7 output channels together with
+    $360\Omega$ resistors on the drivers to yield a per-channel current of
+    108.5mA and a total current of 759.5mA.
+    Section~\ref{sec:design:elec:leds} discusses the properties of the LEDs
+    we chose.
+
+    Sending data to the TLC5940 is relatively easy.  Each channel has
+    12-bit resolution, so a total of $12\cdot16=192$ bits are sent via the
+    serial input to control a single chip.  Furthermore, we chose to daisy
+    chain the chips; that is, the serial output of the first chip feeds the
+    serial input of the second chip, whose output then feeds the serial
+    input of the third chip.  The \pin{xlat} pin is twiddled after
+    $192\cdot3=576$ bits have been sent in.  This latches the data, causing
+    the TLC5940 to drive the LED outputs with a different duty cycle.
+    UV/strobes only use two TLC5940s, so a total of $192\cdot2=384$ bits
+    are sent through these drivers.
+
+    As noted in Section~\ref{sec:design:elec:ledctrl:comm}, the
+    communications system only allows for 8-bit resolution in setting the
+    PWM duty cycle of the LEDs.  This value is upconverted in order to fill
+    the 12-bit range of the LED drivers.
+
+\subsection{Microcontroller}
+    The fundamental job of the microcontroller is to read incoming serial
+    data, determine what action it needs to take based on that serial data,
+    and, if necessary, update the LED output values on the TLC5940 chips.
+    We chose the ATMEGA168P for its low cost and excellent functionality.
+    Furthermore, we chose the version of the chip that was capable of using
+    a 20MHz clock and drove it at this frequency.
+
+    In addition to the code to handle the above behavior, the
+    microcontroller handles timers and interrupts.  First, it
+    generates a clock line for the TLC5940s' \pin{gsclk} signal at a rate
+    of 1MHz.  Second, it generates a blank at the rate of
+    $\frac{1\textrm{MHz}}{2^{12}}=244\textrm{Hz}$.  Thus, the PWM frequency
+    of the TLC5940 is 244Hz.
+
+    The microcontroller also uses an interrupt-driven UART framework.
+    Received UART data is stored to a ring buffer of size 128 bytes.  The
+    main code processes it as needed.
+
+    Lastly, the microcontroller has a timeout timer; if no data is received
+    after a few seconds, the timeout timer triggers and the microcontroller
+    displays a simple moving pattern on the RGB displays.  However, due to
+    a bug in the code in combination with the fixes we had to implement,
+    this feature does not work correctly on almost all of the front panels
+    and one of the rear panels.
+
+    The main loop of the microcontroller begins by setting up all of the
+    necessary timers and interrupts for the system.  It then displays a
+    startup pattern, which varies between RGB and UV/strobe panels.  The
+    RGB panels initially display four red pixels with the middle two being
+    brighter than the outer two.  Then, this is cleared and the first pixel
+    is set to be green.  Then, the address is displayed in binary format on
+    the pixels in blue (the first pixel retains its green coloration and
+    turns cyan when the high bit is 1).
+
+    The UV/strobe displays its address by its three columns.  E.g., if the
+    instrument address is \ttt{3}, then the middle column (the UV LEDs) and
+    the rightmost column (the white LEDs on the right) will both be lit.
+    In the event that more UV/strobes are added, addresses
+    \ttt{8}--\ttt{15} will look brighter.
+
+    Then, the system enables interrupts in order to start receiving data.
+    When the buffer is not empty, the main loop consumes the characters in
+    the buffer as it runs through a state machine that determines which
+    action to take.  When an action's arguments have been fulfilled, the
+    system drives the LEDs appropriately and begins processing the next
+    received data.  The packet processing state machine is described by
+    Figure~\ref{fig:design:elec:statemachine}.  Note that any instance of
+    \ttt{0xAA} immediately returns the state back to its sync'd state,
+    \ttt{SYNC}.  Therefore, LEDs cannot have a value of \ttt{170}; we
+    decided that this was a good enough assumption to make so that our
+    state machine never falls out of sync; the difference between \ttt{169}
+    and \ttt{171} is not noticeable enough to need a \ttt{170}.  The only
+    complication is that all software that controls the lighting system
+    must take this into account when it prepares packets.
+
+    \begin{rfigure*}
+        \label{fig:design:elec:statemachine}
+        \includegraphics[scale=1.0]{fig/photo.pdf}
+        %\includegraphics[scale=0.6]{fig/fig-design-elec-statemachine.jpg}
+        \caption{Packet-processing state machine}
+    \end{rfigure*}
+
+    The final result of processing a packet is to ultimately drive the LEDs
+    with new levels.  So, when the state machine has finished processing a
+    packet, it calls a wrapper function called \fn{led\_action()}, which
+    then calls the appropriate action function to set the LEDs according to
+    the arguments given.
+
+    As noted earlier, the TLC5940s use 12-bit values to set the PWM duty
+    cycle but the communications system only uses 8-bit color arguments.
+    So, right now, we upconvert by simply shifting the 8-bit value left 4
+    times.  However, we then need to store that data in an efficient
+    manner, so we perform 12-bit packing in 8-bit arrays of values.  Each
+    TLC5940 requires $16\cdot12=192\textrm{bits}$ of data to send, so by
+    packing the 12-bit values into an array of 24 8-bit values, it will be
+    easy to send all of this data directly to the LED drivers.
+
+    A 12-bit number can be split into a byte and a nibble.  A left-tailed
+    split is a split where the uppermost nibble of the number is the nibble
+    and the two lower nibbles make up the byte (a right-tailed split uses
+    the lowest nibble as the nibble).  So, given an array of 24 8-bit
+    values $X$, we pack the 12-bit number associated with the TLC5940
+    output channel $i$ (for $0\leq i \leq 15$) according to the following algorithm.
+
+    First, define the base index $i_b$.  This is the index of $X$ that will store
+    the byte of the 12-bit number.  It is dependent on whether $i$ is even
+    or odd.
+
+    \begin{equation}
+        i_b = \left\{
+            \begin{array}{ll}
+                23 - \frac{3\cdot i}{2} & \textrm{$i$ even} \\
+                23 - \frac{3\cdot i}{2} - 1 & \textrm{$i$ odd}
+            \end{array}
+            \right.
+    \end{equation}
+    
+    Notice that 23 is the maximum index of $X$ and $\frac{3}{2}$ is the
+    ratio $\frac{24}{16}$, which effectively scales $i$ to the new array
+    length.  We pack in reverse order (i.e. $i=0 \Rightarrow i_b=23$) in
+    order to make sending data to the TLC5940 happen in proper order.
+
+    To complete the packing algorithm we do the following.  For even
+    channels, we should store the two lower nibbles to the base index,
+    $X[i_b]$ and the high nibble to $X[i_b-1]$'s bottom nibble.  For odd
+    channels, we store the two higher nibbles to the base index and the low
+    nibble to $X[i_b+1]$'s top nibble.
+
+    Thus, for even values of $i$,
+    
+    \begin{align}
+        X[i_b-1] &= val_i[11:8] \\
+        X[i_b] &= val_i[7:0]
+    \end{align}
+
+    and for odd values of $i$,
+
+    \begin{align}
+        X[i_b] &= val_i[11:4] \\
+        X[i_b+1][7:4] &= val_i[3:0]
+    \end{align}
+
+    For RGB instruments, we keep three of these arrays, one for each
+    TLC5940.  For UV/strobes, we keep two, since UV/strobe boards only have
+    two TLC5940s.  When the main loop calls a ``drive" function, the
+    microcontroller sends data to the TLC5940s using its SPI peripheral.
+    The \pin{sck} line from the microcontroller drives the \pin{sclk} line
+    of the LED drivers, and the \pin{mosi} line feeds them the data.  The
+    SPI controller can only send 8-bits at a time, but thanks to our
+    packing scheme, doing so is just a matter of sending the 24 values in
+    each array.  Since we tie the TLC5940s together serially, we just shift
+    in all of the data for all of the drivers on the instrument and then
+    twiddle the \pin{xlat} line on all of the devices to lock the values in
+    and update the drivers.
+
+\subsection{LED Controller Board}
+
+    The majority of the LED controller's electronics are on a two-layer,
+    4"$\times$2.5" board manufactured by Advanced
+    Circuits.\footnote{http://4pcb.com}  Unfortunately, the board is not
+    without its problems; we did some serious rework of the power system
+    after we had already sent the boards out; this resulted in several
+    bugs.  However, we were able to get around them all, albeit with some
+    unpleasant wiring.  A full discussion of the problems we encountered
+    with the electronics is in Section~\ref{sec:analysis:electronics}
+
+    One of the primary features of the board is that it uses all
+    surface-mount components in order to facilitate easy soldering.  We
+    aimed to make \nhpls{} a learning tool; we had a very successful set of
+    ``soldering parties" whereby students learned how to populate a board
+    and solder well.
+
+    The schematics, board design, and bill of materials we used is located
+    at \textbf{TBD}.
+    % TODO find a spot for schematics, board design, bom
+
+    The relevant schematics and board layout diagram are also provided
+    here, in Figures~\ref{fig:design:elec:schem} and
+    \ref{fig:design:elec:brdlayout} respectively.
+
+    \begin{rfigure*}
+        \label{fig:design:elec:schem}
+        \includegraphics[scale=1.0]{fig/photo.pdf}
+        %\includegraphics[scale=0.6]{fig/fig-design-elec-schem.pdf}
+        % TODO schematics
+        \caption{LED controller board schematics}
+    \end{rfigure*}
+
+    \begin{rfigure*}
+        \label{fig:design:elec:brdlayout}
+        \includegraphics[scale=1.0]{fig/photo.pdf}
+        %\includegraphics[scale=0.6]{fig/fig-design-elec-brdlayout1.pdf}
+        %\includegraphics[scale=0.6]{fig/fig-design-elec-brdlayout2.pdf}
+        % TODO brdlayout diagrams
+        \caption{Layout of the LED controller board (top: RGB panel,
+            bottom: UV/strobe panel)}
+    \end{rfigure*}
+
+    Regarding our schematics, we chose to make logic power entirely
+    separate from LED power and decided to use point-to-point connectors to
+    connect the positive LED rail to the LEDs.          
+
+    In the top left-hand corner of the board is a spot for a barrel jack
+    power connector.  We reconfigured the board to use LM7805s instead, as
+    shown in Figure~\ref{fig:design:elec:barrelrework}.  The LEDs connect
+    to the output ports around the LED drivers on the right-hand side of
+    the board.
+
+    \begin{rfigure}
+        \label{fig:design:elec:barrelrework}
+        \includegraphics[scale=1.0]{fig/photo.pdf}
+        %\includegraphics[scale=0.6]{fig/fig-design-elec-barrelrework.pdf}
+        % TODO barrel jack rework
+        \caption{Barrel jack $\rightarrow$ LM7805 rework}
+    \end{rfigure}
+
+
