@@ -43,10 +43,19 @@ int main(void) {
     // get the address of the device
     instaddr = get_addr();
 
-    // initialize UART
-    uart_init();
+    // set up uart for 9600 baud communication with no parity
+	UBRR0H = (uint8_t) (DEF_BAUD_PRESCALE_SLOW>>8);
+	UBRR0L = (uint8_t) DEF_BAUD_PRESCALE_SLOW;
+    UCSR0A = ( _BV(U2X0) );
+	UCSR0B = ( _BV(RXCIE0) | _BV(RXEN0) );
+	UCSR0C = ( _BV(UCSZ01) | _BV(UCSZ00) );
 
-    // show address of the device on the debug LEDs
+    // reset the pointers and buffer count
+	uart_rxbuf_iptr = uart_rxbuf;
+	uart_rxbuf_optr = uart_rxbuf;
+    uart_rxbuf_count = 0;
+
+    // make the debug leds display a pattern 0110
     dbg_set(0x6);
 
     // enable interrupts
@@ -54,13 +63,6 @@ int main(void) {
     rxen = 1;
 
     while (1) {
-        if ( rxen == 0 && uart_rxbuf_count < UART_RX_BUFSZ/2 ) {
-            // buffer has been partially depleted, so we can start accepting
-            // data again
-            rxen = 1;
-            sei();
-        }
-
         if ( uart_data_rdy() ) receive_data();
     }
 
@@ -72,93 +74,59 @@ void receive_data(void) {
 
     inbyte = uart_rx();
 
-    if ( inbyte == CMD_SYNC )  {
-        // the sync byte is always treated as a trigger to reset the state
-        // machine -- never send it as an argument
-        cmdstate = CST_SYNC;
-    } else {
-        switch (cmdstate) {
-            case CST_IDLE:
-                cmdstate = CST_IDLE;
-                break;
-            case CST_SYNC:
-                // save command for later processing
-                action = inbyte;
-                argptr = args;
+    switch (inbyte) {
+        case 'A':
+            // address, high nibble
+            dbg_set(instaddr>>4);
+            break;
+        case 'B':
+            // address, low nibble
+            dbg_set(instaddr&0x0F);
+            break;
+        case 'R':
+            // baud rate 15:12
+            dbg_set(get_baud()>>12);
+            break;
+        case 'S':
+            // baud rate 11:8
+            dbg_set(get_baud()>>8&0x0F);
+            break;
+        case 'T':
+            // baud rate 7:4
+            dbg_set(get_baud()>>4&0x0F);
+            break;
+        case 'U':
+            // baud rate 3:0
+            dbg_set(get_baud()&0x0F);
+            break;
+        case 'V':
+            // baud double
+            dbg_set(get_baud_dbl());
 
-                if ( inbyte == instaddr ) {
-                    numargs = 15;
-                    cmdstate = CST_ARGS;
-                } else if ( (inbyte >= 0xF0 && inbyte <= 0xFE) && 
-                            (instaddr >= (inbyte&0x0F)*16 && 
-                                instaddr <= (inbyte&0x0F)*16+15)) {
-                    numargs = 15;
-                    cmdstate = CST_ARGS;
-                } else if ( inbyte == CMD_DOALL ) {
-                    numargs = 15;
-                    cmdstate = CST_ARGS;
-                } else {
-                    cmdstate = CST_IDLE;
-                }
+        case 'P':
+            // 0110
+            dbg_set(0x6);
+            break;
+        case 'Q':
+            // 1010
+            dbg_set(0xA);
+            break;
 
-                /* a more robust method (that allows you to define your own
-                 * commands)
-                 *
-                 *      process for adding new commands:
-                 *      1. update this state machine (the cmdstate switch)
-                 *           to add args, set numargs and set cmdstate = CST_ARGS
-                 *           otherwise, go to CST_IDLE if it doesn't apply to you
-                 *           or, if there are no args, set cmdstate = CST_IDLE and call
-                 *           led_action()
-                 *      2. update led_action() in led.c with the function that should be called
-                 *         given a command.  led_action() is just a wrapper function, but it
-                 *         makes the code a bit cleaner
-                 *      3. create your action function, prefix with led_ and name it the name of
-                 *         the 5-character action keyword
-                 * / // <- XXX
-                switch (inbyte) {
-                    case CMD_DOALL:
-                        numargs = 15;
-                        cmdstate = CST_ARGS;
+        case 'X':
+            // set address to 0x3
+            eeprom_busy_wait();
+            eeprom_write_byte(EEPROM_INST_ADDR, 3);
+            break;
+        case 'Y':
+            // set baud rate to 0xA5 and double to 1
+            eeprom_busy_wait();
+            eeprom_write_word(EEPROM_BAUD_RATE, 0xA5);
+            eeprom_busy_wait();
+            eeprom_write_byte(EEPROM_BAUD_DBLE, 1);
+            break;
 
-                        led_action();
-                        break;
-
-                    default:
-                        // 0xF0-0xFE are reserved to describe blocks of 16
-                        // addresses
-                        if ( inbyte >= 0xF0 && inbyte <= 0xFE ) {
-                            if ( instaddr >= (inbyte&0x0F)*16 && 
-                                    instaddr <= (inbyte&0x0F)*16+15 ) {
-                                numargs = 15;
-                                cmdstate = CST_ARGS;
-                            } else {
-                                cmdstate = CST_IDLE;
-                            }
-                        } else if ( inbyte == instaddr ) {
-                            numargs = 15;
-                            cmdstate = CST_ARGS;
-                        }
-                        break;
-                }
-                // */
-                break;
-
-            case CST_ARGS:
-                *argptr++ = inbyte;     // isn't that so beautiful?  I love C.
-
-                if ( argptr - args == numargs ) {
-                    cmdstate = CST_IDLE;
-                    led_action();
-                } else {
-                    cmdstate = CST_ARGS;
-                }
-                break;
-
-            default:
-                // the hell!?
-                cmdstate = CST_IDLE;
-                break;
-        }
+        default:
+            dbg_set(0x3);
+            break;
     }
 }

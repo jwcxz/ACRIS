@@ -1,0 +1,668 @@
+GAS LISTING /tmp/ccDSMd0y.s 			page 1
+
+
+   1               		.file	"main.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   7               		.global __do_copy_data
+   8               		.global __do_clear_bss
+   9               		.stabs	"/home/j/projects/acris/avr/boardtest/",100,0,2,.Ltext0
+  10               		.stabs	"main.c",100,0,2,.Ltext0
+  11               		.text
+  12               	.Ltext0:
+  13               		.stabs	"gcc2_compiled.",60,0,0,0
+  14               		.stabs	"int:t(0,1)=r(0,1);-32768;32767;",128,0,0,0
+  15               		.stabs	"char:t(0,2)=@s8;r(0,2);0;255;",128,0,0,0
+  16               		.stabs	"long int:t(0,3)=@s32;r(0,3);020000000000;017777777777;",128,0,0,0
+  17               		.stabs	"unsigned int:t(0,4)=r(0,4);0;0177777;",128,0,0,0
+  18               		.stabs	"long unsigned int:t(0,5)=@s32;r(0,5);0;037777777777;",128,0,0,0
+  19               		.stabs	"long long int:t(0,6)=@s64;r(0,6);01000000000000000000000;0777777777777777777777;",128,0,0,
+  20               		.stabs	"long long unsigned int:t(0,7)=@s64;r(0,7);0;01777777777777777777777;",128,0,0,0
+  21               		.stabs	"short int:t(0,8)=r(0,8);-32768;32767;",128,0,0,0
+  22               		.stabs	"short unsigned int:t(0,9)=r(0,9);0;0177777;",128,0,0,0
+  23               		.stabs	"signed char:t(0,10)=@s8;r(0,10);-128;127;",128,0,0,0
+  24               		.stabs	"unsigned char:t(0,11)=@s8;r(0,11);0;255;",128,0,0,0
+  25               		.stabs	"float:t(0,12)=r(0,1);4;0;",128,0,0,0
+  26               		.stabs	"double:t(0,13)=r(0,1);4;0;",128,0,0,0
+  27               		.stabs	"long double:t(0,14)=r(0,1);4;0;",128,0,0,0
+  28               		.stabs	"void:t(0,15)=(0,15)",128,0,0,0
+  29               		.stabs	"main.h",130,0,0,0
+  30               		.stabs	"/usr/lib/gcc/avr/4.6.0/../../../../avr/include/inttypes.h",130,0,0,0
+  31               		.stabs	"/usr/lib/gcc/avr/4.6.0/include/stdint.h",130,0,0,0
+  32               		.stabs	"/usr/lib/gcc/avr/4.6.0/../../../../avr/include/stdint.h",130,0,0,0
+  33               		.stabs	"int8_t:t(4,1)=(0,10)",128,0,121,0
+  34               		.stabs	"uint8_t:t(4,2)=(0,11)",128,0,122,0
+  35               		.stabs	"int16_t:t(4,3)=(0,1)",128,0,123,0
+  36               		.stabs	"uint16_t:t(4,4)=(0,4)",128,0,124,0
+  37               		.stabs	"int32_t:t(4,5)=(0,3)",128,0,125,0
+  38               		.stabs	"uint32_t:t(4,6)=(0,5)",128,0,126,0
+  39               		.stabs	"int64_t:t(4,7)=(0,6)",128,0,128,0
+  40               		.stabs	"uint64_t:t(4,8)=(0,7)",128,0,129,0
+  41               		.stabs	"intptr_t:t(4,9)=(4,3)",128,0,142,0
+  42               		.stabs	"uintptr_t:t(4,10)=(4,4)",128,0,147,0
+  43               		.stabs	"int_least8_t:t(4,11)=(4,1)",128,0,159,0
+  44               		.stabs	"uint_least8_t:t(4,12)=(4,2)",128,0,164,0
+  45               		.stabs	"int_least16_t:t(4,13)=(4,3)",128,0,169,0
+  46               		.stabs	"uint_least16_t:t(4,14)=(4,4)",128,0,174,0
+  47               		.stabs	"int_least32_t:t(4,15)=(4,5)",128,0,179,0
+  48               		.stabs	"uint_least32_t:t(4,16)=(4,6)",128,0,184,0
+  49               		.stabs	"int_least64_t:t(4,17)=(4,7)",128,0,192,0
+  50               		.stabs	"uint_least64_t:t(4,18)=(4,8)",128,0,199,0
+  51               		.stabs	"int_fast8_t:t(4,19)=(4,1)",128,0,213,0
+  52               		.stabs	"uint_fast8_t:t(4,20)=(4,2)",128,0,218,0
+  53               		.stabs	"int_fast16_t:t(4,21)=(4,3)",128,0,223,0
+  54               		.stabs	"uint_fast16_t:t(4,22)=(4,4)",128,0,228,0
+  55               		.stabs	"int_fast32_t:t(4,23)=(4,5)",128,0,233,0
+  56               		.stabs	"uint_fast32_t:t(4,24)=(4,6)",128,0,238,0
+  57               		.stabs	"int_fast64_t:t(4,25)=(4,7)",128,0,246,0
+GAS LISTING /tmp/ccDSMd0y.s 			page 2
+
+
+  58               		.stabs	"uint_fast64_t:t(4,26)=(4,8)",128,0,253,0
+  59               		.stabs	"intmax_t:t(4,27)=(4,7)",128,0,273,0
+  60               		.stabs	"uintmax_t:t(4,28)=(4,8)",128,0,278,0
+  61               		.stabn	162,0,0,0
+  62               		.stabn	162,0,0,0
+  63               		.stabs	"int_farptr_t:t(2,1)=(4,5)",128,0,77,0
+  64               		.stabs	"uint_farptr_t:t(2,2)=(4,6)",128,0,81,0
+  65               		.stabn	162,0,0,0
+  66               		.stabs	"/usr/lib/gcc/avr/4.6.0/../../../../avr/include/avr/io.h",130,0,0,0
+  67               		.stabs	"/usr/lib/gcc/avr/4.6.0/../../../../avr/include/avr/fuse.h",130,0,0,0
+  68               		.stabs	"__fuse_t:t(6,1)=(6,2)=s3low:(0,11),0,8;high:(0,11),8,8;extended:(0,11),16,8;;",128,0,244,0
+  69               		.stabn	162,0,0,0
+  70               		.stabn	162,0,0,0
+  71               		.stabs	"/usr/lib/gcc/avr/4.6.0/../../../../avr/include/avr/pgmspace.h",130,0,0,0
+  72               		.stabs	"/usr/lib/gcc/avr/4.6.0/include/stddef.h",130,0,0,0
+  73               		.stabs	"size_t:t(8,1)=(0,4)",128,0,212,0
+  74               		.stabn	162,0,0,0
+  75               		.stabs	"prog_void:t(7,1)=(7,2)=(7,2)",128,0,217,0
+  76               		.stabs	"prog_char:t(7,3)=(7,4)=@s8;r(7,4);0;255;",128,0,218,0
+  77               		.stabs	"prog_uchar:t(7,5)=(7,6)=@s8;r(7,6);0;255;",128,0,219,0
+  78               		.stabs	"prog_int8_t:t(7,7)=(7,8)=(0,10)",128,0,221,0
+  79               		.stabs	"prog_uint8_t:t(7,9)=(7,10)=(0,11)",128,0,222,0
+  80               		.stabs	"prog_int16_t:t(7,11)=(7,12)=(0,1)",128,0,223,0
+  81               		.stabs	"prog_uint16_t:t(7,13)=(7,14)=(0,4)",128,0,224,0
+  82               		.stabs	"prog_int32_t:t(7,15)=(7,16)=(0,3)",128,0,225,0
+  83               		.stabs	"prog_uint32_t:t(7,17)=(7,18)=(0,5)",128,0,226,0
+  84               		.stabs	"prog_int64_t:t(7,19)=(7,20)=(0,6)",128,0,228,0
+  85               		.stabs	"prog_uint64_t:t(7,21)=(7,22)=(0,7)",128,0,229,0
+  86               		.stabn	162,0,0,0
+  87               		.stabn	162,0,0,0
+  88               		.stabs	"../ledctrlr/uart.h",130,0,0,0
+  89               		.stabs	"/usr/lib/gcc/avr/4.6.0/../../../../avr/include/avr/eeprom.h",130,0,0,0
+  90               		.stabs	"/usr/lib/gcc/avr/4.6.0/include/stddef.h",130,0,0,0
+  91               		.stabs	"ptrdiff_t:t(11,1)=(0,1)",128,0,150,0
+  92               		.stabs	"wchar_t:t(11,2)=(0,1)",128,0,324,0
+  93               		.stabn	162,0,0,0
+  94               		.stabn	162,0,0,0
+  95               		.stabn	162,0,0,0
+  96               		.stabs	"receive_data:F(0,15)",36,0,72,receive_data
+  97               	.global	receive_data
+  98               		.type	receive_data, @function
+  99               	receive_data:
+ 100               		.stabd	46,0,0
+   1:main.c        **** /* A C R I S   P R O J E C T ********
+   2:main.c        ****  * LED Controller                   *
+   3:main.c        ****  * http://jwcxz.com/projects/acris  *
+   4:main.c        ****  *                                  *
+   5:main.c        ****  * J. Colosimo -- http://jwcxz.com/ *
+   6:main.c        ****  *                                  *
+   7:main.c        ****  * LED controller main loop         *
+   8:main.c        ****  ************************************/
+   9:main.c        **** 
+  10:main.c        **** #include "main.h"
+  11:main.c        **** 
+  12:main.c        **** #include "dbgled.h"
+  13:main.c        **** #include "eeprom.h"
+  14:main.c        **** #include "led.h"
+GAS LISTING /tmp/ccDSMd0y.s 			page 3
+
+
+  15:main.c        **** #include "tlc.h"
+  16:main.c        **** #include "uart.h"
+  17:main.c        **** 
+  18:main.c        **** volatile uint8_t uart_rxbuf[UART_RX_BUFSZ];
+  19:main.c        **** volatile uint8_t *uart_rxbuf_iptr = uart_rxbuf;
+  20:main.c        **** volatile uint8_t *uart_rxbuf_optr = uart_rxbuf;
+  21:main.c        **** volatile uint8_t uart_rxbuf_count = 0;
+  22:main.c        **** volatile uint8_t rxen = 0;
+  23:main.c        **** 
+  24:main.c        **** uint8_t instaddr = 0;
+  25:main.c        **** 
+  26:main.c        **** volatile uint8_t tlc[3][24];
+  27:main.c        **** 
+  28:main.c        **** uint8_t action;         // current action
+  29:main.c        **** uint8_t numargs;        // number of arguments to expect
+  30:main.c        **** uint8_t args[15];       // array to store arguments
+  31:main.c        **** uint8_t* argptr = args; //   ... associated pointer
+  32:main.c        **** 
+  33:main.c        **** /* COMMAND PROCESSOR STATE MACHINE */
+  34:main.c        **** #define CST_IDLE    0
+  35:main.c        **** #define CST_SYNC    1
+  36:main.c        **** #define CST_ARGS    2
+  37:main.c        **** static uint8_t cmdstate;
+  38:main.c        **** 
+  39:main.c        **** int main(void) {
+  40:main.c        ****     // initialize debug LEDs
+  41:main.c        ****     dbg_init();
+  42:main.c        **** 
+  43:main.c        ****     // get the address of the device
+  44:main.c        ****     instaddr = get_addr();
+  45:main.c        **** 
+  46:main.c        ****     // set up uart for 9600 baud communication with no parity
+  47:main.c        **** 	UBRR0H = (uint8_t) (DEF_BAUD_PRESCALE_SLOW>>8);
+  48:main.c        **** 	UBRR0L = (uint8_t) DEF_BAUD_PRESCALE_SLOW;
+  49:main.c        ****     UCSR0A = ( _BV(U2X0) );
+  50:main.c        **** 	UCSR0B = ( _BV(RXCIE0) | _BV(RXEN0) );
+  51:main.c        **** 	UCSR0C = ( _BV(UCSZ01) | _BV(UCSZ00) );
+  52:main.c        **** 
+  53:main.c        ****     // reset the pointers and buffer count
+  54:main.c        **** 	uart_rxbuf_iptr = uart_rxbuf;
+  55:main.c        **** 	uart_rxbuf_optr = uart_rxbuf;
+  56:main.c        ****     uart_rxbuf_count = 0;
+  57:main.c        **** 
+  58:main.c        ****     // make the debug leds display a pattern 0110
+  59:main.c        ****     dbg_set(0x6);
+  60:main.c        **** 
+  61:main.c        ****     // enable interrupts
+  62:main.c        ****     sei();
+  63:main.c        ****     rxen = 1;
+  64:main.c        **** 
+  65:main.c        ****     while (1) {
+  66:main.c        ****         if ( uart_data_rdy() ) receive_data();
+  67:main.c        ****     }
+  68:main.c        **** 
+  69:main.c        **** 	return 0;
+  70:main.c        **** }
+  71:main.c        **** 
+GAS LISTING /tmp/ccDSMd0y.s 			page 4
+
+
+  72:main.c        **** void receive_data(void) {
+ 101               		.stabn	68,0,72,.LM0-.LFBB1
+ 102               	.LM0:
+ 103               	.LFBB1:
+ 104               	/* prologue: function */
+ 105               	/* frame size = 0 */
+ 106               	/* stack size = 0 */
+ 107               	.L__stack_usage = 0
+  73:main.c        ****     unsigned char inbyte;
+  74:main.c        **** 
+  75:main.c        ****     inbyte = uart_rx();
+ 108               		.stabn	68,0,75,.LM1-.LFBB1
+ 109               	.LM1:
+ 110 0000 0E94 0000 		call uart_rx
+  76:main.c        **** 
+  77:main.c        ****     switch (inbyte) {
+ 111               		.stabn	68,0,77,.LM2-.LFBB1
+ 112               	.LM2:
+ 113 0004 8335      		cpi r24,lo8(83)
+ 114 0006 01F4      		brne .+2
+ 115 0008 00C0      		rjmp .L8
+ 116 000a 8435      		cpi r24,lo8(84)
+ 117 000c 00F0      		brlo .L25
+ 118 000e 8635      		cpi r24,lo8(86)
+ 119 0010 01F4      		brne .+2
+ 120 0012 00C0      		rjmp .L11
+ 121 0014 8735      		cpi r24,lo8(87)
+ 122 0016 00F4      		brsh .L16
+ 123 0018 8435      		cpi r24,lo8(84)
+ 124 001a 01F4      		brne .+2
+ 125 001c 00C0      		rjmp .L9
+ 126 001e 8535      		cpi r24,lo8(85)
+ 127 0020 01F4      		brne .+2
+ 128 0022 00C0      		rjmp .L26
+ 129               	.L2:
+  78:main.c        ****         case 'A':
+  79:main.c        ****             // address, high nibble
+  80:main.c        ****             dbg_set(instaddr>>4);
+  81:main.c        ****             break;
+  82:main.c        ****         case 'B':
+  83:main.c        ****             // address, low nibble
+  84:main.c        ****             dbg_set(instaddr&0x0F);
+  85:main.c        ****             break;
+  86:main.c        ****         case 'R':
+  87:main.c        ****             // baud rate 15:12
+  88:main.c        ****             dbg_set(get_baud()>>12);
+  89:main.c        ****             break;
+  90:main.c        ****         case 'S':
+  91:main.c        ****             // baud rate 11:8
+  92:main.c        ****             dbg_set(get_baud()>>8&0x0F);
+  93:main.c        ****             break;
+  94:main.c        ****         case 'T':
+  95:main.c        ****             // baud rate 7:4
+  96:main.c        ****             dbg_set(get_baud()>>4&0x0F);
+  97:main.c        ****             break;
+  98:main.c        ****         case 'U':
+  99:main.c        ****             // baud rate 3:0
+GAS LISTING /tmp/ccDSMd0y.s 			page 5
+
+
+ 100:main.c        ****             dbg_set(get_baud()&0x0F);
+ 101:main.c        ****             break;
+ 102:main.c        ****         case 'V':
+ 103:main.c        ****             // baud double
+ 104:main.c        ****             dbg_set(get_baud_dbl());
+ 105:main.c        **** 
+ 106:main.c        ****         case 'P':
+ 107:main.c        ****             // 0110
+ 108:main.c        ****             dbg_set(0x6);
+ 109:main.c        ****             break;
+ 110:main.c        ****         case 'Q':
+ 111:main.c        ****             // 1010
+ 112:main.c        ****             dbg_set(0xA);
+ 113:main.c        ****             break;
+ 114:main.c        **** 
+ 115:main.c        ****         case 'X':
+ 116:main.c        ****             // set address to 0x3
+ 117:main.c        ****             eeprom_busy_wait();
+ 118:main.c        ****             eeprom_write_byte(EEPROM_INST_ADDR, 3);
+ 119:main.c        ****             break;
+ 120:main.c        ****         case 'Y':
+ 121:main.c        ****             // set baud rate to 0xA5 and double to 1
+ 122:main.c        ****             eeprom_busy_wait();
+ 123:main.c        ****             eeprom_write_word(EEPROM_BAUD_RATE, 0xA5);
+ 124:main.c        ****             eeprom_busy_wait();
+ 125:main.c        ****             eeprom_write_byte(EEPROM_BAUD_DBLE, 1);
+ 126:main.c        ****             break;
+ 127:main.c        **** 
+ 128:main.c        ****         default:
+ 129:main.c        ****             dbg_set(0x3);
+ 130               		.stabn	68,0,129,.LM3-.LFBB1
+ 131               	.LM3:
+ 132 0024 83E0      		ldi r24,lo8(3)
+ 133 0026 0E94 0000 		call dbg_set
+ 134 002a 0895      		ret
+ 135               	.L25:
+  77:main.c        ****     switch (inbyte) {
+ 136               		.stabn	68,0,77,.LM4-.LFBB1
+ 137               	.LM4:
+ 138 002c 8035      		cpi r24,lo8(80)
+ 139 002e 01F0      		breq .L5
+ 140 0030 8135      		cpi r24,lo8(81)
+ 141 0032 00F0      		brlo .L27
+ 142 0034 8135      		cpi r24,lo8(81)
+ 143 0036 01F4      		brne .+2
+ 144 0038 00C0      		rjmp .L6
+ 145 003a 8235      		cpi r24,lo8(82)
+ 146 003c 01F4      		brne .L2
+  88:main.c        ****             dbg_set(get_baud()>>12);
+ 147               		.stabn	68,0,88,.LM5-.LFBB1
+ 148               	.LM5:
+ 149 003e 0E94 0000 		call get_baud
+ 150 0042 892F      		mov r24,r25
+ 151 0044 8295      		swap r24
+ 152 0046 8F70      		andi r24,lo8(15)
+ 153 0048 0E94 0000 		call dbg_set
+  89:main.c        ****             break;
+GAS LISTING /tmp/ccDSMd0y.s 			page 6
+
+
+ 154               		.stabn	68,0,89,.LM6-.LFBB1
+ 155               	.LM6:
+ 156 004c 0895      		ret
+ 157               	.L16:
+  77:main.c        ****     switch (inbyte) {
+ 158               		.stabn	68,0,77,.LM7-.LFBB1
+ 159               	.LM7:
+ 160 004e 8835      		cpi r24,lo8(88)
+ 161 0050 01F0      		breq .L19
+ 162 0052 8935      		cpi r24,lo8(89)
+ 163 0054 01F4      		brne .L2
+ 164               	.L20:
+ 122:main.c        ****             eeprom_busy_wait();
+ 165               		.stabn	68,0,122,.LM8-.LFBB1
+ 166               	.LM8:
+ 167 0056 F999      		sbic 63-0x20,1
+ 168 0058 00C0      		rjmp .L20
+ 123:main.c        ****             eeprom_write_word(EEPROM_BAUD_RATE, 0xA5);
+ 169               		.stabn	68,0,123,.LM9-.LFBB1
+ 170               	.LM9:
+ 171 005a 83E0      		ldi r24,lo8(3)
+ 172 005c 90E0      		ldi r25,hi8(3)
+ 173 005e 65EA      		ldi r22,lo8(165)
+ 174 0060 70E0      		ldi r23,hi8(165)
+ 175 0062 0E94 0000 		call __eewr_word_m168p
+ 176               	.L18:
+ 124:main.c        ****             eeprom_busy_wait();
+ 177               		.stabn	68,0,124,.LM10-.LFBB1
+ 178               	.LM10:
+ 179 0066 F999      		sbic 63-0x20,1
+ 180 0068 00C0      		rjmp .L18
+ 125:main.c        ****             eeprom_write_byte(EEPROM_BAUD_DBLE, 1);
+ 181               		.stabn	68,0,125,.LM11-.LFBB1
+ 182               	.LM11:
+ 183 006a 82E0      		ldi r24,lo8(2)
+ 184 006c 90E0      		ldi r25,hi8(2)
+ 185 006e 61E0      		ldi r22,lo8(1)
+ 186 0070 0E94 0000 		call __eewr_byte_m168p
+ 126:main.c        ****             break;
+ 187               		.stabn	68,0,126,.LM12-.LFBB1
+ 188               	.LM12:
+ 189 0074 0895      		ret
+ 190               	.L19:
+ 117:main.c        ****             eeprom_busy_wait();
+ 191               		.stabn	68,0,117,.LM13-.LFBB1
+ 192               	.LM13:
+ 193 0076 F999      		sbic 63-0x20,1
+ 194 0078 00C0      		rjmp .L19
+ 118:main.c        ****             eeprom_write_byte(EEPROM_INST_ADDR, 3);
+ 195               		.stabn	68,0,118,.LM14-.LFBB1
+ 196               	.LM14:
+ 197 007a 81E0      		ldi r24,lo8(1)
+ 198 007c 90E0      		ldi r25,hi8(1)
+ 199 007e 63E0      		ldi r22,lo8(3)
+ 200 0080 0E94 0000 		call __eewr_byte_m168p
+ 119:main.c        ****             break;
+ 201               		.stabn	68,0,119,.LM15-.LFBB1
+GAS LISTING /tmp/ccDSMd0y.s 			page 7
+
+
+ 202               	.LM15:
+ 203 0084 0895      		ret
+ 204               	.L27:
+  77:main.c        ****     switch (inbyte) {
+ 205               		.stabn	68,0,77,.LM16-.LFBB1
+ 206               	.LM16:
+ 207 0086 8134      		cpi r24,lo8(65)
+ 208 0088 01F0      		breq .L3
+ 209 008a 8234      		cpi r24,lo8(66)
+ 210 008c 01F4      		brne .L2
+  84:main.c        ****             dbg_set(instaddr&0x0F);
+ 211               		.stabn	68,0,84,.LM17-.LFBB1
+ 212               	.LM17:
+ 213 008e 8091 0000 		lds r24,instaddr
+ 214 0092 8F70      		andi r24,lo8(15)
+ 215 0094 0E94 0000 		call dbg_set
+  85:main.c        ****             break;
+ 216               		.stabn	68,0,85,.LM18-.LFBB1
+ 217               	.LM18:
+ 218 0098 0895      		ret
+ 219               	.L11:
+ 104:main.c        ****             dbg_set(get_baud_dbl());
+ 220               		.stabn	68,0,104,.LM19-.LFBB1
+ 221               	.LM19:
+ 222 009a 0E94 0000 		call get_baud_dbl
+ 223 009e 0E94 0000 		call dbg_set
+ 224               	.L5:
+ 108:main.c        ****             dbg_set(0x6);
+ 225               		.stabn	68,0,108,.LM20-.LFBB1
+ 226               	.LM20:
+ 227 00a2 86E0      		ldi r24,lo8(6)
+ 228 00a4 0E94 0000 		call dbg_set
+ 109:main.c        ****             break;
+ 229               		.stabn	68,0,109,.LM21-.LFBB1
+ 230               	.LM21:
+ 231 00a8 0895      		ret
+ 232               	.L3:
+  80:main.c        ****             dbg_set(instaddr>>4);
+ 233               		.stabn	68,0,80,.LM22-.LFBB1
+ 234               	.LM22:
+ 235 00aa 8091 0000 		lds r24,instaddr
+ 236 00ae 8295      		swap r24
+ 237 00b0 8F70      		andi r24,lo8(15)
+ 238 00b2 0E94 0000 		call dbg_set
+  81:main.c        ****             break;
+ 239               		.stabn	68,0,81,.LM23-.LFBB1
+ 240               	.LM23:
+ 241 00b6 0895      		ret
+ 242               	.L8:
+  92:main.c        ****             dbg_set(get_baud()>>8&0x0F);
+ 243               		.stabn	68,0,92,.LM24-.LFBB1
+ 244               	.LM24:
+ 245 00b8 0E94 0000 		call get_baud
+ 246 00bc 892F      		mov r24,r25
+ 247 00be 8F70      		andi r24,lo8(15)
+ 248 00c0 0E94 0000 		call dbg_set
+  93:main.c        ****             break;
+GAS LISTING /tmp/ccDSMd0y.s 			page 8
+
+
+ 249               		.stabn	68,0,93,.LM25-.LFBB1
+ 250               	.LM25:
+ 251 00c4 0895      		ret
+ 252               	.L6:
+ 112:main.c        ****             dbg_set(0xA);
+ 253               		.stabn	68,0,112,.LM26-.LFBB1
+ 254               	.LM26:
+ 255 00c6 8AE0      		ldi r24,lo8(10)
+ 256 00c8 0E94 0000 		call dbg_set
+ 113:main.c        ****             break;
+ 257               		.stabn	68,0,113,.LM27-.LFBB1
+ 258               	.LM27:
+ 259 00cc 0895      		ret
+ 260               	.L26:
+ 100:main.c        ****             dbg_set(get_baud()&0x0F);
+ 261               		.stabn	68,0,100,.LM28-.LFBB1
+ 262               	.LM28:
+ 263 00ce 0E94 0000 		call get_baud
+ 264 00d2 8F70      		andi r24,lo8(15)
+ 265 00d4 0E94 0000 		call dbg_set
+ 101:main.c        ****             break;
+ 266               		.stabn	68,0,101,.LM29-.LFBB1
+ 267               	.LM29:
+ 268 00d8 0895      		ret
+ 269               	.L9:
+  96:main.c        ****             dbg_set(get_baud()>>4&0x0F);
+ 270               		.stabn	68,0,96,.LM30-.LFBB1
+ 271               	.LM30:
+ 272 00da 0E94 0000 		call get_baud
+ 273 00de 9295      		swap r25
+ 274 00e0 8295      		swap r24
+ 275 00e2 8F70      		andi r24,0x0f
+ 276 00e4 8927      		eor r24,r25
+ 277 00e6 9F70      		andi r25,0x0f
+ 278 00e8 8927      		eor r24,r25
+ 279 00ea 8F70      		andi r24,lo8(15)
+ 280 00ec 0E94 0000 		call dbg_set
+  97:main.c        ****             break;
+ 281               		.stabn	68,0,97,.LM31-.LFBB1
+ 282               	.LM31:
+ 283 00f0 0895      		ret
+ 284               		.size	receive_data, .-receive_data
+ 285               		.stabs	"inbyte:r(0,11)",64,0,73,24
+ 286               		.stabn	192,0,0,.LFBB1-.LFBB1
+ 287               		.stabn	224,0,0,.Lscope1-.LFBB1
+ 288               	.Lscope1:
+ 289               		.stabs	"",36,0,0,.Lscope1-.LFBB1
+ 290               		.stabd	78,0,0
+ 291               		.section	.text.startup,"ax",@progbits
+ 292               		.stabs	"main:F(0,1)",36,0,39,main
+ 293               	.global	main
+ 294               		.type	main, @function
+ 295               	main:
+ 296               		.stabd	46,0,0
+  39:main.c        **** int main(void) {
+ 297               		.stabn	68,0,39,.LM32-.LFBB2
+ 298               	.LM32:
+GAS LISTING /tmp/ccDSMd0y.s 			page 9
+
+
+ 299               	.LFBB2:
+ 300               	/* prologue: function */
+ 301               	/* frame size = 0 */
+ 302               	/* stack size = 0 */
+ 303               	.L__stack_usage = 0
+  41:main.c        ****     dbg_init();
+ 304               		.stabn	68,0,41,.LM33-.LFBB2
+ 305               	.LM33:
+ 306 0000 0E94 0000 		call dbg_init
+  44:main.c        ****     instaddr = get_addr();
+ 307               		.stabn	68,0,44,.LM34-.LFBB2
+ 308               	.LM34:
+ 309 0004 0E94 0000 		call get_addr
+ 310 0008 8093 0000 		sts instaddr,r24
+  47:main.c        **** 	UBRR0H = (uint8_t) (DEF_BAUD_PRESCALE_SLOW>>8);
+ 311               		.stabn	68,0,47,.LM35-.LFBB2
+ 312               	.LM35:
+ 313 000c 1092 C500 		sts 197,__zero_reg__
+  48:main.c        **** 	UBRR0L = (uint8_t) DEF_BAUD_PRESCALE_SLOW;
+ 314               		.stabn	68,0,48,.LM36-.LFBB2
+ 315               	.LM36:
+ 316 0010 80E1      		ldi r24,lo8(16)
+ 317 0012 8093 C400 		sts 196,r24
+  49:main.c        ****     UCSR0A = ( _BV(U2X0) );
+ 318               		.stabn	68,0,49,.LM37-.LFBB2
+ 319               	.LM37:
+ 320 0016 82E0      		ldi r24,lo8(2)
+ 321 0018 8093 C000 		sts 192,r24
+  50:main.c        **** 	UCSR0B = ( _BV(RXCIE0) | _BV(RXEN0) );
+ 322               		.stabn	68,0,50,.LM38-.LFBB2
+ 323               	.LM38:
+ 324 001c 80E9      		ldi r24,lo8(-112)
+ 325 001e 8093 C100 		sts 193,r24
+  51:main.c        **** 	UCSR0C = ( _BV(UCSZ01) | _BV(UCSZ00) );
+ 326               		.stabn	68,0,51,.LM39-.LFBB2
+ 327               	.LM39:
+ 328 0022 86E0      		ldi r24,lo8(6)
+ 329 0024 8093 C200 		sts 194,r24
+  54:main.c        **** 	uart_rxbuf_iptr = uart_rxbuf;
+ 330               		.stabn	68,0,54,.LM40-.LFBB2
+ 331               	.LM40:
+ 332 0028 80E0      		ldi r24,lo8(uart_rxbuf)
+ 333 002a 90E0      		ldi r25,hi8(uart_rxbuf)
+ 334 002c 9093 0000 		sts uart_rxbuf_iptr+1,r25
+ 335 0030 8093 0000 		sts uart_rxbuf_iptr,r24
+  55:main.c        **** 	uart_rxbuf_optr = uart_rxbuf;
+ 336               		.stabn	68,0,55,.LM41-.LFBB2
+ 337               	.LM41:
+ 338 0034 9093 0000 		sts uart_rxbuf_optr+1,r25
+ 339 0038 8093 0000 		sts uart_rxbuf_optr,r24
+  56:main.c        ****     uart_rxbuf_count = 0;
+ 340               		.stabn	68,0,56,.LM42-.LFBB2
+ 341               	.LM42:
+ 342 003c 1092 0000 		sts uart_rxbuf_count,__zero_reg__
+  59:main.c        ****     dbg_set(0x6);
+ 343               		.stabn	68,0,59,.LM43-.LFBB2
+ 344               	.LM43:
+GAS LISTING /tmp/ccDSMd0y.s 			page 10
+
+
+ 345 0040 86E0      		ldi r24,lo8(6)
+ 346 0042 0E94 0000 		call dbg_set
+  62:main.c        ****     sei();
+ 347               		.stabn	68,0,62,.LM44-.LFBB2
+ 348               	.LM44:
+ 349               	/* #APP */
+ 350               	 ;  62 "main.c" 1
+ 351 0046 7894      		sei
+ 352               	 ;  0 "" 2
+  63:main.c        ****     rxen = 1;
+ 353               		.stabn	68,0,63,.LM45-.LFBB2
+ 354               	.LM45:
+ 355               	/* #NOAPP */
+ 356 0048 81E0      		ldi r24,lo8(1)
+ 357 004a 8093 0000 		sts rxen,r24
+ 358               	.L33:
+  66:main.c        ****         if ( uart_data_rdy() ) receive_data();
+ 359               		.stabn	68,0,66,.LM46-.LFBB2
+ 360               	.LM46:
+ 361 004e 0E94 0000 		call uart_data_rdy
+ 362 0052 8823      		tst r24
+ 363 0054 01F0      		breq .L33
+  66:main.c        ****         if ( uart_data_rdy() ) receive_data();
+ 364               		.stabn	68,0,66,.LM47-.LFBB2
+ 365               	.LM47:
+ 366 0056 0E94 0000 		call receive_data
+ 367 005a 00C0      		rjmp .L33
+ 368               		.size	main, .-main
+ 369               	.Lscope2:
+ 370               		.stabs	"",36,0,0,.Lscope2-.LFBB2
+ 371               		.stabd	78,0,0
+ 372               	.global	argptr
+ 373               		.data
+ 374               		.type	argptr, @object
+ 375               		.size	argptr, 2
+ 376               	argptr:
+ 377 0000 0000      		.word	args
+ 378               		.comm args,15,1
+ 379               		.comm numargs,1,1
+ 380               		.comm action,1,1
+ 381               		.comm tlc,72,1
+ 382               	.global	instaddr
+ 383               	.global	instaddr
+ 384               		.section .bss
+ 385               		.type	instaddr, @object
+ 386               		.size	instaddr, 1
+ 387               	instaddr:
+ 388 0000 00        		.skip 1,0
+ 389               	.global	rxen
+ 390               	.global	rxen
+ 391               		.type	rxen, @object
+ 392               		.size	rxen, 1
+ 393               	rxen:
+ 394 0001 00        		.skip 1,0
+ 395               	.global	uart_rxbuf_count
+ 396               	.global	uart_rxbuf_count
+ 397               		.type	uart_rxbuf_count, @object
+GAS LISTING /tmp/ccDSMd0y.s 			page 11
+
+
+ 398               		.size	uart_rxbuf_count, 1
+ 399               	uart_rxbuf_count:
+ 400 0002 00        		.skip 1,0
+ 401               	.global	uart_rxbuf_optr
+ 402               		.data
+ 403               		.type	uart_rxbuf_optr, @object
+ 404               		.size	uart_rxbuf_optr, 2
+ 405               	uart_rxbuf_optr:
+ 406 0002 0000      		.word	uart_rxbuf
+ 407               	.global	uart_rxbuf_iptr
+ 408               		.type	uart_rxbuf_iptr, @object
+ 409               		.size	uart_rxbuf_iptr, 2
+ 410               	uart_rxbuf_iptr:
+ 411 0004 0000      		.word	uart_rxbuf
+ 412               		.comm uart_rxbuf,128,1
+ 413               		.stabs	"uart_rxbuf:G(0,16)=ar(0,17)=r(0,17);0;0177777;;0;127;(0,18)=B(4,2)",32,0,18,0
+ 414               		.stabs	"uart_rxbuf_iptr:G(0,19)=*(0,18)",32,0,19,0
+ 415               		.stabs	"uart_rxbuf_optr:G(0,19)",32,0,20,0
+ 416               		.stabs	"uart_rxbuf_count:G(0,18)",32,0,21,0
+ 417               		.stabs	"rxen:G(0,18)",32,0,22,0
+ 418               		.stabs	"instaddr:G(4,2)",32,0,24,0
+ 419               		.stabs	"tlc:G(0,20)=ar(0,17);0;2;(0,21)=ar(0,17);0;23;(0,18)",32,0,26,0
+ 420               		.stabs	"action:G(4,2)",32,0,28,0
+ 421               		.stabs	"numargs:G(4,2)",32,0,29,0
+ 422               		.stabs	"args:G(0,22)=ar(0,17);0;14;(4,2)",32,0,30,0
+ 423               		.stabs	"argptr:G(0,23)=*(4,2)",32,0,31,0
+ 424               		.text
+ 425               		.stabs	"",100,0,0,.Letext0
+ 426               	.Letext0:
+GAS LISTING /tmp/ccDSMd0y.s 			page 12
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 main.c
+     /tmp/ccDSMd0y.s:2      *ABS*:000000000000003f __SREG__
+     /tmp/ccDSMd0y.s:3      *ABS*:000000000000003e __SP_H__
+     /tmp/ccDSMd0y.s:4      *ABS*:000000000000003d __SP_L__
+     /tmp/ccDSMd0y.s:5      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/ccDSMd0y.s:6      *ABS*:0000000000000001 __zero_reg__
+     /tmp/ccDSMd0y.s:99     .text:0000000000000000 receive_data
+     /tmp/ccDSMd0y.s:387    .bss:0000000000000000 instaddr
+     /tmp/ccDSMd0y.s:295    .text.startup:0000000000000000 main
+                            *COM*:0000000000000080 uart_rxbuf
+     /tmp/ccDSMd0y.s:410    .data:0000000000000004 uart_rxbuf_iptr
+     /tmp/ccDSMd0y.s:405    .data:0000000000000002 uart_rxbuf_optr
+     /tmp/ccDSMd0y.s:399    .bss:0000000000000002 uart_rxbuf_count
+     /tmp/ccDSMd0y.s:393    .bss:0000000000000001 rxen
+     /tmp/ccDSMd0y.s:376    .data:0000000000000000 argptr
+                            *COM*:000000000000000f args
+                            *COM*:0000000000000001 numargs
+                            *COM*:0000000000000001 action
+                            *COM*:0000000000000048 tlc
+
+UNDEFINED SYMBOLS
+__do_copy_data
+__do_clear_bss
+uart_rx
+dbg_set
+get_baud
+__eewr_word_m168p
+__eewr_byte_m168p
+get_baud_dbl
+dbg_init
+get_addr
+uart_data_rdy

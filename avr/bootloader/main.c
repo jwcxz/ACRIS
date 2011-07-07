@@ -102,7 +102,7 @@ int main(void) {
     sei();
 
     // wait just a bit to get some data
-    _delay_ms(1);
+    _delay_ms(10);
 
     // switch to application mode if there's no data on the UART
     if ( !uart_data_rdy() ) {
