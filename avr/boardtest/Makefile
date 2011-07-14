@@ -77,7 +77,7 @@ MCU=atmega168p
 PROGRAMMER_MCU=m168
 
 AVR_LFUSE=0xce
-AVR_HFUSE=0xdf
+AVR_HFUSE=0xd4
 AVR_EFUSE=0xf9
 
 # Name of our project

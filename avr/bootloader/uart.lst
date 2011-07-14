@@ -1,4 +1,4 @@
-GAS LISTING /tmp/ccIJsGfm.s 			page 1
+GAS LISTING /tmp/ccGiSJaS.s 			page 1
 
 
    1               		.file	"uart.c"
@@ -58,7 +58,7 @@ GAS LISTING /tmp/ccIJsGfm.s 			page 1
   55               		.stabs	"uint_fast16_t:t(5,22)=(5,4)",128,0,228,0
   56               		.stabs	"int_fast32_t:t(5,23)=(5,5)",128,0,233,0
   57               		.stabs	"uint_fast32_t:t(5,24)=(5,6)",128,0,238,0
-GAS LISTING /tmp/ccIJsGfm.s 			page 2
+GAS LISTING /tmp/ccGiSJaS.s 			page 2
 
 
   58               		.stabs	"int_fast64_t:t(5,25)=(5,7)",128,0,246,0
@@ -118,7 +118,7 @@ GAS LISTING /tmp/ccIJsGfm.s 			page 1
   12:uart.c        **** #include "eeprom.h"
   13:uart.c        **** 
   14:uart.c        **** void uart_init(void) {
-GAS LISTING /tmp/ccIJsGfm.s 			page 3
+GAS LISTING /tmp/ccGiSJaS.s 			page 3
 
 
  101               		.stabn	68,0,14,.LM0-.LFBB1
@@ -178,7 +178,7 @@ GAS LISTING /tmp/ccIJsGfm.s 			page 1
   30:uart.c        **** 
   31:uart.c        ****     // enable even parity
   32:uart.c        ****     UCSR0C |= _BV(UPM01);
-GAS LISTING /tmp/ccIJsGfm.s 			page 4
+GAS LISTING /tmp/ccGiSJaS.s 			page 4
 
 
  140               		.stabn	68,0,32,.LM10-.LFBB1
@@ -238,7 +238,7 @@ GAS LISTING /tmp/ccIJsGfm.s 			page 1
  180               	/* #APP */
  181               	 ;  46 "uart.c" 1
  182 0048 F894      		cli
-GAS LISTING /tmp/ccIJsGfm.s 			page 5
+GAS LISTING /tmp/ccGiSJaS.s 			page 5
 
 
  183               	 ;  0 "" 2
@@ -298,7 +298,7 @@ GAS LISTING /tmp/ccIJsGfm.s 			page 1
  222 007c 0895      		ret
  223               		.size	uart_rx, .-uart_rx
  224               		.stabs	"tmp:r(0,11)",64,0,45,24
-GAS LISTING /tmp/ccIJsGfm.s 			page 6
+GAS LISTING /tmp/ccGiSJaS.s 			page 6
 
 
  225               		.stabn	192,0,0,.LFBB2-.LFBB2
@@ -358,7 +358,7 @@ GAS LISTING /tmp/ccIJsGfm.s 			page 1
   83:uart.c        **** ISR(USART_RX_vect) {
  258               		.stabn	68,0,83,.LM27-.LFBB4
  259               	.LM27:
-GAS LISTING /tmp/ccIJsGfm.s 			page 7
+GAS LISTING /tmp/ccGiSJaS.s 			page 7
 
 
  260               	.LFBB4:
@@ -418,7 +418,7 @@ GAS LISTING /tmp/ccIJsGfm.s 			page 1
  302 00c4 8091 0000 		lds r24,uart_rxbuf_count
  303 00c8 8F5F      		subi r24,lo8(-(1))
  304 00ca 8093 0000 		sts uart_rxbuf_count,r24
-GAS LISTING /tmp/ccIJsGfm.s 			page 8
+GAS LISTING /tmp/ccGiSJaS.s 			page 8
 
 
   96:uart.c        **** 
@@ -478,7 +478,7 @@ GAS LISTING /tmp/ccIJsGfm.s 			page 1
  345               	.L9:
  103:uart.c        ****             cli();
  346               		.stabn	68,0,103,.LM37-.LFBB4
-GAS LISTING /tmp/ccIJsGfm.s 			page 9
+GAS LISTING /tmp/ccGiSJaS.s 			page 9
 
 
  347               	.LM37:
@@ -513,20 +513,20 @@ GAS LISTING /tmp/ccIJsGfm.s 			page 1
  373               		.stabd	78,0,0
  374               		.stabs	"",100,0,0,.Letext0
  375               	.Letext0:
-GAS LISTING /tmp/ccIJsGfm.s 			page 10
+GAS LISTING /tmp/ccGiSJaS.s 			page 10
 
 
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 uart.c
-     /tmp/ccIJsGfm.s:2      *ABS*:000000000000003f __SREG__
-     /tmp/ccIJsGfm.s:3      *ABS*:000000000000003e __SP_H__
-     /tmp/ccIJsGfm.s:4      *ABS*:000000000000003d __SP_L__
-     /tmp/ccIJsGfm.s:5      *ABS*:0000000000000000 __tmp_reg__
-     /tmp/ccIJsGfm.s:6      *ABS*:0000000000000001 __zero_reg__
-     /tmp/ccIJsGfm.s:99     .text:0000000000000000 uart_init
-     /tmp/ccIJsGfm.s:169    .text:0000000000000048 uart_rx
-     /tmp/ccIJsGfm.s:233    .text:000000000000007e uart_data_rdy
-     /tmp/ccIJsGfm.s:256    .text:0000000000000084 __vector_18
+     /tmp/ccGiSJaS.s:2      *ABS*:000000000000003f __SREG__
+     /tmp/ccGiSJaS.s:3      *ABS*:000000000000003e __SP_H__
+     /tmp/ccGiSJaS.s:4      *ABS*:000000000000003d __SP_L__
+     /tmp/ccGiSJaS.s:5      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/ccGiSJaS.s:6      *ABS*:0000000000000001 __zero_reg__
+     /tmp/ccGiSJaS.s:99     .text:0000000000000000 uart_init
+     /tmp/ccGiSJaS.s:169    .text:0000000000000048 uart_rx
+     /tmp/ccGiSJaS.s:233    .text:000000000000007e uart_data_rdy
+     /tmp/ccGiSJaS.s:256    .text:0000000000000084 __vector_18
 
 UNDEFINED SYMBOLS
 __do_copy_data

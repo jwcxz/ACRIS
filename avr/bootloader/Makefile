@@ -77,8 +77,8 @@ MCU=atmega168p
 PROGRAMMER_MCU=m168
 
 AVR_LFUSE=0xce
-AVR_HFUSE=0xdf
-AVR_EFUSE=0xf9
+AVR_HFUSE=0xd4
+AVR_EFUSE=0xf8
 
 # Name of our project
 # (use a single word, e.g. 'myproject')
@@ -101,6 +101,8 @@ LIBS=
 # use s (size opt), 1, 2, 3 or 0 (off)
 OPTLEVEL=2
 
+
+EXTRALDFLAGS=-Wl,--section-start=.text=0x3800
 
 #####      AVR Dude 'writeflash' options       #####
 #####  If you are using the avrdude program
@@ -165,8 +167,7 @@ ASMFLAGS =-I. $(INC) -mmcu=$(MCU)        \
 
 # linker
 LDFLAGS=-Wl,-Map,$(TRG).map -mmcu=$(MCU) \
-	-lm $(LIBS) \
-	-Wl,--section-start=.text=0x3000
+	-lm $(LIBS) $(EXTRALDFLAGS)
 
 ##### executables ####
 CC=avr-gcc

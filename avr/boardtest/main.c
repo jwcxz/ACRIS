@@ -4,7 +4,7 @@
  *                                  *
  * J. Colosimo -- http://jwcxz.com/ *
  *                                  *
- * LED controller main loop         *
+ * LED board test main loop         *
  ************************************/
 
 #include "main.h"
@@ -46,7 +46,7 @@ int main(void) {
     // set up uart for 9600 baud communication with no parity
 	UBRR0H = (uint8_t) (DEF_BAUD_PRESCALE_SLOW>>8);
 	UBRR0L = (uint8_t) DEF_BAUD_PRESCALE_SLOW;
-    UCSR0A = ( _BV(U2X0) );
+    UCSR0A = ( DEF_BAUD_DOUBLE_SLOW<<U2X0 );
 	UCSR0B = ( _BV(RXCIE0) | _BV(RXEN0) );
 	UCSR0C = ( _BV(UCSZ01) | _BV(UCSZ00) );
 
@@ -56,7 +56,7 @@ int main(void) {
     uart_rxbuf_count = 0;
 
     // make the debug leds display a pattern 0110
-    dbg_set(0x6);
+    dbg_set(0x7);
 
     // enable interrupts
     sei();
@@ -74,59 +74,77 @@ void receive_data(void) {
 
     inbyte = uart_rx();
 
+    //*
     switch (inbyte) {
+        case 'a':
         case 'A':
             // address, high nibble
+            instaddr = get_addr();
             dbg_set(instaddr>>4);
             break;
+        case 'b':
         case 'B':
             // address, low nibble
+            instaddr = get_addr();
             dbg_set(instaddr&0x0F);
             break;
+        case 'r':
         case 'R':
             // baud rate 15:12
             dbg_set(get_baud()>>12);
             break;
+        case 's':
         case 'S':
             // baud rate 11:8
             dbg_set(get_baud()>>8&0x0F);
             break;
+        case 't':
         case 'T':
             // baud rate 7:4
             dbg_set(get_baud()>>4&0x0F);
             break;
+        case 'u':
         case 'U':
             // baud rate 3:0
             dbg_set(get_baud()&0x0F);
             break;
+        case 'v':
         case 'V':
             // baud double
             dbg_set(get_baud_dbl());
+            break;
 
+        case 'p':
         case 'P':
             // 0110
             dbg_set(0x6);
             break;
+        case 'q':
         case 'Q':
             // 1010
             dbg_set(0xA);
             break;
 
+        case 'x':
         case 'X':
+            dbg_set(inbyte);
             // set address to 0x3
             eeprom_busy_wait();
-            eeprom_write_byte(EEPROM_INST_ADDR, 3);
+            eeprom_write_byte(EEPROM_INST_ADDR, 0x5);
             break;
+        case 'y':
         case 'Y':
+            dbg_set(inbyte);
             // set baud rate to 0xA5 and double to 1
             eeprom_busy_wait();
-            eeprom_write_word(EEPROM_BAUD_RATE, 0xA5);
+            eeprom_write_byte(EEPROM_BAUD_DBLE, 0x1);
             eeprom_busy_wait();
-            eeprom_write_byte(EEPROM_BAUD_DBLE, 1);
+            eeprom_write_word(EEPROM_BAUD_RATE, 0x69A5);
             break;
 
         default:
             dbg_set(0x3);
             break;
     }
+    // */
 }

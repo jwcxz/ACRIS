@@ -1,4 +1,4 @@
-GAS LISTING /tmp/ccUKiqZN.s 			page 1
+GAS LISTING /tmp/ccTXHOTK.s 			page 1
 
 
    1               		.file	"main.c"
@@ -58,7 +58,7 @@ GAS LISTING /tmp/ccUKiqZN.s 			page 1
   55               		.stabs	"int_fast32_t:t(4,23)=(4,5)",128,0,233,0
   56               		.stabs	"uint_fast32_t:t(4,24)=(4,6)",128,0,238,0
   57               		.stabs	"int_fast64_t:t(4,25)=(4,7)",128,0,246,0
-GAS LISTING /tmp/ccUKiqZN.s 			page 2
+GAS LISTING /tmp/ccTXHOTK.s 			page 2
 
 
   58               		.stabs	"uint_fast64_t:t(4,26)=(4,8)",128,0,253,0
@@ -99,11 +99,11 @@ GAS LISTING /tmp/ccUKiqZN.s 			page 1
   93               		.stabn	162,0,0,0
   94               		.stabn	162,0,0,0
   95               		.stabn	162,0,0,0
-  96               		.stabs	"addr_set:F(0,15)",36,0,270,addr_set
-  97               		.stabs	"address:P(4,2)",64,0,270,22
-  98               	.global	addr_set
-  99               		.type	addr_set, @function
- 100               	addr_set:
+  96               		.stabs	"give_up:F(0,15)",36,0,284,give_up
+  97               		.stabs	"corrupted:P(4,2)",64,0,284,24
+  98               	.global	give_up
+  99               		.type	give_up, @function
+ 100               	give_up:
  101               		.stabd	46,0,0
    1:main.c        **** /* A C R I S   P R O J E C T ********
    2:main.c        ****  * LED Controller Bootloader        *
@@ -118,7 +118,7 @@ GAS LISTING /tmp/ccUKiqZN.s 			page 1
   11:main.c        ****  * This bootloader provides the following features:
   12:main.c        ****  *  1. fast startup time (i.e. bootloader->application time)
   13:main.c        ****  *  2. downloading of program to device
-GAS LISTING /tmp/ccUKiqZN.s 			page 3
+GAS LISTING /tmp/ccTXHOTK.s 			page 3
 
 
   14:main.c        ****  *  3. set address of instrument
@@ -159,1271 +159,1416 @@ GAS LISTING /tmp/ccUKiqZN.s 			page 1
   49:main.c        ****  *                  Furthermore, it requires that unused bytes be 0-filled or
   50:main.c        ****  *                  something.  I'd rather make the programmer
   51:main.c        ****  *
-  52:main.c        ****  *  V   1       [Checksum] Verify whole program against checksum.  If
-  53:main.c        ****  *              verification fails, write 0xFF to the program start to prevent
-  54:main.c        ****  *              the bootloader from loading the application.
-  55:main.c        ****  */
-  56:main.c        **** 
-  57:main.c        **** #include "main.h"
-  58:main.c        **** #include "eeprom.h"
-  59:main.c        **** #include "dbgled.h"
-  60:main.c        **** #include "uart.h"
-  61:main.c        **** 
-  62:main.c        **** // uart buffer
-  63:main.c        **** volatile uint8_t uart_rxbuf[UART_RX_BUFSZ];
-  64:main.c        **** volatile uint8_t *uart_rxbuf_iptr = uart_rxbuf;
-  65:main.c        **** volatile uint8_t *uart_rxbuf_optr = uart_rxbuf;
-  66:main.c        **** volatile uint8_t uart_rxbuf_count = 0;
-  67:main.c        **** volatile uint8_t rxen = 1;
-  68:main.c        **** 
-  69:main.c        **** // current command state
-  70:main.c        **** static uint8_t curstate = CST_IDLE;
-GAS LISTING /tmp/ccUKiqZN.s 			page 4
+  52:main.c        ****  *  R   0       BOOT - boot the application
+  53:main.c        ****  *
+  54:main.c        ****  *  V   1       [Checksum] Verify whole program against checksum.  If
+  55:main.c        ****  *              verification fails, write 0xFF to the program start to prevent
+  56:main.c        ****  *              the bootloader from loading the application.
+  57:main.c        ****  */
+  58:main.c        **** 
+  59:main.c        **** #include "main.h"
+  60:main.c        **** #include "eeprom.h"
+  61:main.c        **** #include "dbgled.h"
+  62:main.c        **** #include "uart.h"
+  63:main.c        **** 
+  64:main.c        **** // uart buffer
+  65:main.c        **** volatile uint8_t uart_rxbuf[UART_RX_BUFSZ];
+  66:main.c        **** volatile uint8_t *uart_rxbuf_iptr = uart_rxbuf;
+  67:main.c        **** volatile uint8_t *uart_rxbuf_optr = uart_rxbuf;
+  68:main.c        **** volatile uint8_t uart_rxbuf_count = 0;
+  69:main.c        **** volatile uint8_t rxen = 1;
+  70:main.c        **** 
+GAS LISTING /tmp/ccTXHOTK.s 			page 4
 
 
-  71:main.c        **** 
-  72:main.c        **** // page buffer
-  73:main.c        **** static uint8_t page_buf[PAGESIZE];
-  74:main.c        **** static uint8_t *page_buf_ptr;
-  75:main.c        **** static uint8_t page_addr;
-  76:main.c        **** 
-  77:main.c        **** // instrument address
-  78:main.c        **** uint8_t instaddr;
-  79:main.c        **** 
-  80:main.c        **** // baud rate divisor
-  81:main.c        **** static uint16_t baud;
-  82:main.c        **** 
-  83:main.c        **** // device address mask
-  84:main.c        **** static uint8_t mask = AM_ALL;
-  85:main.c        **** 
-  86:main.c        **** /* Main Loop */
-  87:main.c        **** int main(void) {
-  88:main.c        ****     instaddr = get_addr();
-  89:main.c        **** 
-  90:main.c        ****     // set up uart for 9600 baud communication with no parity
-  91:main.c        **** 	UBRR0H = (uint8_t) (DEF_BAUD_PRESCALE_SLOW>>8);
-  92:main.c        **** 	UBRR0L = (uint8_t) DEF_BAUD_PRESCALE_SLOW;
-  93:main.c        ****     UCSR0A = ( _BV(U2X0) );
-  94:main.c        **** 	UCSR0B = ( _BV(RXCIE0) | _BV(RXEN0) );
-  95:main.c        **** 	UCSR0C = ( _BV(UCSZ01) | _BV(UCSZ00) );
-  96:main.c        **** 
-  97:main.c        ****     // reset the pointers and buffer count
-  98:main.c        **** 	uart_rxbuf_iptr = uart_rxbuf;
-  99:main.c        **** 	uart_rxbuf_optr = uart_rxbuf;
- 100:main.c        ****     uart_rxbuf_count = 0;
- 101:main.c        **** 
- 102:main.c        ****     sei();
- 103:main.c        **** 
- 104:main.c        ****     // wait just a bit to get some data
- 105:main.c        ****     _delay_ms(1);
- 106:main.c        **** 
- 107:main.c        ****     // switch to application mode if there's no data on the UART
- 108:main.c        ****     if ( !uart_data_rdy() ) {
- 109:main.c        ****         cli();
- 110:main.c        ****         asm("jmp 0000");
- 111:main.c        ****     } else {
- 112:main.c        ****         // otherwise, go into receive data loop
- 113:main.c        ****         receive_data();
- 114:main.c        ****     }
- 115:main.c        **** 
- 116:main.c        ****     return 0;
- 117:main.c        **** }
- 118:main.c        **** 
- 119:main.c        **** /* Loop, waiting for data */
- 120:main.c        **** void receive_data(void) {
- 121:main.c        ****     while (1) {
- 122:main.c        ****         if ( uart_data_rdy() ) process_rx();
- 123:main.c        ****     }
- 124:main.c        **** }
+  71:main.c        **** // current command state
+  72:main.c        **** static uint8_t curstate = CST_IDLE;
+  73:main.c        **** 
+  74:main.c        **** // page buffer
+  75:main.c        **** static uint8_t page_buf[PAGESIZE];
+  76:main.c        **** static uint8_t *page_buf_ptr;
+  77:main.c        **** static uint16_t page_addr;
+  78:main.c        **** 
+  79:main.c        **** // instrument address
+  80:main.c        **** uint8_t instaddr;
+  81:main.c        **** 
+  82:main.c        **** // baud rate divisor
+  83:main.c        **** static uint16_t baud;
+  84:main.c        **** 
+  85:main.c        **** // device address mask
+  86:main.c        **** static uint8_t mask = AM_ALL;
+  87:main.c        **** 
+  88:main.c        **** /* Main Loop */
+  89:main.c        **** int main(void) {
+  90:main.c        ****     MCUCR = (1<<IVCE);
+  91:main.c        ****     MCUCR = (1<<IVSEL);
+  92:main.c        **** 
+  93:main.c        ****     dbg_init();
+  94:main.c        ****     dbg_set(0x9);
+  95:main.c        **** 
+  96:main.c        ****     instaddr = get_addr();
+  97:main.c        **** 
+  98:main.c        ****     // set up uart for 9600 baud communication with no parity
+  99:main.c        **** 	UBRR0H = (uint8_t) (DEF_BAUD_PRESCALE_SLOW>>8);
+ 100:main.c        **** 	UBRR0L = (uint8_t) DEF_BAUD_PRESCALE_SLOW;
+ 101:main.c        ****     UCSR0A = ( DEF_BAUD_DOUBLE_SLOW<<U2X0 );
+ 102:main.c        **** 	UCSR0B = ( _BV(RXCIE0) | _BV(RXEN0) );
+ 103:main.c        **** 	UCSR0C = ( _BV(UCSZ01) | _BV(UCSZ00) );
+ 104:main.c        **** 
+ 105:main.c        ****     // reset the pointers and buffer count
+ 106:main.c        **** 	uart_rxbuf_iptr = uart_rxbuf;
+ 107:main.c        **** 	uart_rxbuf_optr = uart_rxbuf;
+ 108:main.c        ****     uart_rxbuf_count = 0;
+ 109:main.c        **** 
+ 110:main.c        ****     sei();
+ 111:main.c        **** 
+ 112:main.c        ****     // wait just a bit to get some data
+ 113:main.c        ****     _delay_ms(250);
+ 114:main.c        **** 
+ 115:main.c        ****     // switch to application mode if there's no data on the UART
+ 116:main.c        ****     if ( !uart_data_rdy() ) {
+ 117:main.c        ****         cli();
+ 118:main.c        ****         MCUCR = (1<<IVCE);
+ 119:main.c        ****         MCUCR &= ~(1<<IVSEL);
+ 120:main.c        ****         asm("jmp 0000");
+ 121:main.c        ****     } else {
+ 122:main.c        ****         // otherwise, go into receive data loop
+ 123:main.c        ****         receive_data();
+ 124:main.c        ****     }
  125:main.c        **** 
- 126:main.c        **** /* Processed a received byte */
- 127:main.c        **** void process_rx(void) {
-GAS LISTING /tmp/ccUKiqZN.s 			page 5
+ 126:main.c        ****     return 0;
+ 127:main.c        **** }
+GAS LISTING /tmp/ccTXHOTK.s 			page 5
 
 
- 128:main.c        ****     uint8_t data, i;
- 129:main.c        ****     uint8_t csum = 0;
- 130:main.c        ****     data = uart_rx();
- 131:main.c        **** 
- 132:main.c        ****     if ( data != CMD_NOP ) {
- 133:main.c        ****         switch (curstate) {
- 134:main.c        ****             case CST_IDLE:
- 135:main.c        ****                 if ( data == CMD_SYNC ) curstate = CST_SYNC;
- 136:main.c        ****                 else curstate = CST_IDLE;
- 137:main.c        ****                 break;
- 138:main.c        ****             case CST_SYNC:
- 139:main.c        ****                 if ( data == CMD_SYNC ) curstate = CST_SYNC;
- 140:main.c        ****                     // if we get a mask request, then always honor it
- 141:main.c        ****                 else if ( data == CMD_MASK ) curstate = CST_MASK;
- 142:main.c        ****                 else if ( applies_to_me() ) {
- 143:main.c        ****                     switch (data) {
- 144:main.c        ****                         case CMD_DISP_ADDR_H:
- 145:main.c        ****                             dbg_set(instaddr>>4);
- 146:main.c        ****                             curstate = CST_IDLE;
- 147:main.c        ****                             break;
- 148:main.c        ****                         case CMD_DISP_ADDR_L:
- 149:main.c        ****                             dbg_set(instaddr&0x0F);
- 150:main.c        ****                             curstate = CST_IDLE;
- 151:main.c        ****                             break;
- 152:main.c        **** 
- 153:main.c        ****                         case CMD_ADDR:
- 154:main.c        ****                             curstate = CST_ADDR;
- 155:main.c        ****                             break;
- 156:main.c        **** 
- 157:main.c        ****                         case CMD_BAUD:
- 158:main.c        ****                             curstate = CST_BAUD_H;
+ 128:main.c        **** 
+ 129:main.c        **** /* Loop, waiting for data */
+ 130:main.c        **** void receive_data(void) {
+ 131:main.c        ****     while (1) {
+ 132:main.c        ****         if ( uart_data_rdy() ) process_rx();
+ 133:main.c        ****     }
+ 134:main.c        **** }
+ 135:main.c        **** 
+ 136:main.c        **** /* Processed a received byte */
+ 137:main.c        **** void process_rx(void) {
+ 138:main.c        ****     uint8_t data, i;
+ 139:main.c        ****     uint8_t csum = 0;
+ 140:main.c        ****     data = uart_rx();
+ 141:main.c        **** 
+ 142:main.c        ****     if ( data != CMD_NOP ) {
+ 143:main.c        ****         switch (curstate) {
+ 144:main.c        ****             case CST_IDLE:
+ 145:main.c        ****                 if ( data == CMD_SYNC ) curstate = CST_SYNC;
+ 146:main.c        ****                 else curstate = CST_IDLE;
+ 147:main.c        ****                 break;
+ 148:main.c        ****             case CST_SYNC:
+ 149:main.c        ****                 if ( data == CMD_SYNC ) curstate = CST_SYNC;
+ 150:main.c        ****                     // if we get a mask request, then always honor it
+ 151:main.c        ****                 else if ( data == CMD_MASK ) curstate = CST_MASK;
+ 152:main.c        ****                 else if ( applies_to_me() ) {
+ 153:main.c        ****                     switch (data) {
+ 154:main.c        ****                         case CMD_BOOT:
+ 155:main.c        ****                             cli();
+ 156:main.c        ****                             MCUCR = (1<<IVCE);
+ 157:main.c        ****                             MCUCR &= ~(1<<IVSEL);
+ 158:main.c        ****                             asm("jmp 0000");
  159:main.c        ****                             break;
- 160:main.c        **** 
- 161:main.c        ****                         case CMD_PROG:
- 162:main.c        ****                             curstate = CST_PROG_A;
- 163:main.c        ****                             break;
- 164:main.c        **** 
- 165:main.c        ****                         case CMD_VRFY:
- 166:main.c        ****                             curstate = CST_VRFY;
- 167:main.c        ****                             break;
- 168:main.c        **** 
- 169:main.c        ****                         default:
- 170:main.c        ****                             curstate = CST_IDLE;
- 171:main.c        ****                             break;
- 172:main.c        ****                     }
- 173:main.c        ****                 } 
- 174:main.c        ****                 // otherwise, no action applied to me, so wait for the next
- 175:main.c        ****                 // packet (maybe it'll be a new mask)
- 176:main.c        ****                 else curstate = CST_IDLE;
- 177:main.c        ****                 break;
- 178:main.c        **** 
- 179:main.c        ****             case CST_MASK:
- 180:main.c        ****                 mask = data;
- 181:main.c        ****                 curstate = CST_IDLE;
- 182:main.c        ****                 break;
- 183:main.c        **** 
- 184:main.c        ****             case CST_ADDR:
-GAS LISTING /tmp/ccUKiqZN.s 			page 6
+ 160:main.c        ****                             
+ 161:main.c        ****                         case CMD_DISP_ADDR_H:
+ 162:main.c        ****                             dbg_set(instaddr>>4);
+ 163:main.c        ****                             curstate = CST_IDLE;
+ 164:main.c        ****                             break;
+ 165:main.c        ****                         case CMD_DISP_ADDR_L:
+ 166:main.c        ****                             dbg_set(instaddr&0x0F);
+ 167:main.c        ****                             curstate = CST_IDLE;
+ 168:main.c        ****                             break;
+ 169:main.c        **** 
+ 170:main.c        ****                         case CMD_ADDR:
+ 171:main.c        ****                             curstate = CST_ADDR;
+ 172:main.c        ****                             break;
+ 173:main.c        **** 
+ 174:main.c        ****                         case CMD_BAUD:
+ 175:main.c        ****                             curstate = CST_BAUD_H;
+ 176:main.c        ****                             break;
+ 177:main.c        **** 
+ 178:main.c        ****                         case CMD_PROG:
+ 179:main.c        ****                             curstate = CST_PROG_A_H;
+ 180:main.c        ****                             break;
+ 181:main.c        **** 
+ 182:main.c        ****                         case CMD_VRFY:
+ 183:main.c        ****                             curstate = CST_VRFY;
+ 184:main.c        ****                             break;
+GAS LISTING /tmp/ccTXHOTK.s 			page 6
 
 
- 185:main.c        ****                 addr_set(data);
- 186:main.c        ****                 curstate = CST_IDLE;
- 187:main.c        ****                 break;
- 188:main.c        **** 
- 189:main.c        ****             case CST_BAUD_H:
- 190:main.c        ****                 baud = (data << 8);   // high byte of baud rate
- 191:main.c        ****                 curstate = CST_BAUD_L;
- 192:main.c        ****                 break;
- 193:main.c        ****             case CST_BAUD_L:
- 194:main.c        ****                 baud |= data;         // low byte of baud rate
- 195:main.c        ****                 curstate = CST_BAUD_D;
- 196:main.c        ****                 break;
- 197:main.c        ****             case CST_BAUD_D:
- 198:main.c        ****                 // TODO: save some space by always setting double to 1
- 199:main.c        ****                 baud_set(data);
- 200:main.c        ****                 curstate = CST_IDLE;
- 201:main.c        ****                 break;
- 202:main.c        **** 
- 203:main.c        ****             case CST_PROG_A:
- 204:main.c        ****                 page_addr = data;
- 205:main.c        ****                 // reset page buffer pointer
- 206:main.c        ****                 page_buf_ptr = page_buf;
- 207:main.c        ****                 curstate = CST_PROG_D;
- 208:main.c        ****             case CST_PROG_D:
- 209:main.c        ****                 *page_buf_ptr++ = data;
- 210:main.c        ****                 if ( page_buf_ptr - page_buf == PAGESIZE ) {
- 211:main.c        ****                     // we hit the last byte of the page, so the next byte is the
- 212:main.c        ****                     // checksum
- 213:main.c        ****                     curstate = CST_PROG_V;
- 214:main.c        ****                 } else {
- 215:main.c        ****                     curstate = CST_PROG_D;
- 216:main.c        ****                 }
- 217:main.c        ****                 break;
- 218:main.c        ****             case CST_PROG_V:
- 219:main.c        ****                 curstate = CST_IDLE;
+ 185:main.c        **** 
+ 186:main.c        ****                         default:
+ 187:main.c        ****                             curstate = CST_IDLE;
+ 188:main.c        ****                             break;
+ 189:main.c        ****                     }
+ 190:main.c        ****                 } 
+ 191:main.c        ****                 // otherwise, no action applied to me, so wait for the next
+ 192:main.c        ****                 // packet (maybe it'll be a new mask)
+ 193:main.c        ****                 else curstate = CST_IDLE;
+ 194:main.c        ****                 break;
+ 195:main.c        **** 
+ 196:main.c        ****             case CST_MASK:
+ 197:main.c        ****                 mask = data;
+ 198:main.c        ****                 curstate = CST_IDLE;
+ 199:main.c        ****                 break;
+ 200:main.c        **** 
+ 201:main.c        ****             case CST_ADDR:
+ 202:main.c        ****                 addr_set(data);
+ 203:main.c        ****                 curstate = CST_IDLE;
+ 204:main.c        ****                 instaddr = get_addr();
+ 205:main.c        ****                 break;
+ 206:main.c        **** 
+ 207:main.c        ****             case CST_BAUD_H:
+ 208:main.c        ****                 baud = (data << 8);   // high byte of baud rate
+ 209:main.c        ****                 curstate = CST_BAUD_L;
+ 210:main.c        ****                 break;
+ 211:main.c        ****             case CST_BAUD_L:
+ 212:main.c        ****                 baud |= data;         // low byte of baud rate
+ 213:main.c        ****                 curstate = CST_BAUD_D;
+ 214:main.c        ****                 break;
+ 215:main.c        ****             case CST_BAUD_D:
+ 216:main.c        ****                 // TODO: save some space by always setting double to 1
+ 217:main.c        ****                 baud_set(data);
+ 218:main.c        ****                 curstate = CST_IDLE;
+ 219:main.c        ****                 break;
  220:main.c        **** 
- 221:main.c        ****                 for ( i=0 ; i<PAGESIZE ; i++ ) {
- 222:main.c        ****                     csum += page_buf[i];
- 223:main.c        ****                 }
- 224:main.c        ****                 csum = ~csum;
- 225:main.c        **** 
- 226:main.c        ****                 if ( csum == data ) {
- 227:main.c        ****                     // checksum verifies, so write the page
- 228:main.c        ****                     write_page();
- 229:main.c        ****                 } else {
- 230:main.c        ****                     // damnit...
- 231:main.c        ****                     // TODO: we can be slightly smarter (if it's the first address,
- 232:main.c        ****                     // we technically haven't corrupted anything yet)
- 233:main.c        ****                     give_up(1);
- 234:main.c        ****                 }
- 235:main.c        **** 
- 236:main.c        ****             case CST_VRFY:
- 237:main.c        ****                 verify_flash(data);
- 238:main.c        ****                 break;
- 239:main.c        **** 
- 240:main.c        ****             default:
- 241:main.c        ****                 curstate = CST_IDLE;
-GAS LISTING /tmp/ccUKiqZN.s 			page 7
+ 221:main.c        ****             case CST_PROG_A_H:
+ 222:main.c        ****                 //dbg_set(data);
+ 223:main.c        ****                 page_addr = data << 8;
+ 224:main.c        ****                 // reset page buffer pointer
+ 225:main.c        ****                 page_buf_ptr = page_buf;
+ 226:main.c        ****                 curstate = CST_PROG_A_L;
+ 227:main.c        ****                 break;
+ 228:main.c        ****             case CST_PROG_A_L:
+ 229:main.c        ****                 //dbg_set(data);    // not useful
+ 230:main.c        ****                 page_addr |= data;
+ 231:main.c        ****                 curstate = CST_PROG_D;
+ 232:main.c        ****                 break;
+ 233:main.c        ****             case CST_PROG_D:
+ 234:main.c        ****                 *(page_buf_ptr++) = data;
+ 235:main.c        ****                 if ( page_buf_ptr - page_buf == PAGESIZE ) {
+ 236:main.c        ****                     // we hit the last byte of the page, so the next byte is the
+ 237:main.c        ****                     // checksum
+ 238:main.c        ****                     curstate = CST_PROG_V;
+ 239:main.c        ****                 } else {
+ 240:main.c        ****                     curstate = CST_PROG_D;
+ 241:main.c        ****                 }
+GAS LISTING /tmp/ccTXHOTK.s 			page 7
 
 
  242:main.c        ****                 break;
- 243:main.c        ****         }
- 244:main.c        ****     }
- 245:main.c        **** }
- 246:main.c        **** 
- 247:main.c        **** /* Reached an unrecoverable error, so:
- 248:main.c        ****  *  - Light up the LEDs indicating an error
- 249:main.c        ****  *  - If corrupted, then write 0xFF to the first page in order to prevent the
- 250:main.c        ****  *    bootloader from trying to run the application at the beginning.
- 251:main.c        ****  *  - Go back and wait for new data.
- 252:main.c        ****  */
- 253:main.c        **** void give_up(uint8_t corrupted) {
- 254:main.c        ****     // if application data was corrupted, fill the first page with 0xFF
- 255:main.c        ****     if (corrupted) {
- 256:main.c        ****         // set LEDs to "shit really hit the fan"
- 257:main.c        ****         dbg_set(0xA);
- 258:main.c        ****         // TODO: fill the first page with 0xFF
- 259:main.c        ****     } else {
- 260:main.c        ****         // set LEDs to "shit slightly hit the fan"
- 261:main.c        ****         dbg_set(0x9);
- 262:main.c        ****     }
- 263:main.c        **** 
- 264:main.c        ****     // return to waiting for data
- 265:main.c        ****     curstate = CST_IDLE;    // reset state machine
- 266:main.c        ****     receive_data();
- 267:main.c        **** }
- 268:main.c        **** 
- 269:main.c        **** /* Set the instrument address */
- 270:main.c        **** void addr_set(uint8_t address) {
- 102               		.stabn	68,0,270,.LM0-.LFBB1
+ 243:main.c        ****             case CST_PROG_V:
+ 244:main.c        ****                 curstate = CST_IDLE;
+ 245:main.c        **** 
+ 246:main.c        ****                 for ( i=0 ; i<PAGESIZE ; i++ ) {
+ 247:main.c        ****                     csum += page_buf[i];
+ 248:main.c        ****                 }
+ 249:main.c        ****                 csum = ~csum;
+ 250:main.c        **** 
+ 251:main.c        ****                 //write_page();
+ 252:main.c        **** 
+ 253:main.c        ****                 //*
+ 254:main.c        ****                 if ( csum == data ) {
+ 255:main.c        ****                     // checksum verifies, so write the page
+ 256:main.c        ****                     write_page();
+ 257:main.c        ****                 } else {
+ 258:main.c        ****                     // damnit...
+ 259:main.c        ****                     // TODO: we can be slightly smarter (if it's the first address,
+ 260:main.c        ****                     // we technically haven't corrupted anything yet)
+ 261:main.c        ****                     give_up(1);
+ 262:main.c        ****                 }
+ 263:main.c        ****                 // */
+ 264:main.c        ****                 dbg_set(0x3);
+ 265:main.c        ****                 break;
+ 266:main.c        **** 
+ 267:main.c        ****             case CST_VRFY:
+ 268:main.c        ****                 verify_flash(data);
+ 269:main.c        ****                 break;
+ 270:main.c        **** 
+ 271:main.c        ****             default:
+ 272:main.c        ****                 curstate = CST_IDLE;
+ 273:main.c        ****                 break;
+ 274:main.c        ****         }
+ 275:main.c        ****     }
+ 276:main.c        **** }
+ 277:main.c        **** 
+ 278:main.c        **** /* Reached an unrecoverable error, so:
+ 279:main.c        ****  *  - Light up the LEDs indicating an error
+ 280:main.c        ****  *  - If corrupted, then write 0xFF to the first page in order to prevent the
+ 281:main.c        ****  *    bootloader from trying to run the application at the beginning.
+ 282:main.c        ****  *  - Go back and wait for new data.
+ 283:main.c        ****  */
+ 284:main.c        **** void give_up(uint8_t corrupted) {
+ 102               		.stabn	68,0,284,.LM0-.LFBB1
  103               	.LM0:
  104               	.LFBB1:
  105               	/* prologue: function */
  106               	/* frame size = 0 */
  107               	/* stack size = 0 */
  108               	.L__stack_usage = 0
- 109 0000 682F      		mov r22,r24
- 110               	.L2:
- 271:main.c        ****     // TODO: maybe move this to the generic eeprom.h file?  I didn't because
- 272:main.c        ****     // the main code doesn't use it (yet?), so it's just wasted space (or does
- 273:main.c        ****     // it get optimized out?).
- 274:main.c        **** 
- 275:main.c        ****     // wait for eeprom to become ready
- 276:main.c        ****     eeprom_busy_wait();
- 111               		.stabn	68,0,276,.LM1-.LFBB1
- 112               	.LM1:
- 113 0002 F999      		sbic 63-0x20,1
- 114 0004 00C0      		rjmp .L2
- 277:main.c        **** 
- 278:main.c        ****     // write address to the address byte
- 279:main.c        ****     eeprom_write_byte(EEPROM_INST_ADDR, address);
- 115               		.stabn	68,0,279,.LM2-.LFBB1
- 116               	.LM2:
- 117 0006 81E0      		ldi r24,lo8(1)
- 118 0008 90E0      		ldi r25,hi8(1)
- 119 000a 0E94 0000 		call __eewr_byte_m168p
- 120               	/* epilogue start */
-GAS LISTING /tmp/ccUKiqZN.s 			page 8
+ 285:main.c        ****     // if application data was corrupted, fill the first page with 0xFF
+ 286:main.c        ****     if (corrupted) {
+ 109               		.stabn	68,0,286,.LM1-.LFBB1
+ 110               	.LM1:
+ 111 0000 8823      		tst r24
+ 112 0002 01F0      		breq .L2
+ 287:main.c        ****         // set LEDs to "shit really hit the fan"
+GAS LISTING /tmp/ccTXHOTK.s 			page 8
 
 
- 280:main.c        **** }
- 121               		.stabn	68,0,280,.LM3-.LFBB1
- 122               	.LM3:
- 123 000e 0895      		ret
- 124               		.size	addr_set, .-addr_set
- 125               	.Lscope1:
- 126               		.stabs	"",36,0,0,.Lscope1-.LFBB1
- 127               		.stabd	78,0,0
- 128               		.stabs	"baud_set:F(0,15)",36,0,283,baud_set
- 129               		.stabs	"dbl:P(4,2)",64,0,283,17
- 130               	.global	baud_set
- 131               		.type	baud_set, @function
- 132               	baud_set:
- 133               		.stabd	46,0,0
- 281:main.c        **** 
- 282:main.c        **** /* Set the application communication baud rate */
- 283:main.c        **** void baud_set(uint8_t dbl) {
- 134               		.stabn	68,0,283,.LM4-.LFBB2
- 135               	.LM4:
- 136               	.LFBB2:
- 137 0010 1F93      		push r17
- 138               	/* prologue: function */
- 139               	/* frame size = 0 */
- 140               	/* stack size = 1 */
- 141               	.L__stack_usage = 1
- 142 0012 182F      		mov r17,r24
- 143               	.L6:
- 284:main.c        ****     eeprom_busy_wait();
- 144               		.stabn	68,0,284,.LM5-.LFBB2
- 145               	.LM5:
- 146 0014 F999      		sbic 63-0x20,1
- 147 0016 00C0      		rjmp .L6
- 285:main.c        ****     eeprom_write_word(EEPROM_BAUD_RATE, baud);
- 148               		.stabn	68,0,285,.LM6-.LFBB2
- 149               	.LM6:
- 150 0018 2091 0000 		lds r18,baud
- 151 001c 3091 0000 		lds r19,baud+1
- 152 0020 83E0      		ldi r24,lo8(3)
- 153 0022 90E0      		ldi r25,hi8(3)
- 154 0024 B901      		movw r22,r18
- 155 0026 0E94 0000 		call __eewr_word_m168p
- 156               	.L7:
- 286:main.c        ****     eeprom_busy_wait();
- 157               		.stabn	68,0,286,.LM7-.LFBB2
- 158               	.LM7:
- 159 002a F999      		sbic 63-0x20,1
- 160 002c 00C0      		rjmp .L7
- 287:main.c        ****     eeprom_write_byte(EEPROM_BAUD_DBLE, dbl);
- 161               		.stabn	68,0,287,.LM8-.LFBB2
- 162               	.LM8:
- 163 002e 82E0      		ldi r24,lo8(2)
- 164 0030 90E0      		ldi r25,hi8(2)
- 165 0032 612F      		mov r22,r17
- 166 0034 0E94 0000 		call __eewr_byte_m168p
- 167               	/* epilogue start */
- 288:main.c        **** }
- 168               		.stabn	68,0,288,.LM9-.LFBB2
-GAS LISTING /tmp/ccUKiqZN.s 			page 9
-
-
- 169               	.LM9:
- 170 0038 1F91      		pop r17
- 171 003a 0895      		ret
- 172               		.size	baud_set, .-baud_set
- 173               	.Lscope2:
- 174               		.stabs	"",36,0,0,.Lscope2-.LFBB2
- 175               		.stabd	78,0,0
- 176               		.stabs	"write_page:F(0,15)",36,0,291,write_page
- 177               	.global	write_page
- 178               		.type	write_page, @function
- 179               	write_page:
- 180               		.stabd	46,0,0
- 289:main.c        **** 
- 290:main.c        **** /* Write a page of data from the page buffer */
- 291:main.c        **** void write_page(void) {
- 181               		.stabn	68,0,291,.LM10-.LFBB3
- 182               	.LM10:
- 183               	.LFBB3:
- 184 003c CF93      		push r28
- 185 003e DF93      		push r29
- 186               	/* prologue: function */
- 187               	/* frame size = 0 */
- 188               	/* stack size = 2 */
- 189               	.L__stack_usage = 2
- 292:main.c        ****     uint16_t i,w;
- 293:main.c        ****     uint8_t sreg;
+ 288:main.c        ****         dbg_set(0xA);
+ 113               		.stabn	68,0,288,.LM2-.LFBB1
+ 114               	.LM2:
+ 115 0004 8AE0      		ldi r24,lo8(10)
+ 116 0006 0E94 0000 		call dbg_set
+ 117               	.L3:
+ 289:main.c        ****         // TODO: fill the first page with 0xFF
+ 290:main.c        ****     } else {
+ 291:main.c        ****         // set LEDs to "shit slightly hit the fan"
+ 292:main.c        ****         dbg_set(0x9);
+ 293:main.c        ****     }
  294:main.c        **** 
- 295:main.c        ****     // disable interrupts
- 296:main.c        ****     sreg = SREG;
- 190               		.stabn	68,0,296,.LM11-.LFBB3
- 191               	.LM11:
- 192 0040 7FB7      		in r23,__SREG__
- 297:main.c        ****     cli();
- 193               		.stabn	68,0,297,.LM12-.LFBB3
- 194               	.LM12:
- 195               	/* #APP */
- 196               	 ;  297 "main.c" 1
- 197 0042 F894      		cli
- 198               	 ;  0 "" 2
- 199               	/* #NOAPP */
- 200               	.L11:
- 298:main.c        **** 
- 299:main.c        ****     boot_page_erase_safe(page_addr);
- 201               		.stabn	68,0,299,.LM13-.LFBB3
- 202               	.LM13:
- 203 0044 07B6      		in __tmp_reg__,87-0x20
- 204 0046 00FC      		sbrc __tmp_reg__,0
- 205 0048 00C0      		rjmp .L11
- 206               	.L27:
- 207               		.stabn	68,0,299,.LM14-.LFBB3
- 208               	.LM14:
- 209 004a F999      		sbic 63-0x20,1
- 210 004c 00C0      		rjmp .L27
- 211               		.stabn	68,0,299,.LM15-.LFBB3
- 212               	.LM15:
- 213 004e 8091 0000 		lds r24,page_addr
- 214 0052 C82F      		mov r28,r24
-GAS LISTING /tmp/ccUKiqZN.s 			page 10
+ 295:main.c        ****     // return to waiting for data
+ 296:main.c        ****     curstate = CST_IDLE;    // reset state machine
+ 118               		.stabn	68,0,296,.LM3-.LFBB1
+ 119               	.LM3:
+ 120 000a 1092 0000 		sts curstate,__zero_reg__
+ 121               	.L4:
+ 122 000e 00C0      		rjmp .L4
+ 123               	.L2:
+ 292:main.c        ****         dbg_set(0x9);
+ 124               		.stabn	68,0,292,.LM4-.LFBB1
+ 125               	.LM4:
+ 126 0010 89E0      		ldi r24,lo8(9)
+ 127 0012 0E94 0000 		call dbg_set
+ 128 0016 00C0      		rjmp .L3
+ 129               		.size	give_up, .-give_up
+ 130               	.Lscope1:
+ 131               		.stabs	"",36,0,0,.Lscope1-.LFBB1
+ 132               		.stabd	78,0,0
+ 133               		.stabs	"addr_set:F(0,15)",36,0,302,addr_set
+ 134               		.stabs	"address:P(4,2)",64,0,302,22
+ 135               	.global	addr_set
+ 136               		.type	addr_set, @function
+ 137               	addr_set:
+ 138               		.stabd	46,0,0
+ 297:main.c        ****     //receive_data();
+ 298:main.c        ****     while(1);
+ 299:main.c        **** }
+ 300:main.c        **** 
+ 301:main.c        **** /* Set the instrument address */
+ 302:main.c        **** void addr_set(uint8_t address) {
+ 139               		.stabn	68,0,302,.LM5-.LFBB2
+ 140               	.LM5:
+ 141               	.LFBB2:
+ 142               	/* prologue: function */
+ 143               	/* frame size = 0 */
+ 144               	/* stack size = 0 */
+ 145               	.L__stack_usage = 0
+ 146 0018 682F      		mov r22,r24
+ 147               	.L7:
+ 303:main.c        ****     // TODO: maybe move this to the generic eeprom.h file?  I didn't because
+ 304:main.c        ****     // the main code doesn't use it (yet?), so it's just wasted space (or does
+ 305:main.c        ****     // it get optimized out?).
+ 306:main.c        **** 
+ 307:main.c        ****     // wait for eeprom to become ready
+ 308:main.c        ****     eeprom_busy_wait();
+GAS LISTING /tmp/ccTXHOTK.s 			page 9
 
 
- 215 0054 D0E0      		ldi r29,lo8(0)
- 216 0056 83E0      		ldi r24,lo8(3)
- 217 0058 FE01      		movw r30,r28
- 218               	/* #APP */
- 219               	 ;  299 "main.c" 1
- 220 005a 8093 5700 		sts 87, r24
- 221 005e E895      		spm
- 222               		
- 223               	 ;  0 "" 2
- 224               	/* #NOAPP */
- 225               	.L13:
- 300:main.c        ****     boot_spm_busy_wait();
- 226               		.stabn	68,0,300,.LM16-.LFBB3
- 227               	.LM16:
- 228 0060 07B6      		in __tmp_reg__,87-0x20
- 229 0062 00FC      		sbrc __tmp_reg__,0
- 230 0064 00C0      		rjmp .L13
- 291:main.c        **** void write_page(void) {
- 231               		.stabn	68,0,291,.LM17-.LFBB3
- 232               	.LM17:
- 233 0066 A0E0      		ldi r26,lo8(page_buf)
- 234 0068 B0E0      		ldi r27,hi8(page_buf)
- 301:main.c        **** 
- 302:main.c        ****     page_buf_ptr = page_buf;
- 303:main.c        ****     for ( i=0 ; i<PAGESIZE ; i+=2 ) {
- 304:main.c        ****         // make word
- 305:main.c        ****         w = *page_buf_ptr++;
- 306:main.c        ****         w |= (*page_buf_ptr++)<<8;
- 307:main.c        **** 
- 308:main.c        ****         boot_page_fill_safe(page_addr+i, w);
- 235               		.stabn	68,0,308,.LM18-.LFBB3
- 236               	.LM18:
- 237 006a 61E0      		ldi r22,lo8(1)
- 291:main.c        **** void write_page(void) {
- 238               		.stabn	68,0,291,.LM19-.LFBB3
- 239               	.LM19:
- 240 006c AE01      		movw r20,r28
- 241 006e 4050      		subi r20,lo8(page_buf+2)
- 242 0070 5040      		sbci r21,hi8(page_buf+2)
- 243               	.L16:
- 305:main.c        ****         w = *page_buf_ptr++;
- 244               		.stabn	68,0,305,.LM20-.LFBB3
- 245               	.LM20:
- 246 0072 8C91      		ld r24,X
- 247 0074 90E0      		ldi r25,lo8(0)
- 306:main.c        ****         w |= (*page_buf_ptr++)<<8;
- 248               		.stabn	68,0,306,.LM21-.LFBB3
- 249               	.LM21:
- 250 0076 1196      		adiw r26,1
- 251 0078 3C91      		ld r19,X
- 252 007a 1197      		sbiw r26,1
- 253 007c 20E0      		ldi r18,lo8(0)
- 254 007e 822B      		or r24,r18
- 255 0080 932B      		or r25,r19
- 291:main.c        **** void write_page(void) {
- 256               		.stabn	68,0,291,.LM22-.LFBB3
- 257               	.LM22:
-GAS LISTING /tmp/ccUKiqZN.s 			page 11
-
-
- 258 0082 1296      		adiw r26,2
- 306:main.c        ****         w |= (*page_buf_ptr++)<<8;
- 259               		.stabn	68,0,306,.LM23-.LFBB3
- 260               	.LM23:
- 261 0084 B093 0000 		sts page_buf_ptr+1,r27
- 262 0088 A093 0000 		sts page_buf_ptr,r26
- 263               	.L14:
- 264               		.stabn	68,0,308,.LM24-.LFBB3
- 265               	.LM24:
- 266 008c 07B6      		in __tmp_reg__,87-0x20
- 267 008e 00FC      		sbrc __tmp_reg__,0
- 268 0090 00C0      		rjmp .L14
- 269               	.L26:
- 270               		.stabn	68,0,308,.LM25-.LFBB3
- 271               	.LM25:
- 272 0092 F999      		sbic 63-0x20,1
- 273 0094 00C0      		rjmp .L26
- 291:main.c        **** void write_page(void) {
- 274               		.stabn	68,0,291,.LM26-.LFBB3
- 275               	.LM26:
- 276 0096 FD01      		movw r30,r26
- 277 0098 E40F      		add r30,r20
- 278 009a F51F      		adc r31,r21
- 279               		.stabn	68,0,308,.LM27-.LFBB3
- 280               	.LM27:
- 281               	/* #APP */
- 282               	 ;  308 "main.c" 1
- 283 009c 0C01      		movw  r0, r24
- 284 009e 6093 5700 		sts 87, r22
- 285 00a2 E895      		spm
- 286 00a4 1124      		clr  r1
- 287               		
- 288               	 ;  0 "" 2
- 303:main.c        ****     for ( i=0 ; i<PAGESIZE ; i+=2 ) {
- 289               		.stabn	68,0,303,.LM28-.LFBB3
- 290               	.LM28:
- 291               	/* #NOAPP */
- 292 00a6 F0E0      		ldi r31,hi8(page_buf+128)
- 293 00a8 A030      		cpi r26,lo8(page_buf+128)
- 294 00aa BF07      		cpc r27,r31
- 295 00ac 01F4      		brne .L16
- 296               	.L25:
- 309:main.c        ****     }
- 310:main.c        **** 
- 311:main.c        ****     boot_page_write_safe(page_addr);
- 297               		.stabn	68,0,311,.LM29-.LFBB3
- 298               	.LM29:
- 299 00ae 07B6      		in __tmp_reg__,87-0x20
- 300 00b0 00FC      		sbrc __tmp_reg__,0
- 301 00b2 00C0      		rjmp .L25
- 302               	.L24:
- 303               		.stabn	68,0,311,.LM30-.LFBB3
- 304               	.LM30:
- 305 00b4 F999      		sbic 63-0x20,1
- 306 00b6 00C0      		rjmp .L24
- 307               		.stabn	68,0,311,.LM31-.LFBB3
- 308               	.LM31:
-GAS LISTING /tmp/ccUKiqZN.s 			page 12
-
-
- 309 00b8 85E0      		ldi r24,lo8(5)
- 310 00ba FE01      		movw r30,r28
- 311               	/* #APP */
- 312               	 ;  311 "main.c" 1
- 313 00bc 8093 5700 		sts 87, r24
- 314 00c0 E895      		spm
- 315               		
- 316               	 ;  0 "" 2
- 317               	/* #NOAPP */
- 318               	.L19:
- 312:main.c        ****     boot_spm_busy_wait();
- 319               		.stabn	68,0,312,.LM32-.LFBB3
- 320               	.LM32:
- 321 00c2 07B6      		in __tmp_reg__,87-0x20
- 322 00c4 00FC      		sbrc __tmp_reg__,0
- 323 00c6 00C0      		rjmp .L19
- 324               	.L23:
+ 148               		.stabn	68,0,308,.LM6-.LFBB2
+ 149               	.LM6:
+ 150 001a F999      		sbic 63-0x20,1
+ 151 001c 00C0      		rjmp .L7
+ 309:main.c        **** 
+ 310:main.c        ****     // write address to the address byte
+ 311:main.c        ****     eeprom_write_byte(EEPROM_INST_ADDR, address);
+ 152               		.stabn	68,0,311,.LM7-.LFBB2
+ 153               	.LM7:
+ 154 001e 81E0      		ldi r24,lo8(1)
+ 155 0020 90E0      		ldi r25,hi8(1)
+ 156 0022 0E94 0000 		call __eewr_byte_m168p
+ 157               	/* epilogue start */
+ 312:main.c        **** }
+ 158               		.stabn	68,0,312,.LM8-.LFBB2
+ 159               	.LM8:
+ 160 0026 0895      		ret
+ 161               		.size	addr_set, .-addr_set
+ 162               	.Lscope2:
+ 163               		.stabs	"",36,0,0,.Lscope2-.LFBB2
+ 164               		.stabd	78,0,0
+ 165               		.stabs	"baud_set:F(0,15)",36,0,315,baud_set
+ 166               		.stabs	"dbl:P(4,2)",64,0,315,17
+ 167               	.global	baud_set
+ 168               		.type	baud_set, @function
+ 169               	baud_set:
+ 170               		.stabd	46,0,0
  313:main.c        **** 
- 314:main.c        ****     // TODO: move this to only operate on the last page
- 315:main.c        ****     boot_rww_enable_safe();
- 325               		.stabn	68,0,315,.LM33-.LFBB3
+ 314:main.c        **** /* Set the application communication baud rate */
+ 315:main.c        **** void baud_set(uint8_t dbl) {
+ 171               		.stabn	68,0,315,.LM9-.LFBB3
+ 172               	.LM9:
+ 173               	.LFBB3:
+ 174 0028 1F93      		push r17
+ 175               	/* prologue: function */
+ 176               	/* frame size = 0 */
+ 177               	/* stack size = 1 */
+ 178               	.L__stack_usage = 1
+ 179 002a 182F      		mov r17,r24
+ 180               	.L10:
+ 316:main.c        ****     eeprom_busy_wait();
+ 181               		.stabn	68,0,316,.LM10-.LFBB3
+ 182               	.LM10:
+ 183 002c F999      		sbic 63-0x20,1
+ 184 002e 00C0      		rjmp .L10
+ 317:main.c        ****     eeprom_write_word(EEPROM_BAUD_RATE, baud);
+ 185               		.stabn	68,0,317,.LM11-.LFBB3
+ 186               	.LM11:
+ 187 0030 2091 0000 		lds r18,baud
+ 188 0034 3091 0000 		lds r19,baud+1
+ 189 0038 83E0      		ldi r24,lo8(3)
+ 190 003a 90E0      		ldi r25,hi8(3)
+ 191 003c B901      		movw r22,r18
+ 192 003e 0E94 0000 		call __eewr_word_m168p
+ 193               	.L11:
+ 318:main.c        ****     eeprom_busy_wait();
+ 194               		.stabn	68,0,318,.LM12-.LFBB3
+GAS LISTING /tmp/ccTXHOTK.s 			page 10
+
+
+ 195               	.LM12:
+ 196 0042 F999      		sbic 63-0x20,1
+ 197 0044 00C0      		rjmp .L11
+ 319:main.c        ****     eeprom_write_byte(EEPROM_BAUD_DBLE, dbl);
+ 198               		.stabn	68,0,319,.LM13-.LFBB3
+ 199               	.LM13:
+ 200 0046 82E0      		ldi r24,lo8(2)
+ 201 0048 90E0      		ldi r25,hi8(2)
+ 202 004a 612F      		mov r22,r17
+ 203 004c 0E94 0000 		call __eewr_byte_m168p
+ 204               	/* epilogue start */
+ 320:main.c        **** }
+ 205               		.stabn	68,0,320,.LM14-.LFBB3
+ 206               	.LM14:
+ 207 0050 1F91      		pop r17
+ 208 0052 0895      		ret
+ 209               		.size	baud_set, .-baud_set
+ 210               	.Lscope3:
+ 211               		.stabs	"",36,0,0,.Lscope3-.LFBB3
+ 212               		.stabd	78,0,0
+ 213               		.stabs	"write_page:F(0,15)",36,0,323,write_page
+ 214               	.global	write_page
+ 215               		.type	write_page, @function
+ 216               	write_page:
+ 217               		.stabd	46,0,0
+ 321:main.c        **** 
+ 322:main.c        **** /* Write a page of data from the page buffer */
+ 323:main.c        **** void write_page(void) {
+ 218               		.stabn	68,0,323,.LM15-.LFBB4
+ 219               	.LM15:
+ 220               	.LFBB4:
+ 221 0054 CF93      		push r28
+ 222 0056 DF93      		push r29
+ 223               	/* prologue: function */
+ 224               	/* frame size = 0 */
+ 225               	/* stack size = 2 */
+ 226               	.L__stack_usage = 2
+ 324:main.c        ****     uint16_t i,w;
+ 325:main.c        ****     uint8_t sreg;
+ 326:main.c        **** 
+ 327:main.c        ****     // disable interrupts
+ 328:main.c        ****     sreg = SREG;
+ 227               		.stabn	68,0,328,.LM16-.LFBB4
+ 228               	.LM16:
+ 229 0058 7FB7      		in r23,__SREG__
+ 329:main.c        ****     cli();
+ 230               		.stabn	68,0,329,.LM17-.LFBB4
+ 231               	.LM17:
+ 232               	/* #APP */
+ 233               	 ;  329 "main.c" 1
+ 234 005a F894      		cli
+ 235               	 ;  0 "" 2
+ 236               	/* #NOAPP */
+ 237               	.L15:
+ 330:main.c        **** 
+ 331:main.c        ****     boot_page_erase_safe(page_addr);
+ 238               		.stabn	68,0,331,.LM18-.LFBB4
+GAS LISTING /tmp/ccTXHOTK.s 			page 11
+
+
+ 239               	.LM18:
+ 240 005c 07B6      		in __tmp_reg__,87-0x20
+ 241 005e 00FC      		sbrc __tmp_reg__,0
+ 242 0060 00C0      		rjmp .L15
+ 243               	.L31:
+ 244               		.stabn	68,0,331,.LM19-.LFBB4
+ 245               	.LM19:
+ 246 0062 F999      		sbic 63-0x20,1
+ 247 0064 00C0      		rjmp .L31
+ 248               		.stabn	68,0,331,.LM20-.LFBB4
+ 249               	.LM20:
+ 250 0066 C091 0000 		lds r28,page_addr
+ 251 006a D091 0000 		lds r29,page_addr+1
+ 252 006e 83E0      		ldi r24,lo8(3)
+ 253 0070 FE01      		movw r30,r28
+ 254               	/* #APP */
+ 255               	 ;  331 "main.c" 1
+ 256 0072 8093 5700 		sts 87, r24
+ 257 0076 E895      		spm
+ 258               		
+ 259               	 ;  0 "" 2
+ 260               	/* #NOAPP */
+ 261               	.L17:
+ 332:main.c        ****     boot_spm_busy_wait();
+ 262               		.stabn	68,0,332,.LM21-.LFBB4
+ 263               	.LM21:
+ 264 0078 07B6      		in __tmp_reg__,87-0x20
+ 265 007a 00FC      		sbrc __tmp_reg__,0
+ 266 007c 00C0      		rjmp .L17
+ 323:main.c        **** void write_page(void) {
+ 267               		.stabn	68,0,323,.LM22-.LFBB4
+ 268               	.LM22:
+ 269 007e A0E0      		ldi r26,lo8(page_buf)
+ 270 0080 B0E0      		ldi r27,hi8(page_buf)
+ 333:main.c        **** 
+ 334:main.c        ****     page_buf_ptr = page_buf;
+ 335:main.c        ****     for ( i=0 ; i<PAGESIZE ; i+=2 ) {
+ 336:main.c        ****         // make word
+ 337:main.c        ****         w = *page_buf_ptr++;
+ 338:main.c        ****         w |= (*page_buf_ptr++)<<8;
+ 339:main.c        **** 
+ 340:main.c        ****         boot_page_fill_safe(page_addr+i, w);
+ 271               		.stabn	68,0,340,.LM23-.LFBB4
+ 272               	.LM23:
+ 273 0082 61E0      		ldi r22,lo8(1)
+ 323:main.c        **** void write_page(void) {
+ 274               		.stabn	68,0,323,.LM24-.LFBB4
+ 275               	.LM24:
+ 276 0084 AE01      		movw r20,r28
+ 277 0086 4050      		subi r20,lo8(page_buf+2)
+ 278 0088 5040      		sbci r21,hi8(page_buf+2)
+ 279               	.L20:
+ 337:main.c        ****         w = *page_buf_ptr++;
+ 280               		.stabn	68,0,337,.LM25-.LFBB4
+ 281               	.LM25:
+ 282 008a 8C91      		ld r24,X
+ 283 008c 90E0      		ldi r25,lo8(0)
+GAS LISTING /tmp/ccTXHOTK.s 			page 12
+
+
+ 338:main.c        ****         w |= (*page_buf_ptr++)<<8;
+ 284               		.stabn	68,0,338,.LM26-.LFBB4
+ 285               	.LM26:
+ 286 008e 1196      		adiw r26,1
+ 287 0090 3C91      		ld r19,X
+ 288 0092 1197      		sbiw r26,1
+ 289 0094 20E0      		ldi r18,lo8(0)
+ 290 0096 822B      		or r24,r18
+ 291 0098 932B      		or r25,r19
+ 323:main.c        **** void write_page(void) {
+ 292               		.stabn	68,0,323,.LM27-.LFBB4
+ 293               	.LM27:
+ 294 009a 1296      		adiw r26,2
+ 338:main.c        ****         w |= (*page_buf_ptr++)<<8;
+ 295               		.stabn	68,0,338,.LM28-.LFBB4
+ 296               	.LM28:
+ 297 009c B093 0000 		sts page_buf_ptr+1,r27
+ 298 00a0 A093 0000 		sts page_buf_ptr,r26
+ 299               	.L18:
+ 300               		.stabn	68,0,340,.LM29-.LFBB4
+ 301               	.LM29:
+ 302 00a4 07B6      		in __tmp_reg__,87-0x20
+ 303 00a6 00FC      		sbrc __tmp_reg__,0
+ 304 00a8 00C0      		rjmp .L18
+ 305               	.L30:
+ 306               		.stabn	68,0,340,.LM30-.LFBB4
+ 307               	.LM30:
+ 308 00aa F999      		sbic 63-0x20,1
+ 309 00ac 00C0      		rjmp .L30
+ 323:main.c        **** void write_page(void) {
+ 310               		.stabn	68,0,323,.LM31-.LFBB4
+ 311               	.LM31:
+ 312 00ae FD01      		movw r30,r26
+ 313 00b0 E40F      		add r30,r20
+ 314 00b2 F51F      		adc r31,r21
+ 315               		.stabn	68,0,340,.LM32-.LFBB4
+ 316               	.LM32:
+ 317               	/* #APP */
+ 318               	 ;  340 "main.c" 1
+ 319 00b4 0C01      		movw  r0, r24
+ 320 00b6 6093 5700 		sts 87, r22
+ 321 00ba E895      		spm
+ 322 00bc 1124      		clr  r1
+ 323               		
+ 324               	 ;  0 "" 2
+ 335:main.c        ****     for ( i=0 ; i<PAGESIZE ; i+=2 ) {
+ 325               		.stabn	68,0,335,.LM33-.LFBB4
  326               	.LM33:
- 327 00c8 07B6      		in __tmp_reg__,87-0x20
- 328 00ca 00FC      		sbrc __tmp_reg__,0
- 329 00cc 00C0      		rjmp .L23
- 330               	.L22:
- 331               		.stabn	68,0,315,.LM34-.LFBB3
- 332               	.LM34:
- 333 00ce F999      		sbic 63-0x20,1
- 334 00d0 00C0      		rjmp .L22
- 335               		.stabn	68,0,315,.LM35-.LFBB3
- 336               	.LM35:
- 337 00d2 81E1      		ldi r24,lo8(17)
- 338               	/* #APP */
- 339               	 ;  315 "main.c" 1
- 340 00d4 8093 5700 		sts 87, r24
- 341 00d8 E895      		spm
- 342               		
- 343               	 ;  0 "" 2
- 316:main.c        **** 
- 317:main.c        ****     // re-enable interrupts
- 318:main.c        ****     SREG = sreg;
- 344               		.stabn	68,0,318,.LM36-.LFBB3
- 345               	.LM36:
- 346               	/* #NOAPP */
- 347 00da 7FBF      		out __SREG__,r23
- 348               	/* epilogue start */
- 319:main.c        **** }
- 349               		.stabn	68,0,319,.LM37-.LFBB3
- 350               	.LM37:
- 351 00dc DF91      		pop r29
- 352 00de CF91      		pop r28
- 353 00e0 0895      		ret
- 354               		.size	write_page, .-write_page
- 355               		.stabs	"sreg:r(4,2)",64,0,293,23
- 356               		.stabn	192,0,0,.LFBB3-.LFBB3
- 357               		.stabn	224,0,0,.Lscope3-.LFBB3
-GAS LISTING /tmp/ccUKiqZN.s 			page 13
+ 327               	/* #NOAPP */
+ 328 00be F0E0      		ldi r31,hi8(page_buf+128)
+ 329 00c0 A030      		cpi r26,lo8(page_buf+128)
+ 330 00c2 BF07      		cpc r27,r31
+ 331 00c4 01F4      		brne .L20
+ 332               	.L29:
+ 341:main.c        ****     }
+ 342:main.c        **** 
+ 343:main.c        ****     boot_page_write_safe(page_addr);
+GAS LISTING /tmp/ccTXHOTK.s 			page 13
 
 
- 358               	.Lscope3:
- 359               		.stabs	"",36,0,0,.Lscope3-.LFBB3
- 360               		.stabd	78,0,0
- 361               		.stabs	"verify_flash:F(0,15)",36,0,322,verify_flash
- 362               		.stabs	"checksum:P(4,2)",64,0,322,24
- 363               	.global	verify_flash
- 364               		.type	verify_flash, @function
- 365               	verify_flash:
- 366               		.stabd	46,0,0
- 320:main.c        **** 
- 321:main.c        **** /* Verify the flash */
- 322:main.c        **** void verify_flash(uint8_t checksum) {
- 367               		.stabn	68,0,322,.LM38-.LFBB4
- 368               	.LM38:
- 369               	.LFBB4:
- 370               	/* prologue: function */
- 371               	/* frame size = 0 */
- 372               	/* stack size = 0 */
- 373               	.L__stack_usage = 0
- 374               	/* epilogue start */
- 323:main.c        ****     // TODO: not implemented yet
- 324:main.c        **** }
- 375               		.stabn	68,0,324,.LM39-.LFBB4
- 376               	.LM39:
- 377 00e2 0895      		ret
- 378               		.size	verify_flash, .-verify_flash
- 379               	.Lscope4:
- 380               		.stabs	"",36,0,0,.Lscope4-.LFBB4
- 381               		.stabd	78,0,0
- 382               		.stabs	"applies_to_me:F(4,2)",36,0,327,applies_to_me
- 383               	.global	applies_to_me
- 384               		.type	applies_to_me, @function
- 385               	applies_to_me:
- 386               		.stabd	46,0,0
- 325:main.c        **** 
- 326:main.c        **** /* Check to see if the mask applies to this instrument */
- 327:main.c        **** uint8_t applies_to_me(void) {
- 387               		.stabn	68,0,327,.LM40-.LFBB5
- 388               	.LM40:
- 389               	.LFBB5:
- 390               	/* prologue: function */
- 391               	/* frame size = 0 */
- 392               	/* stack size = 0 */
- 393               	.L__stack_usage = 0
- 328:main.c        ****     if ( instaddr == 0xFF ) {
- 394               		.stabn	68,0,328,.LM41-.LFBB5
- 395               	.LM41:
- 396 00e4 2091 0000 		lds r18,instaddr
- 397 00e8 2F3F      		cpi r18,lo8(-1)
- 398 00ea 01F0      		breq .L45
- 329:main.c        ****         // eeprom address hasn't been set yet, so listen to everything
- 330:main.c        ****         return 1;
- 331:main.c        ****     } else if ( mask == AM_ALL ) {
- 399               		.stabn	68,0,331,.LM42-.LFBB5
- 400               	.LM42:
- 401 00ec 8091 0000 		lds r24,mask
- 402 00f0 8F3F      		cpi r24,lo8(-1)
-GAS LISTING /tmp/ccUKiqZN.s 			page 14
+ 333               		.stabn	68,0,343,.LM34-.LFBB4
+ 334               	.LM34:
+ 335 00c6 07B6      		in __tmp_reg__,87-0x20
+ 336 00c8 00FC      		sbrc __tmp_reg__,0
+ 337 00ca 00C0      		rjmp .L29
+ 338               	.L28:
+ 339               		.stabn	68,0,343,.LM35-.LFBB4
+ 340               	.LM35:
+ 341 00cc F999      		sbic 63-0x20,1
+ 342 00ce 00C0      		rjmp .L28
+ 343               		.stabn	68,0,343,.LM36-.LFBB4
+ 344               	.LM36:
+ 345 00d0 85E0      		ldi r24,lo8(5)
+ 346 00d2 FE01      		movw r30,r28
+ 347               	/* #APP */
+ 348               	 ;  343 "main.c" 1
+ 349 00d4 8093 5700 		sts 87, r24
+ 350 00d8 E895      		spm
+ 351               		
+ 352               	 ;  0 "" 2
+ 353               	/* #NOAPP */
+ 354               	.L23:
+ 344:main.c        ****     boot_spm_busy_wait();
+ 355               		.stabn	68,0,344,.LM37-.LFBB4
+ 356               	.LM37:
+ 357 00da 07B6      		in __tmp_reg__,87-0x20
+ 358 00dc 00FC      		sbrc __tmp_reg__,0
+ 359 00de 00C0      		rjmp .L23
+ 360               	.L27:
+ 345:main.c        **** 
+ 346:main.c        ****     // TODO: move this to only operate on the last page
+ 347:main.c        ****     boot_rww_enable_safe();
+ 361               		.stabn	68,0,347,.LM38-.LFBB4
+ 362               	.LM38:
+ 363 00e0 07B6      		in __tmp_reg__,87-0x20
+ 364 00e2 00FC      		sbrc __tmp_reg__,0
+ 365 00e4 00C0      		rjmp .L27
+ 366               	.L26:
+ 367               		.stabn	68,0,347,.LM39-.LFBB4
+ 368               	.LM39:
+ 369 00e6 F999      		sbic 63-0x20,1
+ 370 00e8 00C0      		rjmp .L26
+ 371               		.stabn	68,0,347,.LM40-.LFBB4
+ 372               	.LM40:
+ 373 00ea 81E1      		ldi r24,lo8(17)
+ 374               	/* #APP */
+ 375               	 ;  347 "main.c" 1
+ 376 00ec 8093 5700 		sts 87, r24
+ 377 00f0 E895      		spm
+ 378               		
+ 379               	 ;  0 "" 2
+ 348:main.c        **** 
+ 349:main.c        ****     // re-enable interrupts
+ 350:main.c        ****     SREG = sreg;
+ 380               		.stabn	68,0,350,.LM41-.LFBB4
+ 381               	.LM41:
+ 382               	/* #NOAPP */
+GAS LISTING /tmp/ccTXHOTK.s 			page 14
 
 
- 403 00f2 01F0      		breq .L45
- 332:main.c        ****         // 0xFF = all addresses
- 333:main.c        ****         return 1;
- 334:main.c        ****     } else if ( instaddr == mask ) {
- 404               		.stabn	68,0,334,.LM43-.LFBB5
- 405               	.LM43:
- 406 00f4 2817      		cp r18,r24
- 407 00f6 01F0      		breq .L45
- 335:main.c        ****         // we specifically targeted this device
- 336:main.c        ****         return 1;
- 337:main.c        ****     } else if ( mask >= 0xF0 && ( instaddr >= (mask&0x0F)*16 && 
- 408               		.stabn	68,0,337,.LM44-.LFBB5
- 409               	.LM44:
- 410 00f8 803F      		cpi r24,lo8(-16)
- 411 00fa 00F0      		brlo .L46
- 412               		.stabn	68,0,337,.LM45-.LFBB5
- 413               	.LM45:
- 414 00fc 30E0      		ldi r19,lo8(0)
- 415 00fe 90E0      		ldi r25,lo8(0)
- 416 0100 8F70      		andi r24,lo8(15)
- 417 0102 9070      		andi r25,hi8(15)
- 418 0104 8295      		swap r24
- 419 0106 9295      		swap r25
- 420 0108 907F      		andi r25,0xf0
- 421 010a 9827      		eor r25,r24
- 422 010c 807F      		andi r24,0xf0
- 423 010e 9827      		eor r25,r24
- 424 0110 2817      		cp r18,r24
- 425 0112 3907      		cpc r19,r25
- 426 0114 04F0      		brlt .L47
- 338:main.c        ****                 instaddr <= (mask&0x0F)*16+15 ) ) {
- 427               		.stabn	68,0,338,.LM46-.LFBB5
- 428               	.LM46:
- 429 0116 AC01      		movw r20,r24
- 430 0118 415F      		subi r20,lo8(-(15))
- 431 011a 5F4F      		sbci r21,hi8(-(15))
- 327:main.c        **** uint8_t applies_to_me(void) {
- 432               		.stabn	68,0,327,.LM47-.LFBB5
- 433               	.LM47:
- 434 011c 81E0      		ldi r24,lo8(1)
- 435 011e 4217      		cp r20,r18
- 436 0120 5307      		cpc r21,r19
- 437 0122 04F0      		brlt .L46
- 339:main.c        ****         // the devices matches in block mode
- 340:main.c        ****         return 1;
- 341:main.c        ****     } else {
- 342:main.c        ****         return 0;
- 343:main.c        ****     }
- 344:main.c        **** }
- 438               		.stabn	68,0,344,.LM48-.LFBB5
- 439               	.LM48:
- 440 0124 0895      		ret
- 441               	.L46:
- 342:main.c        ****         return 0;
- 442               		.stabn	68,0,342,.LM49-.LFBB5
- 443               	.LM49:
- 444 0126 80E0      		ldi r24,lo8(0)
-GAS LISTING /tmp/ccUKiqZN.s 			page 15
+ 383 00f2 7FBF      		out __SREG__,r23
+ 384               	/* epilogue start */
+ 351:main.c        **** }
+ 385               		.stabn	68,0,351,.LM42-.LFBB4
+ 386               	.LM42:
+ 387 00f4 DF91      		pop r29
+ 388 00f6 CF91      		pop r28
+ 389 00f8 0895      		ret
+ 390               		.size	write_page, .-write_page
+ 391               		.stabs	"sreg:r(4,2)",64,0,325,23
+ 392               		.stabn	192,0,0,.LFBB4-.LFBB4
+ 393               		.stabn	224,0,0,.Lscope4-.LFBB4
+ 394               	.Lscope4:
+ 395               		.stabs	"",36,0,0,.Lscope4-.LFBB4
+ 396               		.stabd	78,0,0
+ 397               		.stabs	"verify_flash:F(0,15)",36,0,354,verify_flash
+ 398               		.stabs	"checksum:P(4,2)",64,0,354,24
+ 399               	.global	verify_flash
+ 400               		.type	verify_flash, @function
+ 401               	verify_flash:
+ 402               		.stabd	46,0,0
+ 352:main.c        **** 
+ 353:main.c        **** /* Verify the flash */
+ 354:main.c        **** void verify_flash(uint8_t checksum) {
+ 403               		.stabn	68,0,354,.LM43-.LFBB5
+ 404               	.LM43:
+ 405               	.LFBB5:
+ 406               	/* prologue: function */
+ 407               	/* frame size = 0 */
+ 408               	/* stack size = 0 */
+ 409               	.L__stack_usage = 0
+ 410               	/* epilogue start */
+ 355:main.c        ****     // TODO: not implemented yet
+ 356:main.c        **** }
+ 411               		.stabn	68,0,356,.LM44-.LFBB5
+ 412               	.LM44:
+ 413 00fa 0895      		ret
+ 414               		.size	verify_flash, .-verify_flash
+ 415               	.Lscope5:
+ 416               		.stabs	"",36,0,0,.Lscope5-.LFBB5
+ 417               		.stabd	78,0,0
+ 418               		.stabs	"applies_to_me:F(4,2)",36,0,359,applies_to_me
+ 419               	.global	applies_to_me
+ 420               		.type	applies_to_me, @function
+ 421               	applies_to_me:
+ 422               		.stabd	46,0,0
+ 357:main.c        **** 
+ 358:main.c        **** /* Check to see if the mask applies to this instrument */
+ 359:main.c        **** uint8_t applies_to_me(void) {
+ 423               		.stabn	68,0,359,.LM45-.LFBB6
+ 424               	.LM45:
+ 425               	.LFBB6:
+ 426               	/* prologue: function */
+ 427               	/* frame size = 0 */
+ 428               	/* stack size = 0 */
+ 429               	.L__stack_usage = 0
+ 360:main.c        ****     if ( instaddr == 0xFF ) {
+GAS LISTING /tmp/ccTXHOTK.s 			page 15
 
 
- 445 0128 0895      		ret
- 446               	.L45:
- 336:main.c        ****         return 1;
- 447               		.stabn	68,0,336,.LM50-.LFBB5
- 448               	.LM50:
- 449 012a 81E0      		ldi r24,lo8(1)
- 450 012c 0895      		ret
- 451               	.L47:
- 342:main.c        ****         return 0;
- 452               		.stabn	68,0,342,.LM51-.LFBB5
- 453               	.LM51:
- 454 012e 80E0      		ldi r24,lo8(0)
- 455               		.stabn	68,0,344,.LM52-.LFBB5
- 456               	.LM52:
- 457 0130 0895      		ret
- 458               		.size	applies_to_me, .-applies_to_me
- 459               	.Lscope5:
- 460               		.stabs	"",36,0,0,.Lscope5-.LFBB5
- 461               		.stabd	78,0,0
- 462               		.stabs	"process_rx:F(0,15)",36,0,127,process_rx
- 463               	.global	process_rx
- 464               		.type	process_rx, @function
- 465               	process_rx:
- 466               		.stabd	46,0,0
- 127:main.c        **** void process_rx(void) {
- 467               		.stabn	68,0,127,.LM53-.LFBB6
- 468               	.LM53:
- 469               	.LFBB6:
- 470 0132 1F93      		push r17
- 471               	/* prologue: function */
- 472               	/* frame size = 0 */
- 473               	/* stack size = 1 */
- 474               	.L__stack_usage = 1
- 130:main.c        ****     data = uart_rx();
- 475               		.stabn	68,0,130,.LM54-.LFBB6
- 476               	.LM54:
- 477 0134 0E94 0000 		call uart_rx
- 478 0138 182F      		mov r17,r24
- 132:main.c        ****     if ( data != CMD_NOP ) {
- 479               		.stabn	68,0,132,.LM55-.LFBB6
- 480               	.LM55:
- 481 013a 8E34      		cpi r24,lo8(78)
- 482 013c 01F0      		breq .L48
- 133:main.c        ****         switch (curstate) {
- 483               		.stabn	68,0,133,.LM56-.LFBB6
- 484               	.LM56:
- 485 013e 8091 0000 		lds r24,curstate
- 486 0142 8530      		cpi r24,lo8(5)
- 487 0144 01F4      		brne .+2
- 488 0146 00C0      		rjmp .L56
- 489 0148 8630      		cpi r24,lo8(6)
- 490 014a 00F0      		brlo .L79
- 491 014c 8830      		cpi r24,lo8(8)
- 492 014e 01F4      		brne .+2
- 493 0150 00C0      		rjmp .L59
- 494 0152 8930      		cpi r24,lo8(9)
- 495 0154 00F4      		brsh .L63
-GAS LISTING /tmp/ccUKiqZN.s 			page 16
+ 430               		.stabn	68,0,360,.LM46-.LFBB6
+ 431               	.LM46:
+ 432 00fc 2091 0000 		lds r18,instaddr
+ 433 0100 2F3F      		cpi r18,lo8(-1)
+ 434 0102 01F0      		breq .L49
+ 361:main.c        ****         // eeprom address hasn't been set yet, so listen to everything
+ 362:main.c        ****         return 1;
+ 363:main.c        ****     } else if ( mask == AM_ALL ) {
+ 435               		.stabn	68,0,363,.LM47-.LFBB6
+ 436               	.LM47:
+ 437 0104 8091 0000 		lds r24,mask
+ 438 0108 8F3F      		cpi r24,lo8(-1)
+ 439 010a 01F0      		breq .L49
+ 364:main.c        ****         // 0xFF = all addresses
+ 365:main.c        ****         return 1;
+ 366:main.c        ****     } else if ( instaddr == mask ) {
+ 440               		.stabn	68,0,366,.LM48-.LFBB6
+ 441               	.LM48:
+ 442 010c 2817      		cp r18,r24
+ 443 010e 01F0      		breq .L49
+ 367:main.c        ****         // we specifically targeted this device
+ 368:main.c        ****         return 1;
+ 369:main.c        ****     } else if ( mask >= 0xF0 && ( instaddr >= (mask&0x0F)*16 && 
+ 444               		.stabn	68,0,369,.LM49-.LFBB6
+ 445               	.LM49:
+ 446 0110 803F      		cpi r24,lo8(-16)
+ 447 0112 00F0      		brlo .L50
+ 448               		.stabn	68,0,369,.LM50-.LFBB6
+ 449               	.LM50:
+ 450 0114 30E0      		ldi r19,lo8(0)
+ 451 0116 90E0      		ldi r25,lo8(0)
+ 452 0118 8F70      		andi r24,lo8(15)
+ 453 011a 9070      		andi r25,hi8(15)
+ 454 011c 8295      		swap r24
+ 455 011e 9295      		swap r25
+ 456 0120 907F      		andi r25,0xf0
+ 457 0122 9827      		eor r25,r24
+ 458 0124 807F      		andi r24,0xf0
+ 459 0126 9827      		eor r25,r24
+ 460 0128 2817      		cp r18,r24
+ 461 012a 3907      		cpc r19,r25
+ 462 012c 04F0      		brlt .L51
+ 370:main.c        ****                 instaddr <= (mask&0x0F)*16+15 ) ) {
+ 463               		.stabn	68,0,370,.LM51-.LFBB6
+ 464               	.LM51:
+ 465 012e AC01      		movw r20,r24
+ 466 0130 415F      		subi r20,lo8(-(15))
+ 467 0132 5F4F      		sbci r21,hi8(-(15))
+ 359:main.c        **** uint8_t applies_to_me(void) {
+ 468               		.stabn	68,0,359,.LM52-.LFBB6
+ 469               	.LM52:
+ 470 0134 81E0      		ldi r24,lo8(1)
+ 471 0136 4217      		cp r20,r18
+ 472 0138 5307      		cpc r21,r19
+ 473 013a 04F0      		brlt .L50
+ 371:main.c        ****         // the devices matches in block mode
+ 372:main.c        ****         return 1;
+GAS LISTING /tmp/ccTXHOTK.s 			page 16
 
 
- 496 0156 8630      		cpi r24,lo8(6)
- 497 0158 01F4      		brne .+2
- 498 015a 00C0      		rjmp .L57
- 499 015c 8730      		cpi r24,lo8(7)
- 500 015e 01F4      		brne .+2
- 501 0160 00C0      		rjmp .L80
- 502               	.L50:
- 241:main.c        ****                 curstate = CST_IDLE;
- 503               		.stabn	68,0,241,.LM57-.LFBB6
- 504               	.LM57:
- 505 0162 1092 0000 		sts curstate,__zero_reg__
- 506               	.L48:
- 507               	/* epilogue start */
- 245:main.c        **** }
- 508               		.stabn	68,0,245,.LM58-.LFBB6
- 509               	.LM58:
- 510 0166 1F91      		pop r17
- 511 0168 0895      		ret
- 512               	.L79:
- 133:main.c        ****         switch (curstate) {
- 513               		.stabn	68,0,133,.LM59-.LFBB6
- 514               	.LM59:
- 515 016a 8230      		cpi r24,lo8(2)
- 516 016c 01F0      		breq .L53
- 517 016e 8330      		cpi r24,lo8(3)
- 518 0170 00F0      		brlo .L81
- 519 0172 8330      		cpi r24,lo8(3)
- 520 0174 01F0      		breq .L54
- 521 0176 8430      		cpi r24,lo8(4)
- 522 0178 01F4      		brne .L50
- 190:main.c        ****                 baud = (data << 8);   // high byte of baud rate
- 523               		.stabn	68,0,190,.LM60-.LFBB6
- 524               	.LM60:
- 525 017a 1092 0000 		sts baud,__zero_reg__
- 526 017e 1093 0000 		sts baud+1,r17
- 191:main.c        ****                 curstate = CST_BAUD_L;
- 527               		.stabn	68,0,191,.LM61-.LFBB6
- 528               	.LM61:
- 529 0182 85E0      		ldi r24,lo8(5)
- 530 0184 8093 0000 		sts curstate,r24
- 192:main.c        ****                 break;
- 531               		.stabn	68,0,192,.LM62-.LFBB6
- 532               	.LM62:
- 533 0188 00C0      		rjmp .L48
- 534               	.L63:
- 133:main.c        ****         switch (curstate) {
- 535               		.stabn	68,0,133,.LM63-.LFBB6
- 536               	.LM63:
- 537 018a 8930      		cpi r24,lo8(9)
- 538 018c 01F4      		brne .+2
- 539 018e 00C0      		rjmp .L60
- 540 0190 8A30      		cpi r24,lo8(10)
- 541 0192 01F4      		brne .L50
- 542 0194 00C0      		rjmp .L48
- 543               	.L81:
- 544 0196 8823      		tst r24
- 545 0198 01F0      		breq .L51
-GAS LISTING /tmp/ccUKiqZN.s 			page 17
+ 373:main.c        ****     } else {
+ 374:main.c        ****         return 0;
+ 375:main.c        ****     }
+ 376:main.c        **** }
+ 474               		.stabn	68,0,376,.LM53-.LFBB6
+ 475               	.LM53:
+ 476 013c 0895      		ret
+ 477               	.L50:
+ 374:main.c        ****         return 0;
+ 478               		.stabn	68,0,374,.LM54-.LFBB6
+ 479               	.LM54:
+ 480 013e 80E0      		ldi r24,lo8(0)
+ 481 0140 0895      		ret
+ 482               	.L49:
+ 368:main.c        ****         return 1;
+ 483               		.stabn	68,0,368,.LM55-.LFBB6
+ 484               	.LM55:
+ 485 0142 81E0      		ldi r24,lo8(1)
+ 486 0144 0895      		ret
+ 487               	.L51:
+ 374:main.c        ****         return 0;
+ 488               		.stabn	68,0,374,.LM56-.LFBB6
+ 489               	.LM56:
+ 490 0146 80E0      		ldi r24,lo8(0)
+ 491               		.stabn	68,0,376,.LM57-.LFBB6
+ 492               	.LM57:
+ 493 0148 0895      		ret
+ 494               		.size	applies_to_me, .-applies_to_me
+ 495               	.Lscope6:
+ 496               		.stabs	"",36,0,0,.Lscope6-.LFBB6
+ 497               		.stabd	78,0,0
+ 498               		.stabs	"process_rx:F(0,15)",36,0,137,process_rx
+ 499               	.global	process_rx
+ 500               		.type	process_rx, @function
+ 501               	process_rx:
+ 502               		.stabd	46,0,0
+ 137:main.c        **** void process_rx(void) {
+ 503               		.stabn	68,0,137,.LM58-.LFBB7
+ 504               	.LM58:
+ 505               	.LFBB7:
+ 506 014a 1F93      		push r17
+ 507               	/* prologue: function */
+ 508               	/* frame size = 0 */
+ 509               	/* stack size = 1 */
+ 510               	.L__stack_usage = 1
+ 140:main.c        ****     data = uart_rx();
+ 511               		.stabn	68,0,140,.LM59-.LFBB7
+ 512               	.LM59:
+ 513 014c 0E94 0000 		call uart_rx
+ 514 0150 182F      		mov r17,r24
+ 142:main.c        ****     if ( data != CMD_NOP ) {
+ 515               		.stabn	68,0,142,.LM60-.LFBB7
+ 516               	.LM60:
+ 517 0152 8E34      		cpi r24,lo8(78)
+ 518 0154 01F0      		breq .L52
+ 143:main.c        ****         switch (curstate) {
+ 519               		.stabn	68,0,143,.LM61-.LFBB7
+GAS LISTING /tmp/ccTXHOTK.s 			page 17
 
 
- 546 019a 8130      		cpi r24,lo8(1)
- 547 019c 01F4      		brne .L50
- 139:main.c        ****                 if ( data == CMD_SYNC ) curstate = CST_SYNC;
- 548               		.stabn	68,0,139,.LM64-.LFBB6
- 549               	.LM64:
- 550 019e 1A3A      		cpi r17,lo8(-86)
- 551 01a0 01F0      		breq .L48
- 141:main.c        ****                 else if ( data == CMD_MASK ) curstate = CST_MASK;
- 552               		.stabn	68,0,141,.LM65-.LFBB6
- 553               	.LM65:
- 554 01a2 1D34      		cpi r17,lo8(77)
- 555 01a4 01F4      		brne .+2
- 556 01a6 00C0      		rjmp .L82
- 142:main.c        ****                 else if ( applies_to_me() ) {
- 557               		.stabn	68,0,142,.LM66-.LFBB6
- 558               	.LM66:
- 559 01a8 0E94 0000 		call applies_to_me
- 560 01ac 8823      		tst r24
- 561 01ae 01F0      		breq .L50
- 143:main.c        ****                     switch (data) {
- 562               		.stabn	68,0,143,.LM67-.LFBB6
- 563               	.LM67:
- 564 01b0 1434      		cpi r17,lo8(68)
- 565 01b2 01F4      		brne .+2
- 566 01b4 00C0      		rjmp .L70
- 567 01b6 1534      		cpi r17,lo8(69)
- 568 01b8 00F0      		brlo .+2
- 569 01ba 00C0      		rjmp .L74
- 570 01bc 1134      		cpi r17,lo8(65)
- 571 01be 01F4      		brne .+2
- 572 01c0 00C0      		rjmp .L68
- 573 01c2 1234      		cpi r17,lo8(66)
- 574 01c4 01F4      		brne .L50
- 158:main.c        ****                             curstate = CST_BAUD_H;
- 575               		.stabn	68,0,158,.LM68-.LFBB6
- 576               	.LM68:
- 577 01c6 84E0      		ldi r24,lo8(4)
- 578 01c8 8093 0000 		sts curstate,r24
+ 520               	.LM61:
+ 521 0156 8091 0000 		lds r24,curstate
+ 522 015a 8530      		cpi r24,lo8(5)
+ 523 015c 01F4      		brne .+2
+ 524 015e 00C0      		rjmp .L60
+ 525 0160 8630      		cpi r24,lo8(6)
+ 526 0162 00F0      		brlo .L84
+ 527 0164 8830      		cpi r24,lo8(8)
+ 528 0166 01F4      		brne .+2
+ 529 0168 00C0      		rjmp .L63
+ 530 016a 8930      		cpi r24,lo8(9)
+ 531 016c 00F4      		brsh .L68
+ 532 016e 8630      		cpi r24,lo8(6)
+ 533 0170 01F4      		brne .+2
+ 534 0172 00C0      		rjmp .L61
+ 535 0174 8730      		cpi r24,lo8(7)
+ 536 0176 01F4      		brne .+2
+ 537 0178 00C0      		rjmp .L85
+ 538               	.L54:
+ 272:main.c        ****                 curstate = CST_IDLE;
+ 539               		.stabn	68,0,272,.LM62-.LFBB7
+ 540               	.LM62:
+ 541 017a 1092 0000 		sts curstate,__zero_reg__
+ 542               	.L52:
+ 543               	/* epilogue start */
+ 276:main.c        **** }
+ 544               		.stabn	68,0,276,.LM63-.LFBB7
+ 545               	.LM63:
+ 546 017e 1F91      		pop r17
+ 547 0180 0895      		ret
+ 548               	.L84:
+ 143:main.c        ****         switch (curstate) {
+ 549               		.stabn	68,0,143,.LM64-.LFBB7
+ 550               	.LM64:
+ 551 0182 8230      		cpi r24,lo8(2)
+ 552 0184 01F4      		brne .+2
+ 553 0186 00C0      		rjmp .L57
+ 554 0188 8330      		cpi r24,lo8(3)
+ 555 018a 00F0      		brlo .L86
+ 556 018c 8330      		cpi r24,lo8(3)
+ 557 018e 01F4      		brne .+2
+ 558 0190 00C0      		rjmp .L58
+ 559 0192 8430      		cpi r24,lo8(4)
+ 560 0194 01F4      		brne .L54
+ 208:main.c        ****                 baud = (data << 8);   // high byte of baud rate
+ 561               		.stabn	68,0,208,.LM65-.LFBB7
+ 562               	.LM65:
+ 563 0196 1092 0000 		sts baud,__zero_reg__
+ 564 019a 1093 0000 		sts baud+1,r17
+ 209:main.c        ****                 curstate = CST_BAUD_L;
+ 565               		.stabn	68,0,209,.LM66-.LFBB7
+ 566               	.LM66:
+ 567 019e 85E0      		ldi r24,lo8(5)
+ 568 01a0 8093 0000 		sts curstate,r24
+ 210:main.c        ****                 break;
+ 569               		.stabn	68,0,210,.LM67-.LFBB7
+ 570               	.LM67:
+GAS LISTING /tmp/ccTXHOTK.s 			page 18
+
+
+ 571 01a4 00C0      		rjmp .L52
+ 572               	.L68:
+ 143:main.c        ****         switch (curstate) {
+ 573               		.stabn	68,0,143,.LM68-.LFBB7
+ 574               	.LM68:
+ 575 01a6 8A30      		cpi r24,lo8(10)
+ 576 01a8 01F4      		brne .+2
+ 577 01aa 00C0      		rjmp .L65
+ 578 01ac 8A30      		cpi r24,lo8(10)
+ 579 01ae 00F0      		brlo .+2
+ 580 01b0 00C0      		rjmp .L87
+ 234:main.c        ****                 *(page_buf_ptr++) = data;
+ 581               		.stabn	68,0,234,.LM69-.LFBB7
+ 582               	.LM69:
+ 583 01b2 E091 0000 		lds r30,page_buf_ptr
+ 584 01b6 F091 0000 		lds r31,page_buf_ptr+1
+ 585 01ba 1193      		st Z+,r17
+ 586 01bc F093 0000 		sts page_buf_ptr+1,r31
+ 587 01c0 E093 0000 		sts page_buf_ptr,r30
+ 235:main.c        ****                 if ( page_buf_ptr - page_buf == PAGESIZE ) {
+ 588               		.stabn	68,0,235,.LM70-.LFBB7
+ 589               	.LM70:
+ 590 01c4 80E0      		ldi r24,hi8(page_buf+128)
+ 591 01c6 E030      		cpi r30,lo8(page_buf+128)
+ 592 01c8 F807      		cpc r31,r24
+ 593 01ca 01F4      		brne .+2
+ 594 01cc 00C0      		rjmp .L88
+ 240:main.c        ****                     curstate = CST_PROG_D;
+ 595               		.stabn	68,0,240,.LM71-.LFBB7
+ 596               	.LM71:
+ 597 01ce 89E0      		ldi r24,lo8(9)
+ 598 01d0 8093 0000 		sts curstate,r24
+ 599 01d4 00C0      		rjmp .L52
+ 600               	.L86:
+ 143:main.c        ****         switch (curstate) {
+ 601               		.stabn	68,0,143,.LM72-.LFBB7
+ 602               	.LM72:
+ 603 01d6 8823      		tst r24
+ 604 01d8 01F0      		breq .L55
+ 605 01da 8130      		cpi r24,lo8(1)
+ 606 01dc 01F4      		brne .L54
+ 149:main.c        ****                 if ( data == CMD_SYNC ) curstate = CST_SYNC;
+ 607               		.stabn	68,0,149,.LM73-.LFBB7
+ 608               	.LM73:
+ 609 01de 1A3A      		cpi r17,lo8(-86)
+ 610 01e0 01F0      		breq .L52
+ 151:main.c        ****                 else if ( data == CMD_MASK ) curstate = CST_MASK;
+ 611               		.stabn	68,0,151,.LM74-.LFBB7
+ 612               	.LM74:
+ 613 01e2 1D34      		cpi r17,lo8(77)
+ 614 01e4 01F4      		brne .+2
+ 615 01e6 00C0      		rjmp .L89
+ 152:main.c        ****                 else if ( applies_to_me() ) {
+ 616               		.stabn	68,0,152,.LM75-.LFBB7
+ 617               	.LM75:
+ 618 01e8 0E94 0000 		call applies_to_me
+ 619 01ec 8823      		tst r24
+GAS LISTING /tmp/ccTXHOTK.s 			page 19
+
+
+ 620 01ee 01F0      		breq .L54
+ 153:main.c        ****                     switch (data) {
+ 621               		.stabn	68,0,153,.LM76-.LFBB7
+ 622               	.LM76:
+ 623 01f0 1534      		cpi r17,lo8(69)
+ 624 01f2 01F4      		brne .+2
+ 625 01f4 00C0      		rjmp .L75
+ 626 01f6 1634      		cpi r17,lo8(70)
+ 627 01f8 00F0      		brlo .+2
+ 628 01fa 00C0      		rjmp .L79
+ 629 01fc 1234      		cpi r17,lo8(66)
+ 630 01fe 01F4      		brne .+2
+ 631 0200 00C0      		rjmp .L73
+ 632 0202 1434      		cpi r17,lo8(68)
+ 633 0204 01F4      		brne .+2
+ 634 0206 00C0      		rjmp .L74
+ 635 0208 1134      		cpi r17,lo8(65)
+ 636 020a 01F0      		breq .+2
+ 637 020c 00C0      		rjmp .L54
+ 171:main.c        ****                             curstate = CST_ADDR;
+ 638               		.stabn	68,0,171,.LM77-.LFBB7
+ 639               	.LM77:
+ 640 020e 83E0      		ldi r24,lo8(3)
+ 641 0210 8093 0000 		sts curstate,r24
+ 172:main.c        ****                             break;
+ 642               		.stabn	68,0,172,.LM78-.LFBB7
+ 643               	.LM78:
+ 644 0214 00C0      		rjmp .L52
+ 645               	.L58:
+ 202:main.c        ****                 addr_set(data);
+ 646               		.stabn	68,0,202,.LM79-.LFBB7
+ 647               	.LM79:
+ 648 0216 812F      		mov r24,r17
+ 649 0218 0E94 0000 		call addr_set
+ 203:main.c        ****                 curstate = CST_IDLE;
+ 650               		.stabn	68,0,203,.LM80-.LFBB7
+ 651               	.LM80:
+ 652 021c 1092 0000 		sts curstate,__zero_reg__
+ 204:main.c        ****                 instaddr = get_addr();
+ 653               		.stabn	68,0,204,.LM81-.LFBB7
+ 654               	.LM81:
+ 655 0220 0E94 0000 		call get_addr
+ 656 0224 8093 0000 		sts instaddr,r24
+ 205:main.c        ****                 break;
+ 657               		.stabn	68,0,205,.LM82-.LFBB7
+ 658               	.LM82:
+ 659 0228 00C0      		rjmp .L52
+ 660               	.L55:
+ 145:main.c        ****                 if ( data == CMD_SYNC ) curstate = CST_SYNC;
+ 661               		.stabn	68,0,145,.LM83-.LFBB7
+ 662               	.LM83:
+ 663 022a 1A3A      		cpi r17,lo8(-86)
+ 664 022c 01F0      		breq .+2
+ 665 022e 00C0      		rjmp .L52
+ 145:main.c        ****                 if ( data == CMD_SYNC ) curstate = CST_SYNC;
+ 666               		.stabn	68,0,145,.LM84-.LFBB7
+ 667               	.LM84:
+GAS LISTING /tmp/ccTXHOTK.s 			page 20
+
+
+ 668 0230 81E0      		ldi r24,lo8(1)
+ 669 0232 8093 0000 		sts curstate,r24
+ 670 0236 00C0      		rjmp .L52
+ 671               	.L85:
+ 223:main.c        ****                 page_addr = data << 8;
+ 672               		.stabn	68,0,223,.LM85-.LFBB7
+ 673               	.LM85:
+ 674 0238 1092 0000 		sts page_addr,__zero_reg__
+ 675 023c 1093 0000 		sts page_addr+1,r17
+ 225:main.c        ****                 page_buf_ptr = page_buf;
+ 676               		.stabn	68,0,225,.LM86-.LFBB7
+ 677               	.LM86:
+ 678 0240 80E0      		ldi r24,lo8(page_buf)
+ 679 0242 90E0      		ldi r25,hi8(page_buf)
+ 680 0244 9093 0000 		sts page_buf_ptr+1,r25
+ 681 0248 8093 0000 		sts page_buf_ptr,r24
+ 226:main.c        ****                 curstate = CST_PROG_A_L;
+ 682               		.stabn	68,0,226,.LM87-.LFBB7
+ 683               	.LM87:
+ 684 024c 88E0      		ldi r24,lo8(8)
+ 685 024e 8093 0000 		sts curstate,r24
+ 227:main.c        ****                 break;
+ 686               		.stabn	68,0,227,.LM88-.LFBB7
+ 687               	.LM88:
+ 688 0252 00C0      		rjmp .L52
+ 689               	.L61:
+ 217:main.c        ****                 baud_set(data);
+ 690               		.stabn	68,0,217,.LM89-.LFBB7
+ 691               	.LM89:
+ 692 0254 812F      		mov r24,r17
+ 693 0256 0E94 0000 		call baud_set
+ 218:main.c        ****                 curstate = CST_IDLE;
+ 694               		.stabn	68,0,218,.LM90-.LFBB7
+ 695               	.LM90:
+ 696 025a 1092 0000 		sts curstate,__zero_reg__
+ 219:main.c        ****                 break;
+ 697               		.stabn	68,0,219,.LM91-.LFBB7
+ 698               	.LM91:
+ 699 025e 00C0      		rjmp .L52
+ 700               	.L63:
+ 230:main.c        ****                 page_addr |= data;
+ 701               		.stabn	68,0,230,.LM92-.LFBB7
+ 702               	.LM92:
+ 703 0260 212F      		mov r18,r17
+ 704 0262 30E0      		ldi r19,lo8(0)
+ 705 0264 8091 0000 		lds r24,page_addr
+ 706 0268 9091 0000 		lds r25,page_addr+1
+ 707 026c 822B      		or r24,r18
+ 708 026e 932B      		or r25,r19
+ 709 0270 9093 0000 		sts page_addr+1,r25
+ 710 0274 8093 0000 		sts page_addr,r24
+ 231:main.c        ****                 curstate = CST_PROG_D;
+ 711               		.stabn	68,0,231,.LM93-.LFBB7
+ 712               	.LM93:
+ 713 0278 89E0      		ldi r24,lo8(9)
+ 714 027a 8093 0000 		sts curstate,r24
+ 232:main.c        ****                 break;
+GAS LISTING /tmp/ccTXHOTK.s 			page 21
+
+
+ 715               		.stabn	68,0,232,.LM94-.LFBB7
+ 716               	.LM94:
+ 717 027e 00C0      		rjmp .L52
+ 718               	.L65:
+ 244:main.c        ****                 curstate = CST_IDLE;
+ 719               		.stabn	68,0,244,.LM95-.LFBB7
+ 720               	.LM95:
+ 721 0280 1092 0000 		sts curstate,__zero_reg__
+ 139:main.c        ****     uint8_t csum = 0;
+ 722               		.stabn	68,0,139,.LM96-.LFBB7
+ 723               	.LM96:
+ 724 0284 90E0      		ldi r25,lo8(0)
+ 246:main.c        ****                 for ( i=0 ; i<PAGESIZE ; i++ ) {
+ 725               		.stabn	68,0,246,.LM97-.LFBB7
+ 726               	.LM97:
+ 727 0286 80E0      		ldi r24,lo8(0)
+ 728               	.L81:
+ 247:main.c        ****                     csum += page_buf[i];
+ 729               		.stabn	68,0,247,.LM98-.LFBB7
+ 730               	.LM98:
+ 731 0288 E82F      		mov r30,r24
+ 732 028a F0E0      		ldi r31,lo8(0)
+ 733 028c E050      		subi r30,lo8(-(page_buf))
+ 734 028e F040      		sbci r31,hi8(-(page_buf))
+ 735 0290 2081      		ld r18,Z
+ 736 0292 920F      		add r25,r18
+ 246:main.c        ****                 for ( i=0 ; i<PAGESIZE ; i++ ) {
+ 737               		.stabn	68,0,246,.LM99-.LFBB7
+ 738               	.LM99:
+ 739 0294 8F5F      		subi r24,lo8(-(1))
+ 740 0296 8038      		cpi r24,lo8(-128)
+ 741 0298 01F4      		brne .L81
+ 249:main.c        ****                 csum = ~csum;
+ 742               		.stabn	68,0,249,.LM100-.LFBB7
+ 743               	.LM100:
+ 744 029a 9095      		com r25
+ 254:main.c        ****                 if ( csum == data ) {
+ 745               		.stabn	68,0,254,.LM101-.LFBB7
+ 746               	.LM101:
+ 747 029c 9117      		cp r25,r17
+ 748 029e 01F0      		breq .+2
+ 749 02a0 00C0      		rjmp .L82
+ 256:main.c        ****                     write_page();
+ 750               		.stabn	68,0,256,.LM102-.LFBB7
+ 751               	.LM102:
+ 752 02a2 0E94 0000 		call write_page
+ 264:main.c        ****                 dbg_set(0x3);
+ 753               		.stabn	68,0,264,.LM103-.LFBB7
+ 754               	.LM103:
+ 755 02a6 83E0      		ldi r24,lo8(3)
+ 756 02a8 0E94 0000 		call dbg_set
+ 265:main.c        ****                 break;
+ 757               		.stabn	68,0,265,.LM104-.LFBB7
+ 758               	.LM104:
+ 759 02ac 00C0      		rjmp .L52
+ 760               	.L57:
+ 197:main.c        ****                 mask = data;
+GAS LISTING /tmp/ccTXHOTK.s 			page 22
+
+
+ 761               		.stabn	68,0,197,.LM105-.LFBB7
+ 762               	.LM105:
+ 763 02ae 1093 0000 		sts mask,r17
+ 198:main.c        ****                 curstate = CST_IDLE;
+ 764               		.stabn	68,0,198,.LM106-.LFBB7
+ 765               	.LM106:
+ 766 02b2 1092 0000 		sts curstate,__zero_reg__
+ 199:main.c        ****                 break;
+ 767               		.stabn	68,0,199,.LM107-.LFBB7
+ 768               	.LM107:
+ 769 02b6 00C0      		rjmp .L52
+ 770               	.L60:
+ 212:main.c        ****                 baud |= data;         // low byte of baud rate
+ 771               		.stabn	68,0,212,.LM108-.LFBB7
+ 772               	.LM108:
+ 773 02b8 212F      		mov r18,r17
+ 774 02ba 30E0      		ldi r19,lo8(0)
+ 775 02bc 8091 0000 		lds r24,baud
+ 776 02c0 9091 0000 		lds r25,baud+1
+ 777 02c4 822B      		or r24,r18
+ 778 02c6 932B      		or r25,r19
+ 779 02c8 9093 0000 		sts baud+1,r25
+ 780 02cc 8093 0000 		sts baud,r24
+ 213:main.c        ****                 curstate = CST_BAUD_D;
+ 781               		.stabn	68,0,213,.LM109-.LFBB7
+ 782               	.LM109:
+ 783 02d0 86E0      		ldi r24,lo8(6)
+ 784 02d2 8093 0000 		sts curstate,r24
+ 214:main.c        ****                 break;
+ 785               		.stabn	68,0,214,.LM110-.LFBB7
+ 786               	.LM110:
+ 787 02d6 00C0      		rjmp .L52
+ 788               	.L87:
+ 143:main.c        ****         switch (curstate) {
+ 789               		.stabn	68,0,143,.LM111-.LFBB7
+ 790               	.LM111:
+ 791 02d8 8B30      		cpi r24,lo8(11)
+ 792 02da 01F0      		breq .+2
+ 793 02dc 00C0      		rjmp .L54
+ 794 02de 00C0      		rjmp .L52
+ 795               	.L88:
+ 238:main.c        ****                     curstate = CST_PROG_V;
+ 796               		.stabn	68,0,238,.LM112-.LFBB7
+ 797               	.LM112:
+ 798 02e0 8AE0      		ldi r24,lo8(10)
+ 799 02e2 8093 0000 		sts curstate,r24
+ 800 02e6 00C0      		rjmp .L52
+ 801               	.L89:
+ 151:main.c        ****                 else if ( data == CMD_MASK ) curstate = CST_MASK;
+ 802               		.stabn	68,0,151,.LM113-.LFBB7
+ 803               	.LM113:
+ 804 02e8 82E0      		ldi r24,lo8(2)
+ 805 02ea 8093 0000 		sts curstate,r24
+ 806 02ee 00C0      		rjmp .L52
+ 807               	.L79:
+ 153:main.c        ****                     switch (data) {
+ 808               		.stabn	68,0,153,.LM114-.LFBB7
+GAS LISTING /tmp/ccTXHOTK.s 			page 23
+
+
+ 809               	.LM114:
+ 810 02f0 1235      		cpi r17,lo8(82)
+ 811 02f2 01F0      		breq .L77
+ 812 02f4 1635      		cpi r17,lo8(86)
+ 813 02f6 01F0      		breq .L78
+ 814 02f8 1035      		cpi r17,lo8(80)
+ 815 02fa 01F0      		breq .+2
+ 816 02fc 00C0      		rjmp .L54
+ 179:main.c        ****                             curstate = CST_PROG_A_H;
+ 817               		.stabn	68,0,179,.LM115-.LFBB7
+ 818               	.LM115:
+ 819 02fe 87E0      		ldi r24,lo8(7)
+ 820 0300 8093 0000 		sts curstate,r24
+ 180:main.c        ****                             break;
+ 821               		.stabn	68,0,180,.LM116-.LFBB7
+ 822               	.LM116:
+ 823 0304 00C0      		rjmp .L52
+ 824               	.L75:
+ 166:main.c        ****                             dbg_set(instaddr&0x0F);
+ 825               		.stabn	68,0,166,.LM117-.LFBB7
+ 826               	.LM117:
+ 827 0306 8091 0000 		lds r24,instaddr
+ 828 030a 8F70      		andi r24,lo8(15)
+ 829 030c 0E94 0000 		call dbg_set
+ 167:main.c        ****                             curstate = CST_IDLE;
+ 830               		.stabn	68,0,167,.LM118-.LFBB7
+ 831               	.LM118:
+ 832 0310 1092 0000 		sts curstate,__zero_reg__
+ 168:main.c        ****                             break;
+ 833               		.stabn	68,0,168,.LM119-.LFBB7
+ 834               	.LM119:
+ 835 0314 00C0      		rjmp .L52
+ 836               	.L73:
+ 175:main.c        ****                             curstate = CST_BAUD_H;
+ 837               		.stabn	68,0,175,.LM120-.LFBB7
+ 838               	.LM120:
+ 839 0316 84E0      		ldi r24,lo8(4)
+ 840 0318 8093 0000 		sts curstate,r24
+ 176:main.c        ****                             break;
+ 841               		.stabn	68,0,176,.LM121-.LFBB7
+ 842               	.LM121:
+ 843 031c 00C0      		rjmp .L52
+ 844               	.L74:
+ 162:main.c        ****                             dbg_set(instaddr>>4);
+ 845               		.stabn	68,0,162,.LM122-.LFBB7
+ 846               	.LM122:
+ 847 031e 8091 0000 		lds r24,instaddr
+ 848 0322 8295      		swap r24
+ 849 0324 8F70      		andi r24,lo8(15)
+ 850 0326 0E94 0000 		call dbg_set
+ 163:main.c        ****                             curstate = CST_IDLE;
+ 851               		.stabn	68,0,163,.LM123-.LFBB7
+ 852               	.LM123:
+ 853 032a 1092 0000 		sts curstate,__zero_reg__
+ 164:main.c        ****                             break;
+ 854               		.stabn	68,0,164,.LM124-.LFBB7
+ 855               	.LM124:
+GAS LISTING /tmp/ccTXHOTK.s 			page 24
+
+
+ 856 032e 00C0      		rjmp .L52
+ 857               	.L78:
+ 183:main.c        ****                             curstate = CST_VRFY;
+ 858               		.stabn	68,0,183,.LM125-.LFBB7
+ 859               	.LM125:
+ 860 0330 8BE0      		ldi r24,lo8(11)
+ 861 0332 8093 0000 		sts curstate,r24
+ 184:main.c        ****                             break;
+ 862               		.stabn	68,0,184,.LM126-.LFBB7
+ 863               	.LM126:
+ 864 0336 00C0      		rjmp .L52
+ 865               	.L77:
+ 155:main.c        ****                             cli();
+ 866               		.stabn	68,0,155,.LM127-.LFBB7
+ 867               	.LM127:
+ 868               	/* #APP */
+ 869               	 ;  155 "main.c" 1
+ 870 0338 F894      		cli
+ 871               	 ;  0 "" 2
+ 156:main.c        ****                             MCUCR = (1<<IVCE);
+ 872               		.stabn	68,0,156,.LM128-.LFBB7
+ 873               	.LM128:
+ 874               	/* #NOAPP */
+ 875 033a 81E0      		ldi r24,lo8(1)
+ 876 033c 85BF      		out 85-0x20,r24
+ 157:main.c        ****                             MCUCR &= ~(1<<IVSEL);
+ 877               		.stabn	68,0,157,.LM129-.LFBB7
+ 878               	.LM129:
+ 879 033e 85B7      		in r24,85-0x20
+ 880 0340 8D7F      		andi r24,lo8(-3)
+ 881 0342 85BF      		out 85-0x20,r24
+ 158:main.c        ****                             asm("jmp 0000");
+ 882               		.stabn	68,0,158,.LM130-.LFBB7
+ 883               	.LM130:
+ 884               	/* #APP */
+ 885               	 ;  158 "main.c" 1
+ 886 0344 0C94 0000 		jmp 0000
+ 887               	 ;  0 "" 2
  159:main.c        ****                             break;
- 579               		.stabn	68,0,159,.LM69-.LFBB6
- 580               	.LM69:
- 581 01cc 00C0      		rjmp .L48
- 582               	.L54:
- 185:main.c        ****                 addr_set(data);
- 583               		.stabn	68,0,185,.LM70-.LFBB6
- 584               	.LM70:
- 585 01ce 812F      		mov r24,r17
- 586 01d0 0E94 0000 		call addr_set
- 186:main.c        ****                 curstate = CST_IDLE;
- 587               		.stabn	68,0,186,.LM71-.LFBB6
- 588               	.LM71:
- 589 01d4 1092 0000 		sts curstate,__zero_reg__
- 187:main.c        ****                 break;
- 590               		.stabn	68,0,187,.LM72-.LFBB6
- 591               	.LM72:
- 592 01d8 00C0      		rjmp .L48
- 593               	.L51:
-GAS LISTING /tmp/ccUKiqZN.s 			page 18
+ 888               		.stabn	68,0,159,.LM131-.LFBB7
+ 889               	.LM131:
+ 890               	/* #NOAPP */
+ 891 0348 00C0      		rjmp .L52
+ 892               	.L82:
+ 261:main.c        ****                     give_up(1);
+ 893               		.stabn	68,0,261,.LM132-.LFBB7
+ 894               	.LM132:
+ 895 034a 81E0      		ldi r24,lo8(1)
+ 896 034c 0E94 0000 		call give_up
+ 897               		.size	process_rx, .-process_rx
+ 898               		.stabs	"data:r(4,2)",64,0,138,17
+ 899               		.stabs	"i:r(4,2)",64,0,138,24
+ 900               		.stabn	192,0,0,.LFBB7-.LFBB7
+ 901               		.stabn	224,0,0,.Lscope7-.LFBB7
+ 902               	.Lscope7:
+ 903               		.stabs	"",36,0,0,.Lscope7-.LFBB7
+ 904               		.stabd	78,0,0
+GAS LISTING /tmp/ccTXHOTK.s 			page 25
 
 
- 135:main.c        ****                 if ( data == CMD_SYNC ) curstate = CST_SYNC;
- 594               		.stabn	68,0,135,.LM73-.LFBB6
- 595               	.LM73:
- 596 01da 1A3A      		cpi r17,lo8(-86)
- 597 01dc 01F4      		brne .L48
- 135:main.c        ****                 if ( data == CMD_SYNC ) curstate = CST_SYNC;
- 598               		.stabn	68,0,135,.LM74-.LFBB6
- 599               	.LM74:
- 600 01de 81E0      		ldi r24,lo8(1)
- 601 01e0 8093 0000 		sts curstate,r24
- 602 01e4 00C0      		rjmp .L48
- 603               	.L53:
- 180:main.c        ****                 mask = data;
- 604               		.stabn	68,0,180,.LM75-.LFBB6
- 605               	.LM75:
- 606 01e6 1093 0000 		sts mask,r17
- 181:main.c        ****                 curstate = CST_IDLE;
- 607               		.stabn	68,0,181,.LM76-.LFBB6
- 608               	.LM76:
- 609 01ea 1092 0000 		sts curstate,__zero_reg__
- 182:main.c        ****                 break;
- 610               		.stabn	68,0,182,.LM77-.LFBB6
- 611               	.LM77:
- 612 01ee 00C0      		rjmp .L48
- 613               	.L56:
- 194:main.c        ****                 baud |= data;         // low byte of baud rate
- 614               		.stabn	68,0,194,.LM78-.LFBB6
- 615               	.LM78:
- 616 01f0 212F      		mov r18,r17
- 617 01f2 30E0      		ldi r19,lo8(0)
- 618 01f4 8091 0000 		lds r24,baud
- 619 01f8 9091 0000 		lds r25,baud+1
- 620 01fc 822B      		or r24,r18
- 621 01fe 932B      		or r25,r19
- 622 0200 9093 0000 		sts baud+1,r25
- 623 0204 8093 0000 		sts baud,r24
- 195:main.c        ****                 curstate = CST_BAUD_D;
- 624               		.stabn	68,0,195,.LM79-.LFBB6
- 625               	.LM79:
- 626 0208 86E0      		ldi r24,lo8(6)
- 627 020a 8093 0000 		sts curstate,r24
- 196:main.c        ****                 break;
- 628               		.stabn	68,0,196,.LM80-.LFBB6
- 629               	.LM80:
- 630 020e 00C0      		rjmp .L48
- 631               	.L80:
- 204:main.c        ****                 page_addr = data;
- 632               		.stabn	68,0,204,.LM81-.LFBB6
- 633               	.LM81:
- 634 0210 1093 0000 		sts page_addr,r17
- 207:main.c        ****                 curstate = CST_PROG_D;
- 635               		.stabn	68,0,207,.LM82-.LFBB6
- 636               	.LM82:
- 637 0214 E0E0      		ldi r30,lo8(page_buf)
- 638 0216 F0E0      		ldi r31,hi8(page_buf)
- 639               	.L64:
- 209:main.c        ****                 *page_buf_ptr++ = data;
-GAS LISTING /tmp/ccUKiqZN.s 			page 19
+ 905               		.stabs	"receive_data:F(0,15)",36,0,130,receive_data
+ 906               	.global	receive_data
+ 907               		.type	receive_data, @function
+ 908               	receive_data:
+ 909               		.stabd	46,0,0
+ 130:main.c        **** void receive_data(void) {
+ 910               		.stabn	68,0,130,.LM133-.LFBB8
+ 911               	.LM133:
+ 912               	.LFBB8:
+ 913               	/* prologue: function */
+ 914               	/* frame size = 0 */
+ 915               	/* stack size = 0 */
+ 916               	.L__stack_usage = 0
+ 917               	.L95:
+ 132:main.c        ****         if ( uart_data_rdy() ) process_rx();
+ 918               		.stabn	68,0,132,.LM134-.LFBB8
+ 919               	.LM134:
+ 920 0350 0E94 0000 		call uart_data_rdy
+ 921 0354 8823      		tst r24
+ 922 0356 01F0      		breq .L95
+ 132:main.c        ****         if ( uart_data_rdy() ) process_rx();
+ 923               		.stabn	68,0,132,.LM135-.LFBB8
+ 924               	.LM135:
+ 925 0358 0E94 0000 		call process_rx
+ 926 035c 00C0      		rjmp .L95
+ 927               		.size	receive_data, .-receive_data
+ 928               	.Lscope8:
+ 929               		.stabs	"",36,0,0,.Lscope8-.LFBB8
+ 930               		.stabd	78,0,0
+ 931               		.section	.text.startup,"ax",@progbits
+ 932               		.stabs	"main:F(0,1)",36,0,89,main
+ 933               	.global	main
+ 934               		.type	main, @function
+ 935               	main:
+ 936               		.stabd	46,0,0
+  89:main.c        **** int main(void) {
+ 937               		.stabn	68,0,89,.LM136-.LFBB9
+ 938               	.LM136:
+ 939               	.LFBB9:
+ 940               	/* prologue: function */
+ 941               	/* frame size = 0 */
+ 942               	/* stack size = 0 */
+ 943               	.L__stack_usage = 0
+  90:main.c        ****     MCUCR = (1<<IVCE);
+ 944               		.stabn	68,0,90,.LM137-.LFBB9
+ 945               	.LM137:
+ 946 0000 81E0      		ldi r24,lo8(1)
+ 947 0002 85BF      		out 85-0x20,r24
+  91:main.c        ****     MCUCR = (1<<IVSEL);
+ 948               		.stabn	68,0,91,.LM138-.LFBB9
+ 949               	.LM138:
+ 950 0004 82E0      		ldi r24,lo8(2)
+ 951 0006 85BF      		out 85-0x20,r24
+  93:main.c        ****     dbg_init();
+ 952               		.stabn	68,0,93,.LM139-.LFBB9
+ 953               	.LM139:
+ 954 0008 0E94 0000 		call dbg_init
+GAS LISTING /tmp/ccTXHOTK.s 			page 26
 
 
- 640               		.stabn	68,0,209,.LM83-.LFBB6
- 641               	.LM83:
- 642 0218 1193      		st Z+,r17
- 643 021a F093 0000 		sts page_buf_ptr+1,r31
- 644 021e E093 0000 		sts page_buf_ptr,r30
- 210:main.c        ****                 if ( page_buf_ptr - page_buf == PAGESIZE ) {
- 645               		.stabn	68,0,210,.LM84-.LFBB6
- 646               	.LM84:
- 647 0222 80E0      		ldi r24,hi8(page_buf+128)
- 648 0224 E030      		cpi r30,lo8(page_buf+128)
- 649 0226 F807      		cpc r31,r24
- 650 0228 01F0      		breq .L83
- 215:main.c        ****                     curstate = CST_PROG_D;
- 651               		.stabn	68,0,215,.LM85-.LFBB6
- 652               	.LM85:
- 653 022a 88E0      		ldi r24,lo8(8)
- 654 022c 8093 0000 		sts curstate,r24
- 655 0230 00C0      		rjmp .L48
- 656               	.L57:
- 199:main.c        ****                 baud_set(data);
- 657               		.stabn	68,0,199,.LM86-.LFBB6
- 658               	.LM86:
- 659 0232 812F      		mov r24,r17
- 660 0234 0E94 0000 		call baud_set
- 200:main.c        ****                 curstate = CST_IDLE;
- 661               		.stabn	68,0,200,.LM87-.LFBB6
- 662               	.LM87:
- 663 0238 1092 0000 		sts curstate,__zero_reg__
- 201:main.c        ****                 break;
- 664               		.stabn	68,0,201,.LM88-.LFBB6
- 665               	.LM88:
- 666 023c 00C0      		rjmp .L48
- 667               	.L59:
- 133:main.c        ****         switch (curstate) {
- 668               		.stabn	68,0,133,.LM89-.LFBB6
- 669               	.LM89:
- 670 023e E091 0000 		lds r30,page_buf_ptr
- 671 0242 F091 0000 		lds r31,page_buf_ptr+1
- 672 0246 00C0      		rjmp .L64
- 673               	.L60:
- 219:main.c        ****                 curstate = CST_IDLE;
- 674               		.stabn	68,0,219,.LM90-.LFBB6
- 675               	.LM90:
- 676 0248 1092 0000 		sts curstate,__zero_reg__
- 129:main.c        ****     uint8_t csum = 0;
- 677               		.stabn	68,0,129,.LM91-.LFBB6
- 678               	.LM91:
- 679 024c 90E0      		ldi r25,lo8(0)
- 221:main.c        ****                 for ( i=0 ; i<PAGESIZE ; i++ ) {
- 680               		.stabn	68,0,221,.LM92-.LFBB6
- 681               	.LM92:
- 682 024e 80E0      		ldi r24,lo8(0)
- 683               	.L76:
- 222:main.c        ****                     csum += page_buf[i];
- 684               		.stabn	68,0,222,.LM93-.LFBB6
- 685               	.LM93:
- 686 0250 E82F      		mov r30,r24
-GAS LISTING /tmp/ccUKiqZN.s 			page 20
+  94:main.c        ****     dbg_set(0x9);
+ 955               		.stabn	68,0,94,.LM140-.LFBB9
+ 956               	.LM140:
+ 957 000c 89E0      		ldi r24,lo8(9)
+ 958 000e 0E94 0000 		call dbg_set
+  96:main.c        ****     instaddr = get_addr();
+ 959               		.stabn	68,0,96,.LM141-.LFBB9
+ 960               	.LM141:
+ 961 0012 0E94 0000 		call get_addr
+ 962 0016 8093 0000 		sts instaddr,r24
+  99:main.c        **** 	UBRR0H = (uint8_t) (DEF_BAUD_PRESCALE_SLOW>>8);
+ 963               		.stabn	68,0,99,.LM142-.LFBB9
+ 964               	.LM142:
+ 965 001a 1092 C500 		sts 197,__zero_reg__
+ 100:main.c        **** 	UBRR0L = (uint8_t) DEF_BAUD_PRESCALE_SLOW;
+ 966               		.stabn	68,0,100,.LM143-.LFBB9
+ 967               	.LM143:
+ 968 001e 81E8      		ldi r24,lo8(-127)
+ 969 0020 8093 C400 		sts 196,r24
+ 101:main.c        ****     UCSR0A = ( DEF_BAUD_DOUBLE_SLOW<<U2X0 );
+ 970               		.stabn	68,0,101,.LM144-.LFBB9
+ 971               	.LM144:
+ 972 0024 1092 C000 		sts 192,__zero_reg__
+ 102:main.c        **** 	UCSR0B = ( _BV(RXCIE0) | _BV(RXEN0) );
+ 973               		.stabn	68,0,102,.LM145-.LFBB9
+ 974               	.LM145:
+ 975 0028 80E9      		ldi r24,lo8(-112)
+ 976 002a 8093 C100 		sts 193,r24
+ 103:main.c        **** 	UCSR0C = ( _BV(UCSZ01) | _BV(UCSZ00) );
+ 977               		.stabn	68,0,103,.LM146-.LFBB9
+ 978               	.LM146:
+ 979 002e 86E0      		ldi r24,lo8(6)
+ 980 0030 8093 C200 		sts 194,r24
+ 106:main.c        **** 	uart_rxbuf_iptr = uart_rxbuf;
+ 981               		.stabn	68,0,106,.LM147-.LFBB9
+ 982               	.LM147:
+ 983 0034 80E0      		ldi r24,lo8(uart_rxbuf)
+ 984 0036 90E0      		ldi r25,hi8(uart_rxbuf)
+ 985 0038 9093 0000 		sts uart_rxbuf_iptr+1,r25
+ 986 003c 8093 0000 		sts uart_rxbuf_iptr,r24
+ 107:main.c        **** 	uart_rxbuf_optr = uart_rxbuf;
+ 987               		.stabn	68,0,107,.LM148-.LFBB9
+ 988               	.LM148:
+ 989 0040 9093 0000 		sts uart_rxbuf_optr+1,r25
+ 990 0044 8093 0000 		sts uart_rxbuf_optr,r24
+ 108:main.c        ****     uart_rxbuf_count = 0;
+ 991               		.stabn	68,0,108,.LM149-.LFBB9
+ 992               	.LM149:
+ 993 0048 1092 0000 		sts uart_rxbuf_count,__zero_reg__
+ 110:main.c        ****     sei();
+ 994               		.stabn	68,0,110,.LM150-.LFBB9
+ 995               	.LM150:
+ 996               	/* #APP */
+ 997               	 ;  110 "main.c" 1
+ 998 004c 7894      		sei
+ 999               	 ;  0 "" 2
+ 1000               	/* #NOAPP */
+GAS LISTING /tmp/ccTXHOTK.s 			page 27
 
 
- 687 0252 F0E0      		ldi r31,lo8(0)
- 688 0254 E050      		subi r30,lo8(-(page_buf))
- 689 0256 F040      		sbci r31,hi8(-(page_buf))
- 690 0258 2081      		ld r18,Z
- 691 025a 920F      		add r25,r18
- 221:main.c        ****                 for ( i=0 ; i<PAGESIZE ; i++ ) {
- 692               		.stabn	68,0,221,.LM94-.LFBB6
- 693               	.LM94:
- 694 025c 8F5F      		subi r24,lo8(-(1))
- 695 025e 8038      		cpi r24,lo8(-128)
- 696 0260 01F4      		brne .L76
- 224:main.c        ****                 csum = ~csum;
- 697               		.stabn	68,0,224,.LM95-.LFBB6
- 698               	.LM95:
- 699 0262 9095      		com r25
- 226:main.c        ****                 if ( csum == data ) {
- 700               		.stabn	68,0,226,.LM96-.LFBB6
- 701               	.LM96:
- 702 0264 9117      		cp r25,r17
- 703 0266 01F0      		breq .L84
- 233:main.c        ****                     give_up(1);
- 704               		.stabn	68,0,233,.LM97-.LFBB6
- 705               	.LM97:
- 706 0268 81E0      		ldi r24,lo8(1)
- 707 026a 0E94 0000 		call give_up
- 708 026e 00C0      		rjmp .L48
- 709               	.L84:
- 228:main.c        ****                     write_page();
- 710               		.stabn	68,0,228,.LM98-.LFBB6
- 711               	.LM98:
- 712 0270 0E94 0000 		call write_page
- 713 0274 00C0      		rjmp .L48
- 714               	.L82:
- 141:main.c        ****                 else if ( data == CMD_MASK ) curstate = CST_MASK;
- 715               		.stabn	68,0,141,.LM99-.LFBB6
- 716               	.LM99:
- 717 0276 82E0      		ldi r24,lo8(2)
- 718 0278 8093 0000 		sts curstate,r24
- 719 027c 00C0      		rjmp .L48
- 720               	.L83:
- 213:main.c        ****                     curstate = CST_PROG_V;
- 721               		.stabn	68,0,213,.LM100-.LFBB6
- 722               	.LM100:
- 723 027e 89E0      		ldi r24,lo8(9)
- 724 0280 8093 0000 		sts curstate,r24
- 725 0284 00C0      		rjmp .L48
- 726               	.L74:
- 143:main.c        ****                     switch (data) {
- 727               		.stabn	68,0,143,.LM101-.LFBB6
- 728               	.LM101:
- 729 0286 1035      		cpi r17,lo8(80)
- 730 0288 01F0      		breq .L72
- 731 028a 1635      		cpi r17,lo8(86)
- 732 028c 01F0      		breq .L73
- 733 028e 1534      		cpi r17,lo8(69)
- 734 0290 01F0      		breq .+2
- 735 0292 00C0      		rjmp .L50
-GAS LISTING /tmp/ccUKiqZN.s 			page 21
-
-
- 149:main.c        ****                             dbg_set(instaddr&0x0F);
- 736               		.stabn	68,0,149,.LM102-.LFBB6
- 737               	.LM102:
- 738 0294 8091 0000 		lds r24,instaddr
- 739 0298 8F70      		andi r24,lo8(15)
- 740 029a 0E94 0000 		call dbg_set
- 150:main.c        ****                             curstate = CST_IDLE;
- 741               		.stabn	68,0,150,.LM103-.LFBB6
- 742               	.LM103:
- 743 029e 1092 0000 		sts curstate,__zero_reg__
- 151:main.c        ****                             break;
- 744               		.stabn	68,0,151,.LM104-.LFBB6
- 745               	.LM104:
- 746 02a2 00C0      		rjmp .L48
- 747               	.L68:
- 154:main.c        ****                             curstate = CST_ADDR;
- 748               		.stabn	68,0,154,.LM105-.LFBB6
- 749               	.LM105:
- 750 02a4 83E0      		ldi r24,lo8(3)
- 751 02a6 8093 0000 		sts curstate,r24
- 155:main.c        ****                             break;
- 752               		.stabn	68,0,155,.LM106-.LFBB6
- 753               	.LM106:
- 754 02aa 00C0      		rjmp .L48
- 755               	.L70:
- 145:main.c        ****                             dbg_set(instaddr>>4);
- 756               		.stabn	68,0,145,.LM107-.LFBB6
- 757               	.LM107:
- 758 02ac 8091 0000 		lds r24,instaddr
- 759 02b0 8295      		swap r24
- 760 02b2 8F70      		andi r24,lo8(15)
- 761 02b4 0E94 0000 		call dbg_set
- 146:main.c        ****                             curstate = CST_IDLE;
- 762               		.stabn	68,0,146,.LM108-.LFBB6
- 763               	.LM108:
- 764 02b8 1092 0000 		sts curstate,__zero_reg__
- 147:main.c        ****                             break;
- 765               		.stabn	68,0,147,.LM109-.LFBB6
- 766               	.LM109:
- 767 02bc 00C0      		rjmp .L48
- 768               	.L73:
- 166:main.c        ****                             curstate = CST_VRFY;
- 769               		.stabn	68,0,166,.LM110-.LFBB6
- 770               	.LM110:
- 771 02be 8AE0      		ldi r24,lo8(10)
- 772 02c0 8093 0000 		sts curstate,r24
- 167:main.c        ****                             break;
- 773               		.stabn	68,0,167,.LM111-.LFBB6
- 774               	.LM111:
- 775 02c4 00C0      		rjmp .L48
- 776               	.L72:
- 162:main.c        ****                             curstate = CST_PROG_A;
- 777               		.stabn	68,0,162,.LM112-.LFBB6
- 778               	.LM112:
- 779 02c6 87E0      		ldi r24,lo8(7)
- 780 02c8 8093 0000 		sts curstate,r24
- 163:main.c        ****                             break;
-GAS LISTING /tmp/ccUKiqZN.s 			page 22
-
-
- 781               		.stabn	68,0,163,.LM113-.LFBB6
- 782               	.LM113:
- 783 02cc 00C0      		rjmp .L48
- 784               		.size	process_rx, .-process_rx
- 785               		.stabs	"data:r(4,2)",64,0,128,17
- 786               		.stabs	"i:r(4,2)",64,0,128,24
- 787               		.stabn	192,0,0,.LFBB6-.LFBB6
- 788               		.stabn	224,0,0,.Lscope6-.LFBB6
- 789               	.Lscope6:
- 790               		.stabs	"",36,0,0,.Lscope6-.LFBB6
- 791               		.stabd	78,0,0
- 792               		.stabs	"receive_data:F(0,15)",36,0,120,receive_data
- 793               	.global	receive_data
- 794               		.type	receive_data, @function
- 795               	receive_data:
- 796               		.stabd	46,0,0
- 120:main.c        **** void receive_data(void) {
- 797               		.stabn	68,0,120,.LM114-.LFBB7
- 798               	.LM114:
- 799               	.LFBB7:
- 800               	/* prologue: function */
- 801               	/* frame size = 0 */
- 802               	/* stack size = 0 */
- 803               	.L__stack_usage = 0
- 804               	.L90:
- 122:main.c        ****         if ( uart_data_rdy() ) process_rx();
- 805               		.stabn	68,0,122,.LM115-.LFBB7
- 806               	.LM115:
- 807 02ce 0E94 0000 		call uart_data_rdy
- 808 02d2 8823      		tst r24
- 809 02d4 01F0      		breq .L90
- 122:main.c        ****         if ( uart_data_rdy() ) process_rx();
- 810               		.stabn	68,0,122,.LM116-.LFBB7
- 811               	.LM116:
- 812 02d6 0E94 0000 		call process_rx
- 813 02da 00C0      		rjmp .L90
- 814               		.size	receive_data, .-receive_data
- 815               	.Lscope7:
- 816               		.stabs	"",36,0,0,.Lscope7-.LFBB7
- 817               		.stabd	78,0,0
- 818               		.stabs	"give_up:F(0,15)",36,0,253,give_up
- 819               		.stabs	"corrupted:P(4,2)",64,0,253,24
- 820               	.global	give_up
- 821               		.type	give_up, @function
- 822               	give_up:
- 823               		.stabd	46,0,0
- 253:main.c        **** void give_up(uint8_t corrupted) {
- 824               		.stabn	68,0,253,.LM117-.LFBB8
- 825               	.LM117:
- 826               	.LFBB8:
- 827               	/* prologue: function */
- 828               	/* frame size = 0 */
- 829               	/* stack size = 0 */
- 830               	.L__stack_usage = 0
- 255:main.c        ****     if (corrupted) {
- 831               		.stabn	68,0,255,.LM118-.LFBB8
- 832               	.LM118:
-GAS LISTING /tmp/ccUKiqZN.s 			page 23
-
-
- 833 02dc 8823      		tst r24
- 834 02de 01F0      		breq .L92
- 257:main.c        ****         dbg_set(0xA);
- 835               		.stabn	68,0,257,.LM119-.LFBB8
- 836               	.LM119:
- 837 02e0 8AE0      		ldi r24,lo8(10)
- 838 02e2 0E94 0000 		call dbg_set
- 839               	.L93:
- 265:main.c        ****     curstate = CST_IDLE;    // reset state machine
- 840               		.stabn	68,0,265,.LM120-.LFBB8
- 841               	.LM120:
- 842 02e6 1092 0000 		sts curstate,__zero_reg__
- 266:main.c        ****     receive_data();
- 843               		.stabn	68,0,266,.LM121-.LFBB8
- 844               	.LM121:
- 845 02ea 0E94 0000 		call receive_data
- 846               	.L92:
- 261:main.c        ****         dbg_set(0x9);
- 847               		.stabn	68,0,261,.LM122-.LFBB8
- 848               	.LM122:
- 849 02ee 89E0      		ldi r24,lo8(9)
- 850 02f0 0E94 0000 		call dbg_set
- 851 02f4 00C0      		rjmp .L93
- 852               		.size	give_up, .-give_up
- 853               	.Lscope8:
- 854               		.stabs	"",36,0,0,.Lscope8-.LFBB8
- 855               		.stabd	78,0,0
- 856               		.section	.text.startup,"ax",@progbits
- 857               		.stabs	"main:F(0,1)",36,0,87,main
- 858               	.global	main
- 859               		.type	main, @function
- 860               	main:
- 861               		.stabd	46,0,0
-  87:main.c        **** int main(void) {
- 862               		.stabn	68,0,87,.LM123-.LFBB9
- 863               	.LM123:
- 864               	.LFBB9:
- 865               	/* prologue: function */
- 866               	/* frame size = 0 */
- 867               	/* stack size = 0 */
- 868               	.L__stack_usage = 0
-  88:main.c        ****     instaddr = get_addr();
- 869               		.stabn	68,0,88,.LM124-.LFBB9
- 870               	.LM124:
- 871 0000 0E94 0000 		call get_addr
- 872 0004 8093 0000 		sts instaddr,r24
-  91:main.c        **** 	UBRR0H = (uint8_t) (DEF_BAUD_PRESCALE_SLOW>>8);
- 873               		.stabn	68,0,91,.LM125-.LFBB9
- 874               	.LM125:
- 875 0008 1092 C500 		sts 197,__zero_reg__
-  92:main.c        **** 	UBRR0L = (uint8_t) DEF_BAUD_PRESCALE_SLOW;
- 876               		.stabn	68,0,92,.LM126-.LFBB9
- 877               	.LM126:
- 878 000c 80E1      		ldi r24,lo8(16)
- 879 000e 8093 C400 		sts 196,r24
-  93:main.c        ****     UCSR0A = ( _BV(U2X0) );
- 880               		.stabn	68,0,93,.LM127-.LFBB9
-GAS LISTING /tmp/ccUKiqZN.s 			page 24
-
-
- 881               	.LM127:
- 882 0012 82E0      		ldi r24,lo8(2)
- 883 0014 8093 C000 		sts 192,r24
-  94:main.c        **** 	UCSR0B = ( _BV(RXCIE0) | _BV(RXEN0) );
- 884               		.stabn	68,0,94,.LM128-.LFBB9
- 885               	.LM128:
- 886 0018 80E9      		ldi r24,lo8(-112)
- 887 001a 8093 C100 		sts 193,r24
-  95:main.c        **** 	UCSR0C = ( _BV(UCSZ01) | _BV(UCSZ00) );
- 888               		.stabn	68,0,95,.LM129-.LFBB9
- 889               	.LM129:
- 890 001e 86E0      		ldi r24,lo8(6)
- 891 0020 8093 C200 		sts 194,r24
-  98:main.c        **** 	uart_rxbuf_iptr = uart_rxbuf;
- 892               		.stabn	68,0,98,.LM130-.LFBB9
- 893               	.LM130:
- 894 0024 80E0      		ldi r24,lo8(uart_rxbuf)
- 895 0026 90E0      		ldi r25,hi8(uart_rxbuf)
- 896 0028 9093 0000 		sts uart_rxbuf_iptr+1,r25
- 897 002c 8093 0000 		sts uart_rxbuf_iptr,r24
-  99:main.c        **** 	uart_rxbuf_optr = uart_rxbuf;
- 898               		.stabn	68,0,99,.LM131-.LFBB9
- 899               	.LM131:
- 900 0030 9093 0000 		sts uart_rxbuf_optr+1,r25
- 901 0034 8093 0000 		sts uart_rxbuf_optr,r24
- 100:main.c        ****     uart_rxbuf_count = 0;
- 902               		.stabn	68,0,100,.LM132-.LFBB9
- 903               	.LM132:
- 904 0038 1092 0000 		sts uart_rxbuf_count,__zero_reg__
- 102:main.c        ****     sei();
- 905               		.stabn	68,0,102,.LM133-.LFBB9
- 906               	.LM133:
- 907               	/* #APP */
- 908               	 ;  102 "main.c" 1
- 909 003c 7894      		sei
- 910               	 ;  0 "" 2
- 911               	/* #NOAPP */
- 912               	.LBB14:
- 913               	.LBB15:
- 914               	.LBB16:
- 915               	.LBB17:
- 916               		.stabs	"/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay_basic.h",132,0,0,.Ltext1
- 917               	.Ltext1:
+ 1001 004e 84EC      		ldi r24,lo8(2500)
+ 1002 0050 99E0      		ldi r25,hi8(2500)
+ 1003               	.LBB14:
+ 1004               	.LBB15:
+ 1005               	.LBB16:
+ 1006               	.LBB17:
+ 1007               		.stabs	"/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay_basic.h",132,0,0,.Ltext1
+ 1008               	.Ltext1:
    1:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay_basic.h **** /* Copyright (c) 2002, Marek Michalkiewicz
    2:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay_basic.h ****    Copyright (c) 2007 Joerg Wunsch
    3:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay_basic.h ****    All rights reserved.
@@ -1438,9 +1583,6 @@ GAS LISTING /tmp/ccUKiqZN.s 			page 1
   12:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay_basic.h ****      notice, this list of conditions and the following disclaimer in
   13:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay_basic.h ****      the documentation and/or other materials provided with the
   14:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay_basic.h ****      distribution.
-GAS LISTING /tmp/ccUKiqZN.s 			page 25
-
-
   15:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay_basic.h **** 
   16:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay_basic.h ****    * Neither the name of the copyright holders nor the names of
   17:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay_basic.h ****      contributors may be used to endorse or promote products derived
@@ -1476,6 +1618,9 @@ GAS LISTING /tmp/ccUKiqZN.s 			page 1
   47:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay_basic.h ****     #include <util/delay_basic.h>
   48:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay_basic.h ****     \endcode
   49:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay_basic.h **** 
+GAS LISTING /tmp/ccTXHOTK.s 			page 28
+
+
   50:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay_basic.h ****     The functions in this header file implement simple delay loops
   51:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay_basic.h ****     that perform a busy-waiting.  They are typically used to
   52:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay_basic.h ****     facilitate short delays in the program execution.  They are
@@ -1498,9 +1643,6 @@ GAS LISTING /tmp/ccUKiqZN.s 			page 1
   69:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay_basic.h **** /** \ingroup util_delay_basic
   70:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay_basic.h **** 
   71:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay_basic.h ****     Delay loop using an 8-bit counter \c __count, so up to 256
-GAS LISTING /tmp/ccUKiqZN.s 			page 26
-
-
   72:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay_basic.h ****     iterations are possible.  (The value 256 would have to be passed
   73:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay_basic.h ****     as 0.)  The loop executes three CPU cycles per iteration, not
   74:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay_basic.h ****     including the overhead the compiler needs to setup the counter
@@ -1535,152 +1677,311 @@ GAS LISTING /tmp/ccUKiqZN.s 			page 1
  103:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay_basic.h **** _delay_loop_2(uint16_t __count)
  104:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay_basic.h **** {
  105:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay_basic.h **** 	__asm__ volatile (
- 918               		.stabn	68,0,105,.LM134-.LFBB9
- 919               	.LM134:
- 920 003e 88E8      		ldi r24,lo8(5000)
- 921 0040 93E1      		ldi r25,hi8(5000)
- 922               	/* #APP */
- 923               	 ;  105 "/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay_basic.h" 1
- 924 0042 0197      		1: sbiw r24,1
- 925 0044 01F4      		brne 1b
- 926               	 ;  0 "" 2
- 927               	/* #NOAPP */
- 928               	.LBE17:
- 929               	.LBE16:
- 930               	.LBE15:
- 931               	.LBE14:
- 932               		.stabs	"main.c",132,0,0,.Ltext2
- 933               	.Ltext2:
- 108:main.c        ****     if ( !uart_data_rdy() ) {
- 934               		.stabn	68,0,108,.LM135-.LFBB9
- 935               	.LM135:
- 936 0046 0E94 0000 		call uart_data_rdy
- 937 004a 8823      		tst r24
- 938 004c 01F4      		brne .L95
- 109:main.c        ****         cli();
-GAS LISTING /tmp/ccUKiqZN.s 			page 27
+ 1009               		.stabn	68,0,105,.LM151-.LFBB9
+GAS LISTING /tmp/ccTXHOTK.s 			page 29
 
 
- 939               		.stabn	68,0,109,.LM136-.LFBB9
- 940               	.LM136:
- 941               	/* #APP */
- 942               	 ;  109 "main.c" 1
- 943 004e F894      		cli
- 944               	 ;  0 "" 2
- 110:main.c        ****         asm("jmp 0000");
- 945               		.stabn	68,0,110,.LM137-.LFBB9
- 946               	.LM137:
- 947               	 ;  110 "main.c" 1
- 948 0050 0C94 0000 		jmp 0000
- 949               	 ;  0 "" 2
- 117:main.c        **** }
- 950               		.stabn	68,0,117,.LM138-.LFBB9
- 951               	.LM138:
- 952               	/* #NOAPP */
- 953 0054 80E0      		ldi r24,lo8(0)
- 954 0056 90E0      		ldi r25,hi8(0)
- 955               	/* epilogue start */
- 956 0058 0895      		ret
- 957               	.L95:
- 113:main.c        ****         receive_data();
- 958               		.stabn	68,0,113,.LM139-.LFBB9
- 959               	.LM139:
- 960 005a 0E94 0000 		call receive_data
- 961               		.size	main, .-main
- 962               	.Lscope9:
- 963               		.stabs	"",36,0,0,.Lscope9-.LFBB9
- 964               		.stabd	78,0,0
- 965               		.comm instaddr,1,1
- 966               	.global	rxen
- 967               		.data
- 968               		.type	rxen, @object
- 969               		.size	rxen, 1
- 970               	rxen:
- 971 0000 01        		.byte	1
- 972               	.global	uart_rxbuf_count
- 973               	.global	uart_rxbuf_count
- 974               		.section .bss
- 975               		.type	uart_rxbuf_count, @object
- 976               		.size	uart_rxbuf_count, 1
- 977               	uart_rxbuf_count:
- 978 0000 00        		.skip 1,0
- 979               	.global	uart_rxbuf_optr
- 980               		.data
- 981               		.type	uart_rxbuf_optr, @object
- 982               		.size	uart_rxbuf_optr, 2
- 983               	uart_rxbuf_optr:
- 984 0001 0000      		.word	uart_rxbuf
- 985               	.global	uart_rxbuf_iptr
- 986               		.type	uart_rxbuf_iptr, @object
- 987               		.size	uart_rxbuf_iptr, 2
- 988               	uart_rxbuf_iptr:
- 989 0003 0000      		.word	uart_rxbuf
- 990               		.comm uart_rxbuf,128,1
- 991               		.lcomm curstate,1
- 992               		.type	mask, @object
-GAS LISTING /tmp/ccUKiqZN.s 			page 28
+ 1010               	.LM151:
+ 1011 0052 24EF      		ldi r18,lo8(500)
+ 1012 0054 31E0      		ldi r19,hi8(500)
+ 1013               	.L97:
+ 1014 0056 F901      		movw r30,r18
+ 1015               	/* #APP */
+ 1016               	 ;  105 "/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay_basic.h" 1
+ 1017 0058 3197      		1: sbiw r30,1
+ 1018 005a 01F4      		brne 1b
+ 1019               	 ;  0 "" 2
+ 1020               	/* #NOAPP */
+ 1021 005c 0197      		sbiw r24,1
+ 1022               	.LBE17:
+ 1023               	.LBE16:
+ 1024               		.stabs	"/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h",132,0,0,.Ltext2
+ 1025               	.Ltext2:
+   1:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** /* Copyright (c) 2002, Marek Michalkiewicz
+   2:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****    Copyright (c) 2004,2005,2007 Joerg Wunsch
+   3:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****    Copyright (c) 2007  Florin-Viorel Petrov
+   4:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****    All rights reserved.
+   5:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** 
+   6:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****    Redistribution and use in source and binary forms, with or without
+   7:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****    modification, are permitted provided that the following conditions are met:
+   8:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** 
+   9:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****    * Redistributions of source code must retain the above copyright
+  10:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****      notice, this list of conditions and the following disclaimer.
+  11:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** 
+  12:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****    * Redistributions in binary form must reproduce the above copyright
+  13:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****      notice, this list of conditions and the following disclaimer in
+  14:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****      the documentation and/or other materials provided with the
+  15:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****      distribution.
+  16:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** 
+  17:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****    * Neither the name of the copyright holders nor the names of
+  18:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****      contributors may be used to endorse or promote products derived
+  19:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****      from this software without specific prior written permission.
+  20:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** 
+  21:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  22:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  23:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  24:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****   ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  25:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****   LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  26:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****   CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  27:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****   SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  28:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****   INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  29:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****   CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  30:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+  31:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****   POSSIBILITY OF SUCH DAMAGE. */
+  32:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** 
+  33:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** /* $Id: delay.h.in 2103 2010-03-17 05:16:10Z joerg_wunsch $ */
+  34:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** 
+  35:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** #ifndef _UTIL_DELAY_H_
+  36:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** #define _UTIL_DELAY_H_ 1
+  37:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** 
+  38:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** #ifndef __HAS_DELAY_CYCLES
+  39:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** #define __HAS_DELAY_CYCLES 0
+  40:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** #endif
+  41:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** 
+GAS LISTING /tmp/ccTXHOTK.s 			page 30
 
 
- 993               		.size	mask, 1
- 994               	mask:
- 995 0005 FF        		.byte	-1
- 996               		.lcomm baud,2
- 997               		.lcomm page_addr,1
- 998               		.lcomm page_buf_ptr,2
- 999               		.lcomm page_buf,128
- 1000               		.stabs	"curstate:S(4,2)",38,0,70,curstate
- 1001               		.stabs	"page_buf:S(0,16)=ar(0,17)=r(0,17);0;0177777;;0;127;(4,2)",40,0,73,page_buf
- 1002               		.stabs	"page_buf_ptr:S(0,18)=*(4,2)",40,0,74,page_buf_ptr
- 1003               		.stabs	"page_addr:S(4,2)",40,0,75,page_addr
- 1004               		.stabs	"baud:S(4,4)",40,0,81,baud
- 1005               		.stabs	"mask:S(4,2)",38,0,84,mask
- 1006               		.stabs	"uart_rxbuf:G(0,19)=ar(0,17);0;127;(0,20)=B(4,2)",32,0,63,0
- 1007               		.stabs	"uart_rxbuf_iptr:G(0,21)=*(0,20)",32,0,64,0
- 1008               		.stabs	"uart_rxbuf_optr:G(0,21)",32,0,65,0
- 1009               		.stabs	"uart_rxbuf_count:G(0,20)",32,0,66,0
- 1010               		.stabs	"rxen:G(0,20)",32,0,67,0
- 1011               		.stabs	"instaddr:G(4,2)",32,0,78,0
- 1012               		.text
- 1013               		.stabs	"",100,0,0,.Letext0
- 1014               	.Letext0:
-GAS LISTING /tmp/ccUKiqZN.s 			page 29
+  42:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** #include <inttypes.h>
+  43:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** #include <util/delay_basic.h>
+  44:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** 
+  45:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** /** \file */
+  46:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** /** \defgroup util_delay <util/delay.h>: Convenience functions for busy-wait delay loops
+  47:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****     \code
+  48:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****     #define F_CPU 1000000UL  // 1 MHz
+  49:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****     //#define F_CPU 14.7456E6
+  50:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****     #include <util/delay.h>
+  51:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****     \endcode
+  52:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** 
+  53:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****     \note As an alternative method, it is possible to pass the
+  54:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****     F_CPU macro down to the compiler from the Makefile.
+  55:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****     Obviously, in that case, no \c \#define statement should be
+  56:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****     used.
+  57:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** 
+  58:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****     The functions in this header file are wrappers around the basic
+  59:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****     busy-wait functions from <util/delay_basic.h>.  They are meant as
+  60:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****     convenience functions where actual time values can be specified
+  61:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****     rather than a number of cycles to wait for.  The idea behind is
+  62:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****     that compile-time constant expressions will be eliminated by
+  63:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****     compiler optimization so floating-point expressions can be used
+  64:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****     to calculate the number of delay cycles needed based on the CPU
+  65:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****     frequency passed by the macro F_CPU.
+  66:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** 
+  67:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****     \note In order for these functions to work as intended, compiler
+  68:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****     optimizations <em>must</em> be enabled, and the delay time
+  69:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****     <em>must</em> be an expression that is a known constant at
+  70:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****     compile-time.  If these requirements are not met, the resulting
+  71:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****     delay will be much longer (and basically unpredictable), and
+  72:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****     applications that otherwise do not use floating-point calculations
+  73:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****     will experience severe code bloat by the floating-point library
+  74:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****     routines linked into the application.
+  75:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** 
+  76:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****     The functions available allow the specification of microsecond, and
+  77:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****     millisecond delays directly, using the application-supplied macro
+  78:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****     F_CPU as the CPU clock frequency (in Hertz).
+  79:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** 
+  80:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** */
+  81:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** 
+  82:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** #if !defined(__DOXYGEN__)
+  83:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** static inline void _delay_us(double __us) __attribute__((always_inline));
+  84:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** static inline void _delay_ms(double __ms) __attribute__((always_inline));
+  85:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** #endif
+  86:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** 
+  87:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** #ifndef F_CPU
+  88:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** /* prevent compiler error by supplying a default */
+  89:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** # warning "F_CPU not defined for <util/delay.h>"
+  90:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** # define F_CPU 1000000UL
+  91:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** #endif
+  92:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** 
+  93:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** #ifndef __OPTIMIZE__
+  94:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** # warning "Compiler optimizations disabled; functions from <util/delay.h> won't work as designed"
+  95:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** #endif
+  96:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** 
+  97:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** /**
+  98:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****    \ingroup util_delay
+GAS LISTING /tmp/ccTXHOTK.s 			page 31
+
+
+  99:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** 
+ 100:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****    Perform a delay of \c __ms milliseconds, using _delay_loop_2().
+ 101:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** 
+ 102:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****    The macro F_CPU is supposed to be defined to a
+ 103:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****    constant defining the CPU clock frequency (in Hertz).
+ 104:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** 
+ 105:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****    The maximal possible delay is 262.14 ms / F_CPU in MHz.
+ 106:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** 
+ 107:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****    When the user request delay which exceed the maximum possible one,
+ 108:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****    _delay_ms() provides a decreased resolution functionality. In this
+ 109:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****    mode _delay_ms() will work with a resolution of 1/10 ms, providing
+ 110:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****    delays up to 6.5535 seconds (independent from CPU frequency).  The
+ 111:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****    user will not be informed about decreased resolution.
+ 112:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****  */
+ 113:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** void
+ 114:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** _delay_ms(double __ms)
+ 115:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** {
+ 116:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** 	uint16_t __ticks;
+ 117:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** 	double __tmp = ((F_CPU) / 4e3) * __ms;
+ 118:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** #if __HAS_DELAY_CYCLES && defined(__OPTIMIZE__)
+ 119:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** 	extern void __builtin_avr_delay_cycles(unsigned long);
+ 120:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** 	__builtin_avr_delay_cycles(__tmp);
+ 121:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** #else
+ 122:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** 	if (__tmp < 1.0)
+ 123:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** 		__ticks = 1;
+ 124:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** 	else if (__tmp > 65535)
+ 125:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** 	{
+ 126:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** 		//	__ticks = requested delay in 1/10 ms
+ 127:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** 		__ticks = (uint16_t) (__ms * 10.0);
+ 128:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** 		while(__ticks)
+ 1026               		.stabn	68,0,128,.LM152-.LFBB9
+ 1027               	.LM152:
+ 1028 005e 01F4      		brne .L97
+ 1029               	.LBE15:
+ 1030               	.LBE14:
+ 1031               		.stabs	"main.c",132,0,0,.Ltext3
+ 1032               	.Ltext3:
+ 116:main.c        ****     if ( !uart_data_rdy() ) {
+ 1033               		.stabn	68,0,116,.LM153-.LFBB9
+ 1034               	.LM153:
+ 1035 0060 0E94 0000 		call uart_data_rdy
+ 1036 0064 8823      		tst r24
+ 1037 0066 01F4      		brne .L98
+ 117:main.c        ****         cli();
+ 1038               		.stabn	68,0,117,.LM154-.LFBB9
+ 1039               	.LM154:
+ 1040               	/* #APP */
+ 1041               	 ;  117 "main.c" 1
+ 1042 0068 F894      		cli
+ 1043               	 ;  0 "" 2
+ 118:main.c        ****         MCUCR = (1<<IVCE);
+ 1044               		.stabn	68,0,118,.LM155-.LFBB9
+ 1045               	.LM155:
+ 1046               	/* #NOAPP */
+ 1047 006a 81E0      		ldi r24,lo8(1)
+ 1048 006c 85BF      		out 85-0x20,r24
+ 119:main.c        ****         MCUCR &= ~(1<<IVSEL);
+GAS LISTING /tmp/ccTXHOTK.s 			page 32
+
+
+ 1049               		.stabn	68,0,119,.LM156-.LFBB9
+ 1050               	.LM156:
+ 1051 006e 85B7      		in r24,85-0x20
+ 1052 0070 8D7F      		andi r24,lo8(-3)
+ 1053 0072 85BF      		out 85-0x20,r24
+ 120:main.c        ****         asm("jmp 0000");
+ 1054               		.stabn	68,0,120,.LM157-.LFBB9
+ 1055               	.LM157:
+ 1056               	/* #APP */
+ 1057               	 ;  120 "main.c" 1
+ 1058 0074 0C94 0000 		jmp 0000
+ 1059               	 ;  0 "" 2
+ 127:main.c        **** }
+ 1060               		.stabn	68,0,127,.LM158-.LFBB9
+ 1061               	.LM158:
+ 1062               	/* #NOAPP */
+ 1063 0078 80E0      		ldi r24,lo8(0)
+ 1064 007a 90E0      		ldi r25,hi8(0)
+ 1065               	/* epilogue start */
+ 1066 007c 0895      		ret
+ 1067               	.L98:
+ 123:main.c        ****         receive_data();
+ 1068               		.stabn	68,0,123,.LM159-.LFBB9
+ 1069               	.LM159:
+ 1070 007e 0E94 0000 		call receive_data
+ 1071               		.size	main, .-main
+ 1072               	.Lscope9:
+ 1073               		.stabs	"",36,0,0,.Lscope9-.LFBB9
+ 1074               		.stabd	78,0,0
+ 1075               		.comm instaddr,1,1
+ 1076               	.global	rxen
+ 1077               		.data
+ 1078               		.type	rxen, @object
+ 1079               		.size	rxen, 1
+ 1080               	rxen:
+ 1081 0000 01        		.byte	1
+ 1082               	.global	uart_rxbuf_count
+ 1083               	.global	uart_rxbuf_count
+ 1084               		.section .bss
+ 1085               		.type	uart_rxbuf_count, @object
+ 1086               		.size	uart_rxbuf_count, 1
+ 1087               	uart_rxbuf_count:
+ 1088 0000 00        		.skip 1,0
+ 1089               	.global	uart_rxbuf_optr
+ 1090               		.data
+ 1091               		.type	uart_rxbuf_optr, @object
+ 1092               		.size	uart_rxbuf_optr, 2
+ 1093               	uart_rxbuf_optr:
+ 1094 0001 0000      		.word	uart_rxbuf
+ 1095               	.global	uart_rxbuf_iptr
+ 1096               		.type	uart_rxbuf_iptr, @object
+ 1097               		.size	uart_rxbuf_iptr, 2
+ 1098               	uart_rxbuf_iptr:
+ 1099 0003 0000      		.word	uart_rxbuf
+ 1100               		.comm uart_rxbuf,128,1
+ 1101               		.lcomm curstate,1
+ 1102               		.type	mask, @object
+GAS LISTING /tmp/ccTXHOTK.s 			page 33
+
+
+ 1103               		.size	mask, 1
+ 1104               	mask:
+ 1105 0005 FF        		.byte	-1
+ 1106               		.lcomm baud,2
+ 1107               		.lcomm page_addr,2
+ 1108               		.lcomm page_buf_ptr,2
+ 1109               		.lcomm page_buf,128
+ 1110               		.stabs	"curstate:S(4,2)",38,0,72,curstate
+ 1111               		.stabs	"page_buf:S(0,16)=ar(0,17)=r(0,17);0;0177777;;0;127;(4,2)",40,0,75,page_buf
+ 1112               		.stabs	"page_buf_ptr:S(0,18)=*(4,2)",40,0,76,page_buf_ptr
+ 1113               		.stabs	"page_addr:S(4,4)",40,0,77,page_addr
+ 1114               		.stabs	"baud:S(4,4)",40,0,83,baud
+ 1115               		.stabs	"mask:S(4,2)",38,0,86,mask
+ 1116               		.stabs	"uart_rxbuf:G(0,19)=ar(0,17);0;127;(0,20)=B(4,2)",32,0,65,0
+ 1117               		.stabs	"uart_rxbuf_iptr:G(0,21)=*(0,20)",32,0,66,0
+ 1118               		.stabs	"uart_rxbuf_optr:G(0,21)",32,0,67,0
+ 1119               		.stabs	"uart_rxbuf_count:G(0,20)",32,0,68,0
+ 1120               		.stabs	"rxen:G(0,20)",32,0,69,0
+ 1121               		.stabs	"instaddr:G(4,2)",32,0,80,0
+ 1122               		.text
+ 1123               		.stabs	"",100,0,0,.Letext0
+ 1124               	.Letext0:
+GAS LISTING /tmp/ccTXHOTK.s 			page 34
 
 
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 main.c
-     /tmp/ccUKiqZN.s:2      *ABS*:000000000000003f __SREG__
-     /tmp/ccUKiqZN.s:3      *ABS*:000000000000003e __SP_H__
-     /tmp/ccUKiqZN.s:4      *ABS*:000000000000003d __SP_L__
-     /tmp/ccUKiqZN.s:5      *ABS*:0000000000000000 __tmp_reg__
-     /tmp/ccUKiqZN.s:6      *ABS*:0000000000000001 __zero_reg__
-     /tmp/ccUKiqZN.s:100    .text:0000000000000000 addr_set
-     /tmp/ccUKiqZN.s:132    .text:0000000000000010 baud_set
-     /tmp/ccUKiqZN.s:991    .bss:0000000000000002 baud
-     /tmp/ccUKiqZN.s:179    .text:000000000000003c write_page
-     /tmp/ccUKiqZN.s:996    .bss:0000000000000004 page_addr
-     /tmp/ccUKiqZN.s:998    .bss:0000000000000007 page_buf
-     /tmp/ccUKiqZN.s:997    .bss:0000000000000005 page_buf_ptr
-     /tmp/ccUKiqZN.s:365    .text:00000000000000e2 verify_flash
-     /tmp/ccUKiqZN.s:385    .text:00000000000000e4 applies_to_me
-                            *COM*:0000000000000001 instaddr
-     /tmp/ccUKiqZN.s:994    .data:0000000000000005 mask
-     /tmp/ccUKiqZN.s:465    .text:0000000000000132 process_rx
+     /tmp/ccTXHOTK.s:2      *ABS*:000000000000003f __SREG__
+     /tmp/ccTXHOTK.s:3      *ABS*:000000000000003e __SP_H__
+     /tmp/ccTXHOTK.s:4      *ABS*:000000000000003d __SP_L__
+     /tmp/ccTXHOTK.s:5      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/ccTXHOTK.s:6      *ABS*:0000000000000001 __zero_reg__
+     /tmp/ccTXHOTK.s:100    .text:0000000000000000 give_up
                              .bss:0000000000000001 curstate
-     /tmp/ccUKiqZN.s:822    .text:00000000000002dc give_up
-     /tmp/ccUKiqZN.s:795    .text:00000000000002ce receive_data
-     /tmp/ccUKiqZN.s:860    .text.startup:0000000000000000 main
+     /tmp/ccTXHOTK.s:137    .text:0000000000000018 addr_set
+     /tmp/ccTXHOTK.s:169    .text:0000000000000028 baud_set
+     /tmp/ccTXHOTK.s:1101   .bss:0000000000000002 baud
+     /tmp/ccTXHOTK.s:216    .text:0000000000000054 write_page
+     /tmp/ccTXHOTK.s:1106   .bss:0000000000000004 page_addr
+     /tmp/ccTXHOTK.s:1108   .bss:0000000000000008 page_buf
+     /tmp/ccTXHOTK.s:1107   .bss:0000000000000006 page_buf_ptr
+     /tmp/ccTXHOTK.s:401    .text:00000000000000fa verify_flash
+     /tmp/ccTXHOTK.s:421    .text:00000000000000fc applies_to_me
+                            *COM*:0000000000000001 instaddr
+     /tmp/ccTXHOTK.s:1104   .data:0000000000000005 mask
+     /tmp/ccTXHOTK.s:501    .text:000000000000014a process_rx
+     /tmp/ccTXHOTK.s:908    .text:0000000000000350 receive_data
+     /tmp/ccTXHOTK.s:935    .text.startup:0000000000000000 main
                             *COM*:0000000000000080 uart_rxbuf
-     /tmp/ccUKiqZN.s:988    .data:0000000000000003 uart_rxbuf_iptr
-     /tmp/ccUKiqZN.s:983    .data:0000000000000001 uart_rxbuf_optr
-     /tmp/ccUKiqZN.s:977    .bss:0000000000000000 uart_rxbuf_count
-     /tmp/ccUKiqZN.s:970    .data:0000000000000000 rxen
+     /tmp/ccTXHOTK.s:1098   .data:0000000000000003 uart_rxbuf_iptr
+     /tmp/ccTXHOTK.s:1093   .data:0000000000000001 uart_rxbuf_optr
+     /tmp/ccTXHOTK.s:1087   .bss:0000000000000000 uart_rxbuf_count
+     /tmp/ccTXHOTK.s:1080   .data:0000000000000000 rxen
 
 UNDEFINED SYMBOLS
 __do_copy_data
 __do_clear_bss
+dbg_set
 __eewr_byte_m168p
 __eewr_word_m168p
 uart_rx
-dbg_set
-uart_data_rdy
 get_addr
+uart_data_rdy
+dbg_init

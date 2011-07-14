@@ -10,14 +10,15 @@
 #define SYSCLK 20000000UL
 #define F_CPU 20000000UL
 
-#define EEPROM_INST_ADDR (uint8_t*) 1
-#define EEPROM_BAUD_DBLE (uint8_t*) 2
+#define EEPROM_INST_ADDR (uint8_t*)  1
+#define EEPROM_BAUD_DBLE (uint8_t*)  2
 #define EEPROM_BAUD_RATE (uint16_t*) 3
 
 // uart baud rate prescale (if nothing found on the EEPROM)
 #define DEF_BAUD_PRESCALE 64    // 38400
 #define DEF_BAUD_DOUBLE 1
-#define DEF_BAUD_PRESCALE_SLOW 16    // 9600
+#define DEF_BAUD_PRESCALE_SLOW 129    // 9600
+#define DEF_BAUD_DOUBLE_SLOW 0
 
 // set the speed of the latch pulse
 #define XLATPD      1

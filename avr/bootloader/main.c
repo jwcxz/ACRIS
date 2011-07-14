@@ -49,6 +49,8 @@
  *                  Furthermore, it requires that unused bytes be 0-filled or
  *                  something.  I'd rather make the programmer
  *
+ *  R   0       BOOT - boot the application
+ *
  *  V   1       [Checksum] Verify whole program against checksum.  If
  *              verification fails, write 0xFF to the program start to prevent
  *              the bootloader from loading the application.
@@ -72,7 +74,7 @@ static uint8_t curstate = CST_IDLE;
 // page buffer
 static uint8_t page_buf[PAGESIZE];
 static uint8_t *page_buf_ptr;
-static uint8_t page_addr;
+static uint16_t page_addr;
 
 // instrument address
 uint8_t instaddr;
@@ -85,12 +87,18 @@ static uint8_t mask = AM_ALL;
 
 /* Main Loop */
 int main(void) {
+    MCUCR = (1<<IVCE);
+    MCUCR = (1<<IVSEL);
+
+    dbg_init();
+    dbg_set(0x9);
+
     instaddr = get_addr();
 
     // set up uart for 9600 baud communication with no parity
 	UBRR0H = (uint8_t) (DEF_BAUD_PRESCALE_SLOW>>8);
 	UBRR0L = (uint8_t) DEF_BAUD_PRESCALE_SLOW;
-    UCSR0A = ( _BV(U2X0) );
+    UCSR0A = ( DEF_BAUD_DOUBLE_SLOW<<U2X0 );
 	UCSR0B = ( _BV(RXCIE0) | _BV(RXEN0) );
 	UCSR0C = ( _BV(UCSZ01) | _BV(UCSZ00) );
 
@@ -102,11 +110,13 @@ int main(void) {
     sei();
 
     // wait just a bit to get some data
-    _delay_ms(10);
+    _delay_ms(250);
 
     // switch to application mode if there's no data on the UART
     if ( !uart_data_rdy() ) {
         cli();
+        MCUCR = (1<<IVCE);
+        MCUCR &= ~(1<<IVSEL);
         asm("jmp 0000");
     } else {
         // otherwise, go into receive data loop
@@ -141,6 +151,13 @@ void process_rx(void) {
                 else if ( data == CMD_MASK ) curstate = CST_MASK;
                 else if ( applies_to_me() ) {
                     switch (data) {
+                        case CMD_BOOT:
+                            cli();
+                            MCUCR = (1<<IVCE);
+                            MCUCR &= ~(1<<IVSEL);
+                            asm("jmp 0000");
+                            break;
+                            
                         case CMD_DISP_ADDR_H:
                             dbg_set(instaddr>>4);
                             curstate = CST_IDLE;
@@ -159,7 +176,7 @@ void process_rx(void) {
                             break;
 
                         case CMD_PROG:
-                            curstate = CST_PROG_A;
+                            curstate = CST_PROG_A_H;
                             break;
 
                         case CMD_VRFY:
@@ -184,6 +201,7 @@ void process_rx(void) {
             case CST_ADDR:
                 addr_set(data);
                 curstate = CST_IDLE;
+                instaddr = get_addr();
                 break;
 
             case CST_BAUD_H:
@@ -200,13 +218,20 @@ void process_rx(void) {
                 curstate = CST_IDLE;
                 break;
 
-            case CST_PROG_A:
-                page_addr = data;
+            case CST_PROG_A_H:
+                dbg_set(data);
+                page_addr = data << 8;
                 // reset page buffer pointer
                 page_buf_ptr = page_buf;
+                curstate = CST_PROG_A_L;
+                break;
+            case CST_PROG_A_L:
+                //dbg_set(data);    // not useful
+                page_addr |= data;
                 curstate = CST_PROG_D;
+                break;
             case CST_PROG_D:
-                *page_buf_ptr++ = data;
+                *(page_buf_ptr++) = data;
                 if ( page_buf_ptr - page_buf == PAGESIZE ) {
                     // we hit the last byte of the page, so the next byte is the
                     // checksum
@@ -223,6 +248,9 @@ void process_rx(void) {
                 }
                 csum = ~csum;
 
+                //write_page();
+
+                //*
                 if ( csum == data ) {
                     // checksum verifies, so write the page
                     write_page();
@@ -232,6 +260,9 @@ void process_rx(void) {
                     // we technically haven't corrupted anything yet)
                     give_up(1);
                 }
+                // */
+                dbg_set(0x3);
+                break;
 
             case CST_VRFY:
                 verify_flash(data);
@@ -263,7 +294,8 @@ void give_up(uint8_t corrupted) {
 
     // return to waiting for data
     curstate = CST_IDLE;    // reset state machine
-    receive_data();
+    //receive_data();
+    while(1);
 }
 
 /* Set the instrument address */
