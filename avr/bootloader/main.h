@@ -29,7 +29,7 @@
 #define CMD_DISP_ADDR_L 'E'
 #define CMD_MASK 'M'
 #define CMD_PROG 'P'
-#define CMD_VRFY 'V'
+#define CMD_FNSH 'F'
 
 #define CST_IDLE     0
 #define CST_SYNC     1
@@ -42,7 +42,6 @@
 #define CST_PROG_A_L 8
 #define CST_PROG_D   9
 #define CST_PROG_V   10
-#define CST_VRFY     11
 
 
 /* UART BUFFERS */

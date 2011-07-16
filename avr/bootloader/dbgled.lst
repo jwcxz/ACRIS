@@ -1,4 +1,4 @@
-GAS LISTING /tmp/ccedNnxM.s 			page 1
+GAS LISTING /tmp/ccQaiQyf.s 			page 1
 
 
    1               		.file	"dbgled.c"
@@ -58,7 +58,7 @@ GAS LISTING /tmp/ccedNnxM.s 			page 1
   55               		.stabs	"uint_fast16_t:t(5,22)=(5,4)",128,0,228,0
   56               		.stabs	"int_fast32_t:t(5,23)=(5,5)",128,0,233,0
   57               		.stabs	"uint_fast32_t:t(5,24)=(5,6)",128,0,238,0
-GAS LISTING /tmp/ccedNnxM.s 			page 2
+GAS LISTING /tmp/ccQaiQyf.s 			page 2
 
 
   58               		.stabs	"int_fast64_t:t(5,25)=(5,7)",128,0,246,0
@@ -118,7 +118,7 @@ GAS LISTING /tmp/ccedNnxM.s 			page 1
  100               	/* stack size = 0 */
  101               	.L__stack_usage = 0
   13:dbgled.c      ****     dbg_set(instaddr >> 4);
-GAS LISTING /tmp/ccedNnxM.s 			page 3
+GAS LISTING /tmp/ccQaiQyf.s 			page 3
 
 
  102               		.stabn	68,0,13,.LM1-.LFBB1
@@ -178,7 +178,7 @@ GAS LISTING /tmp/ccedNnxM.s 			page 1
   15:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay_basic.h **** 
   16:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay_basic.h ****    * Neither the name of the copyright holders nor the names of
   17:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay_basic.h ****      contributors may be used to endorse or promote products derived
-GAS LISTING /tmp/ccedNnxM.s 			page 4
+GAS LISTING /tmp/ccQaiQyf.s 			page 4
 
 
   18:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay_basic.h ****      from this software without specific prior written permission.
@@ -238,7 +238,7 @@ GAS LISTING /tmp/ccedNnxM.s 			page 1
   72:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay_basic.h ****     iterations are possible.  (The value 256 would have to be passed
   73:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay_basic.h ****     as 0.)  The loop executes three CPU cycles per iteration, not
   74:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay_basic.h ****     including the overhead the compiler needs to setup the counter
-GAS LISTING /tmp/ccedNnxM.s 			page 5
+GAS LISTING /tmp/ccQaiQyf.s 			page 5
 
 
   75:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay_basic.h ****     register.
@@ -298,7 +298,7 @@ GAS LISTING /tmp/ccedNnxM.s 			page 1
    7:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****    modification, are permitted provided that the following conditions are met:
    8:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** 
    9:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****    * Redistributions of source code must retain the above copyright
-GAS LISTING /tmp/ccedNnxM.s 			page 6
+GAS LISTING /tmp/ccQaiQyf.s 			page 6
 
 
   10:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****      notice, this list of conditions and the following disclaimer.
@@ -358,7 +358,7 @@ GAS LISTING /tmp/ccedNnxM.s 			page 1
   64:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****     to calculate the number of delay cycles needed based on the CPU
   65:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****     frequency passed by the macro F_CPU.
   66:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** 
-GAS LISTING /tmp/ccedNnxM.s 			page 7
+GAS LISTING /tmp/ccQaiQyf.s 			page 7
 
 
   67:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h ****     \note In order for these functions to work as intended, compiler
@@ -418,7 +418,7 @@ GAS LISTING /tmp/ccedNnxM.s 			page 1
  121:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** #else
  122:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** 	if (__tmp < 1.0)
  123:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** 		__ticks = 1;
-GAS LISTING /tmp/ccedNnxM.s 			page 8
+GAS LISTING /tmp/ccQaiQyf.s 			page 8
 
 
  124:/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h **** 	else if (__tmp > 65535)
@@ -478,7 +478,7 @@ GAS LISTING /tmp/ccedNnxM.s 			page 1
  197               	.LBE33:
  198               	.LBE32:
  199               		.stabs	"/usr/lib/gcc/avr/4.6.0/../../../../avr/include/util/delay.h",132,0,0,.Ltext5
-GAS LISTING /tmp/ccedNnxM.s 			page 9
+GAS LISTING /tmp/ccQaiQyf.s 			page 9
 
 
  200               	.Ltext5:
@@ -538,7 +538,7 @@ GAS LISTING /tmp/ccedNnxM.s 			page 1
   23:dbgled.c      **** }
  250               		.stabn	68,0,23,.LM17-.LFBB2
  251               	.LM17:
-GAS LISTING /tmp/ccedNnxM.s 			page 10
+GAS LISTING /tmp/ccQaiQyf.s 			page 10
 
 
  252 0060 0895      		ret
@@ -598,7 +598,7 @@ GAS LISTING /tmp/ccedNnxM.s 			page 1
  300               	.LM21:
  301               	.LFBB4:
  302               	/* prologue: function */
-GAS LISTING /tmp/ccedNnxM.s 			page 11
+GAS LISTING /tmp/ccQaiQyf.s 			page 11
 
 
  303               	/* frame size = 0 */
@@ -658,26 +658,26 @@ GAS LISTING /tmp/ccedNnxM.s 			page 1
  349               	.Lscope5:
  350               		.stabs	"",36,0,0,.Lscope5-.LFBB5
  351               		.stabd	78,0,0
-GAS LISTING /tmp/ccedNnxM.s 			page 12
+GAS LISTING /tmp/ccQaiQyf.s 			page 12
 
 
  352               		.stabs	"",100,0,0,.Letext0
  353               	.Letext0:
-GAS LISTING /tmp/ccedNnxM.s 			page 13
+GAS LISTING /tmp/ccQaiQyf.s 			page 13
 
 
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 dbgled.c
-     /tmp/ccedNnxM.s:2      *ABS*:000000000000003f __SREG__
-     /tmp/ccedNnxM.s:3      *ABS*:000000000000003e __SP_H__
-     /tmp/ccedNnxM.s:4      *ABS*:000000000000003d __SP_L__
-     /tmp/ccedNnxM.s:5      *ABS*:0000000000000000 __tmp_reg__
-     /tmp/ccedNnxM.s:6      *ABS*:0000000000000001 __zero_reg__
-     /tmp/ccedNnxM.s:93     .text:0000000000000000 show_addr
-     /tmp/ccedNnxM.s:226    .text:0000000000000050 dbg_set
-     /tmp/ccedNnxM.s:264    .text:0000000000000062 dbg_on
-     /tmp/ccedNnxM.s:297    .text:0000000000000078 dbg_off
-     /tmp/ccedNnxM.s:330    .text:0000000000000090 dbg_init
+     /tmp/ccQaiQyf.s:2      *ABS*:000000000000003f __SREG__
+     /tmp/ccQaiQyf.s:3      *ABS*:000000000000003e __SP_H__
+     /tmp/ccQaiQyf.s:4      *ABS*:000000000000003d __SP_L__
+     /tmp/ccQaiQyf.s:5      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/ccQaiQyf.s:6      *ABS*:0000000000000001 __zero_reg__
+     /tmp/ccQaiQyf.s:93     .text:0000000000000000 show_addr
+     /tmp/ccQaiQyf.s:226    .text:0000000000000050 dbg_set
+     /tmp/ccQaiQyf.s:264    .text:0000000000000062 dbg_on
+     /tmp/ccQaiQyf.s:297    .text:0000000000000078 dbg_off
+     /tmp/ccQaiQyf.s:330    .text:0000000000000090 dbg_init
 
 UNDEFINED SYMBOLS
 __do_copy_data

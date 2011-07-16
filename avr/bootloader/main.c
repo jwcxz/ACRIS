@@ -50,10 +50,6 @@
  *                  something.  I'd rather make the programmer
  *
  *  R   0       BOOT - boot the application
- *
- *  V   1       [Checksum] Verify whole program against checksum.  If
- *              verification fails, write 0xFF to the program start to prevent
- *              the bootloader from loading the application.
  */
 
 #include "main.h"
@@ -110,13 +106,18 @@ int main(void) {
     sei();
 
     // wait just a bit to get some data
-    _delay_ms(250);
+    _delay_ms(500);
 
     // switch to application mode if there's no data on the UART
     if ( !uart_data_rdy() ) {
         cli();
         MCUCR = (1<<IVCE);
-        MCUCR &= ~(1<<IVSEL);
+        MCUCR = 0;
+        asm("jmp 0000");
+    } else if ( uart_rx() != CMD_NOP ) {
+        cli();
+        MCUCR = (1<<IVCE);
+        MCUCR = 0;
         asm("jmp 0000");
     } else {
         // otherwise, go into receive data loop
@@ -153,9 +154,11 @@ void process_rx(void) {
                     switch (data) {
                         case CMD_BOOT:
                             cli();
+                            boot_rww_enable_safe();
                             MCUCR = (1<<IVCE);
-                            MCUCR &= ~(1<<IVSEL);
+                            MCUCR = 0;
                             asm("jmp 0000");
+                            curstate = CST_IDLE;
                             break;
                             
                         case CMD_DISP_ADDR_H:
@@ -179,8 +182,9 @@ void process_rx(void) {
                             curstate = CST_PROG_A_H;
                             break;
 
-                        case CMD_VRFY:
-                            curstate = CST_VRFY;
+                        case CMD_FNSH:
+                            boot_rww_enable_safe();
+                            curstate = CST_IDLE;
                             break;
 
                         default:
@@ -248,9 +252,6 @@ void process_rx(void) {
                 }
                 csum = ~csum;
 
-                //write_page();
-
-                //*
                 if ( csum == data ) {
                     // checksum verifies, so write the page
                     write_page();
@@ -260,12 +261,7 @@ void process_rx(void) {
                     // we technically haven't corrupted anything yet)
                     give_up(1);
                 }
-                // */
-                dbg_set(0x3);
-                break;
-
-            case CST_VRFY:
-                verify_flash(data);
+                dbg_on(0x3);
                 break;
 
             default:
@@ -282,11 +278,20 @@ void process_rx(void) {
  *  - Go back and wait for new data.
  */
 void give_up(uint8_t corrupted) {
-    // if application data was corrupted, fill the first page with 0xFF
+    uint16_t i;
     if (corrupted) {
         // set LEDs to "shit really hit the fan"
         dbg_set(0xA);
-        // TODO: fill the first page with 0xFF
+
+        // fill the first page with 0xFF
+        for ( i=0 ; i<PAGESIZE ; i+=2 ) {
+            boot_page_fill_safe(i, 0xFFFF);
+        }
+        boot_page_write_safe(0);
+        boot_spm_busy_wait();
+
+        // halt
+        while(1);
     } else {
         // set LEDs to "shit slightly hit the fan"
         dbg_set(0x9);
@@ -294,8 +299,7 @@ void give_up(uint8_t corrupted) {
 
     // return to waiting for data
     curstate = CST_IDLE;    // reset state machine
-    //receive_data();
-    while(1);
+    receive_data();
 }
 
 /* Set the instrument address */
@@ -343,16 +347,8 @@ void write_page(void) {
     boot_page_write_safe(page_addr);
     boot_spm_busy_wait();
 
-    // TODO: move this to only operate on the last page
-    boot_rww_enable_safe();
-
     // re-enable interrupts
     SREG = sreg;
-}
-
-/* Verify the flash */
-void verify_flash(uint8_t checksum) {
-    // TODO: not implemented yet
 }
 
 /* Check to see if the mask applies to this instrument */

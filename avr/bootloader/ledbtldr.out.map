@@ -135,7 +135,7 @@ LOAD /usr/lib/gcc/avr/4.6.0/avr5/libgcc.a
 .rela.plt
  *(.rela.plt)
 
-.text           0x0000000000003800      0x6f0
+.text           0x0000000000003800      0x746
  *(.vectors)
  .vectors       0x0000000000003800       0x68 /usr/lib/gcc/avr/4.6.0/../../../../avr/lib/avr5/crtm168p.o
                 0x0000000000003800                __vectors
@@ -216,67 +216,66 @@ LOAD /usr/lib/gcc/avr/4.6.0/avr5/libgcc.a
                 0x00000000000038a2                __vector_10
                 0x00000000000038a2                __vector_16
                 0x00000000000038a2                __vector_20
- .text          0x00000000000038a6      0x35e main.o
-                0x00000000000038a6                give_up
-                0x00000000000038be                addr_set
-                0x00000000000038ce                baud_set
-                0x00000000000038fa                write_page
-                0x00000000000039a0                verify_flash
-                0x00000000000039a2                applies_to_me
-                0x00000000000039f0                process_rx
-                0x0000000000003bf6                receive_data
- .text          0x0000000000003c04       0x98 dbgled.o
-                0x0000000000003c04                show_addr
-                0x0000000000003c54                dbg_set
-                0x0000000000003c66                dbg_on
-                0x0000000000003c7c                dbg_off
-                0x0000000000003c94                dbg_init
- .text          0x0000000000003c9c       0x40 eeprom.o
-                0x0000000000003c9c                get_addr
-                0x0000000000003caa                get_baud
-                0x0000000000003cc6                get_baud_dbl
- .text          0x0000000000003cdc      0x12c uart.o
-                0x0000000000003cdc                uart_init
-                0x0000000000003d24                uart_rx
-                0x0000000000003d5a                uart_data_rdy
-                0x0000000000003d60                __vector_18
- .text          0x0000000000003e08        0x0 /usr/lib/gcc/avr/4.6.0/avr5/libgcc.a(_exit.o)
- .text          0x0000000000003e08        0x0 /usr/lib/gcc/avr/4.6.0/avr5/libgcc.a(_copy_data.o)
- .text          0x0000000000003e08        0x0 /usr/lib/gcc/avr/4.6.0/avr5/libgcc.a(_clear_bss.o)
- .text          0x0000000000003e08        0x0 /usr/lib/gcc/avr/4.6.0/../../../../avr/lib/avr5/libc.a(eerd_byte_atmega168p.o)
- .text          0x0000000000003e08        0x0 /usr/lib/gcc/avr/4.6.0/../../../../avr/lib/avr5/libc.a(eerd_word_atmega168p.o)
- .text          0x0000000000003e08        0x0 /usr/lib/gcc/avr/4.6.0/../../../../avr/lib/avr5/libc.a(eewr_byte_atmega168p.o)
- .text          0x0000000000003e08        0x0 /usr/lib/gcc/avr/4.6.0/../../../../avr/lib/avr5/libc.a(eewr_word_atmega168p.o)
- .text          0x0000000000003e08        0x0 /usr/lib/gcc/avr/4.6.0/../../../../avr/lib/avr5/libc.a(eerd_block_atmega168p.o)
-                0x0000000000003e08                . = ALIGN (0x2)
+ .text          0x00000000000038a6      0x3b0 main.o
+                0x00000000000038a6                addr_set
+                0x00000000000038b6                baud_set
+                0x00000000000038e2                write_page
+                0x0000000000003976                applies_to_me
+                0x00000000000039c4                process_rx
+                0x0000000000003be6                receive_data
+                0x0000000000003bf4                give_up
+ .text          0x0000000000003c56       0x98 dbgled.o
+                0x0000000000003c56                show_addr
+                0x0000000000003ca6                dbg_set
+                0x0000000000003cb8                dbg_on
+                0x0000000000003cce                dbg_off
+                0x0000000000003ce6                dbg_init
+ .text          0x0000000000003cee       0x40 eeprom.o
+                0x0000000000003cee                get_addr
+                0x0000000000003cfc                get_baud
+                0x0000000000003d18                get_baud_dbl
+ .text          0x0000000000003d2e      0x12c uart.o
+                0x0000000000003d2e                uart_init
+                0x0000000000003d76                uart_rx
+                0x0000000000003dac                uart_data_rdy
+                0x0000000000003db2                __vector_18
+ .text          0x0000000000003e5a        0x0 /usr/lib/gcc/avr/4.6.0/avr5/libgcc.a(_exit.o)
+ .text          0x0000000000003e5a        0x0 /usr/lib/gcc/avr/4.6.0/avr5/libgcc.a(_copy_data.o)
+ .text          0x0000000000003e5a        0x0 /usr/lib/gcc/avr/4.6.0/avr5/libgcc.a(_clear_bss.o)
+ .text          0x0000000000003e5a        0x0 /usr/lib/gcc/avr/4.6.0/../../../../avr/lib/avr5/libc.a(eerd_byte_atmega168p.o)
+ .text          0x0000000000003e5a        0x0 /usr/lib/gcc/avr/4.6.0/../../../../avr/lib/avr5/libc.a(eerd_word_atmega168p.o)
+ .text          0x0000000000003e5a        0x0 /usr/lib/gcc/avr/4.6.0/../../../../avr/lib/avr5/libc.a(eewr_byte_atmega168p.o)
+ .text          0x0000000000003e5a        0x0 /usr/lib/gcc/avr/4.6.0/../../../../avr/lib/avr5/libc.a(eewr_word_atmega168p.o)
+ .text          0x0000000000003e5a        0x0 /usr/lib/gcc/avr/4.6.0/../../../../avr/lib/avr5/libc.a(eerd_block_atmega168p.o)
+                0x0000000000003e5a                . = ALIGN (0x2)
  *(.text.*)
- .text.startup  0x0000000000003e08       0x82 main.o
-                0x0000000000003e08                main
- .text.libgcc   0x0000000000003e8a        0x0 /usr/lib/gcc/avr/4.6.0/avr5/libgcc.a(_exit.o)
- .text.libgcc   0x0000000000003e8a        0x0 /usr/lib/gcc/avr/4.6.0/avr5/libgcc.a(_copy_data.o)
- .text.libgcc   0x0000000000003e8a        0x0 /usr/lib/gcc/avr/4.6.0/avr5/libgcc.a(_clear_bss.o)
+ .text.startup  0x0000000000003e5a       0x86 main.o
+                0x0000000000003e5a                main
+ .text.libgcc   0x0000000000003ee0        0x0 /usr/lib/gcc/avr/4.6.0/avr5/libgcc.a(_exit.o)
+ .text.libgcc   0x0000000000003ee0        0x0 /usr/lib/gcc/avr/4.6.0/avr5/libgcc.a(_copy_data.o)
+ .text.libgcc   0x0000000000003ee0        0x0 /usr/lib/gcc/avr/4.6.0/avr5/libgcc.a(_clear_bss.o)
  .text.avr-libc
-                0x0000000000003e8a       0x10 /usr/lib/gcc/avr/4.6.0/../../../../avr/lib/avr5/libc.a(eerd_byte_atmega168p.o)
-                0x0000000000003e8a                __eerd_byte_m168p
+                0x0000000000003ee0       0x10 /usr/lib/gcc/avr/4.6.0/../../../../avr/lib/avr5/libc.a(eerd_byte_atmega168p.o)
+                0x0000000000003ee0                __eerd_byte_m168p
  .text.avr-libc
-                0x0000000000003e9a        0xc /usr/lib/gcc/avr/4.6.0/../../../../avr/lib/avr5/libc.a(eerd_word_atmega168p.o)
-                0x0000000000003e9a                __eerd_word_m168p
+                0x0000000000003ef0        0xc /usr/lib/gcc/avr/4.6.0/../../../../avr/lib/avr5/libc.a(eerd_word_atmega168p.o)
+                0x0000000000003ef0                __eerd_word_m168p
  .text.avr-libc
-                0x0000000000003ea6       0x1c /usr/lib/gcc/avr/4.6.0/../../../../avr/lib/avr5/libc.a(eewr_byte_atmega168p.o)
-                0x0000000000003ea6                __eewr_byte_m168p
-                0x0000000000003ea8                __eewr_r18_m168p
+                0x0000000000003efc       0x1c /usr/lib/gcc/avr/4.6.0/../../../../avr/lib/avr5/libc.a(eewr_byte_atmega168p.o)
+                0x0000000000003efc                __eewr_byte_m168p
+                0x0000000000003efe                __eewr_r18_m168p
  .text.avr-libc
-                0x0000000000003ec2        0xa /usr/lib/gcc/avr/4.6.0/../../../../avr/lib/avr5/libc.a(eewr_word_atmega168p.o)
-                0x0000000000003ec2                __eewr_word_m168p
+                0x0000000000003f18        0xa /usr/lib/gcc/avr/4.6.0/../../../../avr/lib/avr5/libc.a(eewr_word_atmega168p.o)
+                0x0000000000003f18                __eewr_word_m168p
  .text.avr-libc
-                0x0000000000003ecc       0x20 /usr/lib/gcc/avr/4.6.0/../../../../avr/lib/avr5/libc.a(eerd_block_atmega168p.o)
-                0x0000000000003ecc                __eerd_block_m168p
-                0x0000000000003ed0                __eerd_blraw_m168p
-                0x0000000000003eec                . = ALIGN (0x2)
+                0x0000000000003f22       0x20 /usr/lib/gcc/avr/4.6.0/../../../../avr/lib/avr5/libc.a(eerd_block_atmega168p.o)
+                0x0000000000003f22                __eerd_block_m168p
+                0x0000000000003f26                __eerd_blraw_m168p
+                0x0000000000003f42                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x0000000000003eec        0x0 /usr/lib/gcc/avr/4.6.0/avr5/libgcc.a(_exit.o)
-                0x0000000000003eec                exit
-                0x0000000000003eec                _exit
+ .fini9         0x0000000000003f42        0x0 /usr/lib/gcc/avr/4.6.0/avr5/libgcc.a(_exit.o)
+                0x0000000000003f42                exit
+                0x0000000000003f42                _exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -295,11 +294,11 @@ LOAD /usr/lib/gcc/avr/4.6.0/avr5/libgcc.a
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x0000000000003eec        0x4 /usr/lib/gcc/avr/4.6.0/avr5/libgcc.a(_exit.o)
+ .fini0         0x0000000000003f42        0x4 /usr/lib/gcc/avr/4.6.0/avr5/libgcc.a(_exit.o)
  *(.fini0)
-                0x0000000000003ef0                _etext = .
+                0x0000000000003f46                _etext = .
 
-.data           0x0000000000800100        0x6 load address 0x0000000000003ef0
+.data           0x0000000000800100        0x6 load address 0x0000000000003f46
                 0x0000000000800100                PROVIDE (__data_start, .)
  *(.data)
  .data          0x0000000000800100        0x0 /usr/lib/gcc/avr/4.6.0/../../../../avr/lib/avr5/crtm168p.o
@@ -349,8 +348,8 @@ LOAD /usr/lib/gcc/avr/4.6.0/avr5/libgcc.a
                 0x000000000080018e                uart_rxbuf
                 0x000000000080020e                instaddr
                 0x000000000080020f                PROVIDE (__bss_end, .)
-                0x0000000000003ef0                __data_load_start = LOADADDR (.data)
-                0x0000000000003ef6                __data_load_end = (__data_load_start + SIZEOF (.data))
+                0x0000000000003f46                __data_load_start = LOADADDR (.data)
+                0x0000000000003f4c                __data_load_end = (__data_load_start + SIZEOF (.data))
 
 .noinit         0x000000000080020f        0x0
                 0x000000000080020f                PROVIDE (__noinit_start, .)
@@ -363,37 +362,37 @@ LOAD /usr/lib/gcc/avr/4.6.0/avr5/libgcc.a
  *(.eeprom*)
                 0x0000000000810000                __eeprom_end = .
 
-.stab           0x0000000000000000     0x25e0
+.stab           0x0000000000000000     0x2670
  *(.stab)
  .stab          0x0000000000000000      0x6cc /usr/lib/gcc/avr/4.6.0/../../../../avr/lib/avr5/crtm168p.o
- .stab          0x00000000000006cc      0xe70 main.o
-                                        0xe7c (size before relaxing)
- .stab          0x000000000000153c      0x474 dbgled.o
+ .stab          0x00000000000006cc      0xf00 main.o
+                                        0xf0c (size before relaxing)
+ .stab          0x00000000000015cc      0x474 dbgled.o
                                         0x6d8 (size before relaxing)
- .stab          0x00000000000019b0      0x324 eeprom.o
+ .stab          0x0000000000001a40      0x324 eeprom.o
                                         0x5c4 (size before relaxing)
- .stab          0x0000000000001cd4      0x468 uart.o
+ .stab          0x0000000000001d64      0x468 uart.o
                                         0x708 (size before relaxing)
- .stab          0x000000000000213c       0x54 /usr/lib/gcc/avr/4.6.0/avr5/libgcc.a(_exit.o)
+ .stab          0x00000000000021cc       0x54 /usr/lib/gcc/avr/4.6.0/avr5/libgcc.a(_exit.o)
                                          0x60 (size before relaxing)
- .stab          0x0000000000002190       0x9c /usr/lib/gcc/avr/4.6.0/avr5/libgcc.a(_copy_data.o)
+ .stab          0x0000000000002220       0x9c /usr/lib/gcc/avr/4.6.0/avr5/libgcc.a(_copy_data.o)
                                          0xa8 (size before relaxing)
- .stab          0x000000000000222c       0x78 /usr/lib/gcc/avr/4.6.0/avr5/libgcc.a(_clear_bss.o)
+ .stab          0x00000000000022bc       0x78 /usr/lib/gcc/avr/4.6.0/avr5/libgcc.a(_clear_bss.o)
                                          0x84 (size before relaxing)
- .stab          0x00000000000022a4       0x90 /usr/lib/gcc/avr/4.6.0/../../../../avr/lib/avr5/libc.a(eerd_byte_atmega168p.o)
+ .stab          0x0000000000002334       0x90 /usr/lib/gcc/avr/4.6.0/../../../../avr/lib/avr5/libc.a(eerd_byte_atmega168p.o)
                                          0x9c (size before relaxing)
- .stab          0x0000000000002334       0x6c /usr/lib/gcc/avr/4.6.0/../../../../avr/lib/avr5/libc.a(eerd_word_atmega168p.o)
+ .stab          0x00000000000023c4       0x6c /usr/lib/gcc/avr/4.6.0/../../../../avr/lib/avr5/libc.a(eerd_word_atmega168p.o)
                                          0x78 (size before relaxing)
- .stab          0x00000000000023a0       0xe4 /usr/lib/gcc/avr/4.6.0/../../../../avr/lib/avr5/libc.a(eewr_byte_atmega168p.o)
+ .stab          0x0000000000002430       0xe4 /usr/lib/gcc/avr/4.6.0/../../../../avr/lib/avr5/libc.a(eewr_byte_atmega168p.o)
                                          0xf0 (size before relaxing)
- .stab          0x0000000000002484       0x54 /usr/lib/gcc/avr/4.6.0/../../../../avr/lib/avr5/libc.a(eewr_word_atmega168p.o)
+ .stab          0x0000000000002514       0x54 /usr/lib/gcc/avr/4.6.0/../../../../avr/lib/avr5/libc.a(eewr_word_atmega168p.o)
                                          0x60 (size before relaxing)
- .stab          0x00000000000024d8      0x108 /usr/lib/gcc/avr/4.6.0/../../../../avr/lib/avr5/libc.a(eerd_block_atmega168p.o)
+ .stab          0x0000000000002568      0x108 /usr/lib/gcc/avr/4.6.0/../../../../avr/lib/avr5/libc.a(eerd_block_atmega168p.o)
                                         0x114 (size before relaxing)
 
-.stabstr        0x0000000000000000      0xf4f
+.stabstr        0x0000000000000000      0xf33
  *(.stabstr)
- .stabstr       0x0000000000000000      0xf4f /usr/lib/gcc/avr/4.6.0/../../../../avr/lib/avr5/crtm168p.o
+ .stabstr       0x0000000000000000      0xf33 /usr/lib/gcc/avr/4.6.0/../../../../avr/lib/avr5/crtm168p.o
 
 .stab.excl
  *(.stab.excl)
