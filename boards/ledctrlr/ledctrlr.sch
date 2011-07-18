@@ -1,4 +1,4 @@
-EESchema Schematic File Version 2  date Tue 14 Jun 2011 12:07:09 AM EDT
+EESchema Schematic File Version 2  date Sun 17 Jul 2011 11:37:49 AM EDT
 LIBS:power
 LIBS:device
 LIBS:transistors
@@ -39,7 +39,7 @@ EELAYER END
 $Descr A 11000 8500
 Sheet 1 1
 Title "4-RGB LED Controller Board"
-Date "14 jun 2011"
+Date "17 jul 2011"
 Rev "1.5"
 Comp "J. Colosimo"
 Comment1 ""
@@ -1490,7 +1490,7 @@ U 1 1 4D1A4743
 P 4650 2150
 F 0 "X1" H 4650 2300 60  0000 C CNN
 F 1 "CRYSTAL" H 4650 2000 60  0000 C CNN
-F 2 "SM1206" H 4590 2360 60  0001 C CNN
+F 2 "Crystal_FOX-FE-SMD-RevA_09Aug201" H 4590 2360 60  0001 C CNN
 F 4 "NX8045GB-20.000000MHZ" H 4650 2150 60  0001 C CNN "Part"
 F 5 "644-1026-1-ND" H 4650 2150 60  0001 C CNN "DigikeyPart"
 	1    4650 2150

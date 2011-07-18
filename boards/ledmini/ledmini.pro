@@ -1,4 +1,4 @@
-update=Sun 17 Jul 2011 03:53:03 PM EDT
+update=Sun 17 Jul 2011 11:44:45 AM EDT
 version=1
 last_client=pcbnew
 [cvpcb]
@@ -11,6 +11,8 @@ LibDir=
 NetType=0
 [cvpcb/libraries]
 EquName1=devcms
+[general]
+version=1
 [eeschema]
 version=1
 LibDir=../libs
@@ -81,8 +83,6 @@ LibName31=atmel2
 LibName32=monomeArduino
 LibName33=sn75176b
 LibName34=SparkFun
-[general]
-version=1
 [pcbnew]
 version=1
 PadDrlX=320
@@ -100,7 +100,7 @@ DrawLar=150
 EdgeLar=150
 TxtLar=120
 MSegLar=150
-LastNetListRead=ledctrlr.net
+LastNetListRead=ledmini.net
 [pcbnew/libraries]
 LibDir=../libs
 LibName1=sockets
@@ -113,8 +113,12 @@ LibName7=display
 LibName8=valves
 LibName9=led
 LibName10=dip_sockets
-LibName11=push_sw
+LibName11=Crystals_RevA_09Aug2010
 LibName12=Elko_ThroughHole_RevA
-LibName13=w_smd_dil
-LibName14=soic8
-LibName15=Crystals_RevA_09Aug2010
+LibName13=push_sw
+LibName14=SMB-0402
+LibName15=soic8
+LibName16=sw_push
+LibName17=sw_push2
+LibName18=usb_mini_a
+LibName19=w_smd_dil
