@@ -1,3 +1,5 @@
+/* Test project for old board setup that cycles through hues */
+
 #include "main.h"
 
 #include "led.h"
