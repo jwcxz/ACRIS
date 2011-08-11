@@ -15,6 +15,7 @@ Features:
     - Each LED controller supports up to 15 channels, each sinking up to 360mA
     - LED controllers are just 3.2" by 2.3"
     - Status LEDs on the board tell you what the hell is going on
+    - CAPACITORS.  ALL THE CAPACITORS.  EVERY SINGLE CAPACITOR.
     - Each Mini LED controller supports up to 5 channels, also at 360mA each
     - Mini controllers are just 1.4" by .88"
     - Communications board provides two RS-485 outputs and is 1.35" by 1.2"
