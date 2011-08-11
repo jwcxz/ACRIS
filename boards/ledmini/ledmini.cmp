@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPCB (2010-04-21 BZR 23xx)-stable date = Sun 17 Jul 2011 12:04:43 PM EDT
+Cmp-Mod V01 Created by CvPCB (2011-07-08)-stable date = Sun 07 Aug 2011 06:13:58 PM EDT
 
 BeginCmp
 TimeStamp = /4DDBFDFD;
@@ -138,34 +138,6 @@ TimeStamp = /4D1A428B;
 Reference = IC2;
 ValeurCmp = SN75176B;
 IdModule  = SOIC8;
-EndCmp
-
-BeginCmp
-TimeStamp = /4DDEAE64;
-Reference = PCRNR1;
-ValeurCmp = CONN_1;
-IdModule  = 1pin;
-EndCmp
-
-BeginCmp
-TimeStamp = /4DDEAE6E;
-Reference = PCRNR2;
-ValeurCmp = CONN_1;
-IdModule  = 1pin;
-EndCmp
-
-BeginCmp
-TimeStamp = /4DDEAE70;
-Reference = PCRNR3;
-ValeurCmp = CONN_1;
-IdModule  = 1pin;
-EndCmp
-
-BeginCmp
-TimeStamp = /4DDEAE72;
-Reference = PCRNR4;
-ValeurCmp = CONN_1;
-IdModule  = 1pin;
 EndCmp
 
 BeginCmp

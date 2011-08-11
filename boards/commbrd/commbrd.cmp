@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPCB (2010-04-21 BZR 23xx)-stable date = Mon 30 May 2011 02:10:40 AM EDT
+Cmp-Mod V01 Created by CvPCB (2011-07-08)-stable date = Sun 07 Aug 2011 01:59:13 PM EDT
 
 BeginCmp
 TimeStamp = /4DE311CC;
@@ -40,6 +40,13 @@ TimeStamp = /4DE3120F;
 Reference = D3;
 ValeurCmp = LED;
 IdModule  = LED-1206;
+EndCmp
+
+BeginCmp
+TimeStamp = /4E3ED1CD;
+Reference = FB1;
+ValeurCmp = FILTER;
+IdModule  = SM0603;
 EndCmp
 
 BeginCmp
