@@ -21,7 +21,7 @@ convert -resize 400 -density 400 commbrd/commbrd-brd.pdf commbrd/commbrd-brd.png
 convert -resize 400 -density 400 ledctrlr/ledctrlr.pdf ledctrlr/ledctrlr.png
 convert -resize 400 -density 400 ledctrlr/ledctrlr-brd.pdf ledctrlr/ledctrlr-brd.png
 
-convert -resize 400 -density 400 ledmini/ledmini.pdf ledmini/ledctrlr.png
+convert -resize 400 -density 400 ledmini/ledmini.pdf ledmini/ledmini.png
 convert -resize 400 -density 400 ledmini/ledmini-brd.pdf ledmini/ledmini-brd.png
 
 
