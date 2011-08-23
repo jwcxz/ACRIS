@@ -17,7 +17,7 @@ p.add_argument('-m', '--mask', dest='mask', action='store', default=None,
 p.add_argument('-a', '--address', dest='address', action='store', default=None,
         help='set instrument address');
 p.add_argument('-b', '--baud', dest='baud', action='store', default=None,
-        help='set device baud prescale');
+        nargs=2, help='set device baud prescale and double');
 p.add_argument('-p', '--prog', dest='file', action='store', default=None,
         help='program the device');
 
@@ -52,8 +52,8 @@ if args.address != None:
     btldr.setaddr(int(args.address));
 
 if args.baud != None:
-    print "setting baud prescale 0x%04x" % int(args.baud);
-    btldr.setbaud(int(args.baud));
+    print "setting baud prescale 0x%04x with double %s" % (int(args.baud[0]), args.baud[1]);
+    btldr.setbaud(int(args.baud[0]), int(args.baud[1]));
 
 if args.file != None:
     print "programming with %s" % args.file;

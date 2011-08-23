@@ -124,6 +124,9 @@ AVRDUDE_PROGRAMMERID=ponyser
 #
 AVRDUDE_PORT=/dev/ttyS0
 
+# BOOTLOADER
+BOOTLOADER=../../sw/bootloader/program.sh
+
 
 ####################################################
 #####                Config Done               #####
@@ -215,10 +218,10 @@ GENASMFILES=$(filter %.s, $(OBJDEPS:.o=.s))
 	.hex .ee.hex .h .hh .hpp
 
 
-.PHONY: writeflash clean stats gdbinit stats
+.PHONY: writeserial writeflash clean stats gdbinit stats
 
 # Make targets:
-# all, disasm, stats, hex, writeflash/install, clean
+# all, disasm, stats, hex, writeserial, writeflash/install, clean
 all: $(TRG)
 
 disasm: $(DUMPTRG) stats
@@ -236,6 +239,9 @@ writeflash: hex
 	 -U flash:w:$(HEXROMTRG)
 
 install: writeflash
+
+writeserial: hex
+	$(BOOTLOADER) $(PWD)/$(HEXROMTRG)
 
 writefuse:
 	echo $(AVRDUDE) -c $(AVRDUDE_PROGRAMMERID) \
