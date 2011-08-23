@@ -1,8 +1,9 @@
+orders/*
 *.pyc
-tags
 *.ee.hex
 *.hex
 *.out
 *.out.map
 *.lst
 *.o
+tags
