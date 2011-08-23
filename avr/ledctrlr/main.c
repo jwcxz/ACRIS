@@ -37,14 +37,16 @@ uint8_t* argptr = args; //   ... associated pointer
 static uint8_t cmdstate;
 
 int main(void) {
+    // initialize TLC
+    tlc_init();
+    // set everything off
+    tlc_drive();
+
     // initialize debug LEDs
     dbg_init();
 
     // get the address of the device
     instaddr = get_addr();
-
-    // initialize TLC
-    tlc_init();
 
     // initialize UART
     uart_init();
@@ -76,6 +78,7 @@ void receive_data(void) {
     unsigned char inbyte;
 
     inbyte = uart_rx();
+    dbg_set(inbyte&0xF);
 
     if ( inbyte == CMD_SYNC )  {
         // the sync byte is always treated as a trigger to reset the state

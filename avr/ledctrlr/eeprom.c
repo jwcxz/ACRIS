@@ -34,5 +34,5 @@ uint8_t get_baud_dbl(void) {
 
                         // v return default double if not set
     if ( tmp == 0xFF ) return DEF_BAUD_DOUBLE;
-    else return tmp;
+    else return tmp&1;
 }
