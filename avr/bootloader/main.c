@@ -91,6 +91,9 @@ int main(void) {
 
     instaddr = get_addr();
 
+    // set rs485 tristate to "read"
+    UARTWR_DDR |= _BV(UARTWR_PIN);
+    _OFF(UARTWR_PRT, UARTWR_PIN);
     // set up uart for 9600 baud communication with no parity
 	UBRR0H = (uint8_t) (DEF_BAUD_PRESCALE_SLOW>>8);
 	UBRR0L = (uint8_t) DEF_BAUD_PRESCALE_SLOW;
@@ -140,134 +143,133 @@ void process_rx(void) {
     uint8_t csum = 0;
     data = uart_rx();
 
-    if ( data != CMD_NOP ) {
-        switch (curstate) {
-            case CST_IDLE:
-                if ( data == CMD_SYNC ) curstate = CST_SYNC;
-                else curstate = CST_IDLE;
-                break;
-            case CST_SYNC:
-                if ( data == CMD_SYNC ) curstate = CST_SYNC;
-                    // if we get a mask request, then always honor it
-                else if ( data == CMD_MASK ) curstate = CST_MASK;
-                else if ( applies_to_me() ) {
-                    switch (data) {
-                        case CMD_BOOT:
-                            cli();
-                            boot_rww_enable_safe();
-                            MCUCR = (1<<IVCE);
-                            MCUCR = 0;
-                            asm("jmp 0000");
-                            curstate = CST_IDLE;
-                            break;
-                            
-                        case CMD_DISP_ADDR_H:
-                            dbg_set(instaddr>>4);
-                            curstate = CST_IDLE;
-                            break;
-                        case CMD_DISP_ADDR_L:
-                            dbg_set(instaddr&0x0F);
-                            curstate = CST_IDLE;
-                            break;
+    switch (curstate) {
+        case CST_IDLE:
+            if ( data == CMD_SYNC ) curstate = CST_SYNC;
+            else curstate = CST_IDLE;
+            break;
+        case CST_SYNC:
+            if ( data == CMD_NOP ) curstate = CST_IDLE;
+            else if ( data == CMD_SYNC ) curstate = CST_SYNC;
+                // if we get a mask request, then always honor it
+            else if ( data == CMD_MASK ) curstate = CST_MASK;
+            else if ( applies_to_me() ) {
+                switch (data) {
+                    case CMD_BOOT:
+                        cli();
+                        boot_rww_enable_safe();
+                        MCUCR = (1<<IVCE);
+                        MCUCR = 0;
+                        asm("jmp 0000");
+                        curstate = CST_IDLE;
+                        break;
+                        
+                    case CMD_DISP_ADDR_H:
+                        dbg_set(instaddr>>4);
+                        curstate = CST_IDLE;
+                        break;
+                    case CMD_DISP_ADDR_L:
+                        dbg_set(instaddr&0x0F);
+                        curstate = CST_IDLE;
+                        break;
 
-                        case CMD_ADDR:
-                            curstate = CST_ADDR;
-                            break;
+                    case CMD_ADDR:
+                        curstate = CST_ADDR;
+                        break;
 
-                        case CMD_BAUD:
-                            curstate = CST_BAUD_H;
-                            break;
+                    case CMD_BAUD:
+                        curstate = CST_BAUD_H;
+                        break;
 
-                        case CMD_PROG:
-                            curstate = CST_PROG_A_H;
-                            break;
+                    case CMD_PROG:
+                        curstate = CST_PROG_A_H;
+                        break;
 
-                        case CMD_FNSH:
-                            boot_rww_enable_safe();
-                            curstate = CST_IDLE;
-                            break;
+                    case CMD_FNSH:
+                        boot_rww_enable_safe();
+                        curstate = CST_IDLE;
+                        break;
 
-                        default:
-                            curstate = CST_IDLE;
-                            break;
-                    }
-                } 
-                // otherwise, no action applied to me, so wait for the next
-                // packet (maybe it'll be a new mask)
-                else curstate = CST_IDLE;
-                break;
+                    default:
+                        curstate = CST_IDLE;
+                        break;
+                }
+            } 
+            // otherwise, no action applied to me, so wait for the next
+            // packet (maybe it'll be a new mask)
+            else curstate = CST_IDLE;
+            break;
 
-            case CST_MASK:
-                mask = data;
-                curstate = CST_IDLE;
-                break;
+        case CST_MASK:
+            mask = data;
+            curstate = CST_IDLE;
+            break;
 
-            case CST_ADDR:
-                addr_set(data);
-                curstate = CST_IDLE;
-                instaddr = get_addr();
-                break;
+        case CST_ADDR:
+            addr_set(data);
+            curstate = CST_IDLE;
+            instaddr = get_addr();
+            break;
 
-            case CST_BAUD_H:
-                baud = (data << 8);   // high byte of baud rate
-                curstate = CST_BAUD_L;
-                break;
-            case CST_BAUD_L:
-                baud |= data;         // low byte of baud rate
-                curstate = CST_BAUD_D;
-                break;
-            case CST_BAUD_D:
-                // TODO: save some space by always setting double to 1
-                baud_set(data);
-                curstate = CST_IDLE;
-                break;
+        case CST_BAUD_H:
+            baud = (data << 8);   // high byte of baud rate
+            curstate = CST_BAUD_L;
+            break;
+        case CST_BAUD_L:
+            baud |= data;         // low byte of baud rate
+            curstate = CST_BAUD_D;
+            break;
+        case CST_BAUD_D:
+            // TODO: save some space by always setting double to 1
+            baud_set(data);
+            curstate = CST_IDLE;
+            break;
 
-            case CST_PROG_A_H:
-                dbg_set(data);
-                page_addr = data << 8;
-                // reset page buffer pointer
-                page_buf_ptr = page_buf;
-                curstate = CST_PROG_A_L;
-                break;
-            case CST_PROG_A_L:
-                //dbg_set(data);    // not useful
-                page_addr |= data;
+        case CST_PROG_A_H:
+            dbg_set(data);
+            page_addr = data << 8;
+            // reset page buffer pointer
+            page_buf_ptr = page_buf;
+            curstate = CST_PROG_A_L;
+            break;
+        case CST_PROG_A_L:
+            //dbg_set(data);    // not useful
+            page_addr |= data;
+            curstate = CST_PROG_D;
+            break;
+        case CST_PROG_D:
+            *(page_buf_ptr++) = data;
+            if ( page_buf_ptr - page_buf == PAGESIZE ) {
+                // we hit the last byte of the page, so the next byte is the
+                // checksum
+                curstate = CST_PROG_V;
+            } else {
                 curstate = CST_PROG_D;
-                break;
-            case CST_PROG_D:
-                *(page_buf_ptr++) = data;
-                if ( page_buf_ptr - page_buf == PAGESIZE ) {
-                    // we hit the last byte of the page, so the next byte is the
-                    // checksum
-                    curstate = CST_PROG_V;
-                } else {
-                    curstate = CST_PROG_D;
-                }
-                break;
-            case CST_PROG_V:
-                curstate = CST_IDLE;
+            }
+            break;
+        case CST_PROG_V:
+            curstate = CST_IDLE;
 
-                for ( i=0 ; i<PAGESIZE ; i++ ) {
-                    csum += page_buf[i];
-                }
-                csum = ~csum;
+            for ( i=0 ; i<PAGESIZE ; i++ ) {
+                csum += page_buf[i];
+            }
+            csum = ~csum;
 
-                if ( csum == data ) {
-                    // checksum verifies, so write the page
-                    write_page();
-                } else {
-                    // damnit...
-                    // TODO: we can be slightly smarter (if it's the first address,
-                    // we technically haven't corrupted anything yet)
-                    give_up(1);
-                }
-                dbg_on(0x3);
-                break;
+            if ( csum == data ) {
+                // checksum verifies, so write the page
+                write_page();
+            } else {
+                // damnit...
+                // TODO: we can be slightly smarter (if it's the first address,
+                // we technically haven't corrupted anything yet)
+                give_up(1);
+            }
+            dbg_on(0x3);
+            break;
 
-            default:
-                curstate = CST_IDLE;
-                break;
-        }
+        default:
+            curstate = CST_IDLE;
+            break;
     }
 }
 
