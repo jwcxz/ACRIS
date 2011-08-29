@@ -99,7 +99,7 @@ void receive_data(void) {
                     cmdstate = CST_ARGS;
                 } else if ( (inbyte >= 0xF0 && inbyte <= 0xFE) && 
                             (instaddr >= (inbyte&0x0F)*16 && 
-                                instaddr <= (inbyte&0x0F)*16+15)) {
+                                instaddr <= (inbyte&0x0F)*16+15) ) {
                     numargs = 15;
                     cmdstate = CST_ARGS;
                 } else if ( inbyte == CMD_DOALL ) {

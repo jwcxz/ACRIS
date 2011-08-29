@@ -240,7 +240,7 @@ writeflash: hex
 install: writeflash
 
 writefuse:
-	echo $(AVRDUDE) -c $(AVRDUDE_PROGRAMMERID) \
+	$(AVRDUDE) -c $(AVRDUDE_PROGRAMMERID) \
 		-p $(PROGRAMMER_MCU) -P $(AVRDUDE_PORT) -e  \
 		-U hfuse:w:$(AVR_HFUSE):m \
         -U lfuse:w:$(AVR_LFUSE):m \

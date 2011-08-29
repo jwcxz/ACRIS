@@ -46,31 +46,39 @@ if args.nops == True:
 if args.mask != None: 
     print "applying mask 0x%02x" % int(args.mask);
     btldr.mask(int(args.mask));
+    time.sleep(.1);
 
 if args.address != None: 
     print "setting address 0x%02x" % int(args.address);
     btldr.setaddr(int(args.address));
+    time.sleep(.1);
 
 if args.baud != None:
     print "setting baud prescale 0x%04x with double %s" % (int(args.baud[0]), args.baud[1]);
     btldr.setbaud(int(args.baud[0]), int(args.baud[1]));
+    time.sleep(.1);
 
 if args.file != None:
     print "programming with %s" % args.file;
     btldr.program(args.file);
+    time.sleep(.1);
 
 if args.dsph == True:
     print "displaying high address nibble";
     btldr.disph();
+    time.sleep(.1);
 
 if args.dspl == True:
     print "displaying low address nibble";
     btldr.displ();
+    time.sleep(.1);
 
 if args.finish == True:
     print "re-enabling the application section";
     btldr.finish();
+    time.sleep(.1);
 
 if args.boot == True:
     print "booting the device";
     btldr.boot();
+    time.sleep(.1);
