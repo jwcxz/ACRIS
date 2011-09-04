@@ -6,12 +6,15 @@ class Network:
     def __init__(self, port='/dev/ttyS0', baud=38400, parity=serial.PARITY_EVEN):
         # the default baud rate is 38400, but it will vary based on user
         # configuration
-        self.cxn = serial.Serial(port, baud)
+        self.cxn = serial.Serial(port, baud, parity=parity)
 
     def cmd(self, args, sendsync=True):
         # send a command string
-        if sendsync: self.cxn.write(self.SYNC);
-        for a in args: self.cxn.write(self.c(a));
+        s = "";
+        if sendsync: s += self.SYNC;
+        for a in args: s += self.c(a);
+
+        self.cxn.write(s);
         self.cxn.flush();
 
     def inst(self, addr, args):
@@ -30,4 +33,3 @@ class Network:
             return chr(_+1);
         else:
             return chr(_);
-

@@ -1,11 +1,11 @@
-import acris.controller
+import backend.controller
 
-class WallSconce(acris.controller.Controller):
+class WallSconce(backend.controller.Controller):
     """ this is the wall sconce that has three LEDs in it.  one is a main
     (center) LED and the other two point outwards to give a potentially
     different lighting effect on the top and bottom """
 
-    def each(self, center, top, bottom):
+    def each(self, top, center, bottom):
         self.set(top + [0,0,0] + center + [0,0,0] + bottom);
 
     def all(self, color):
