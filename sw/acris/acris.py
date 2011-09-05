@@ -77,7 +77,7 @@ class Acris:
                 print "::  ", statusmsg;
                 client.send(statusmsg+"\n");
                 client.close();
-            except:
+            except socket.error:
                 print "whoops"
 
     def lights_off(self):
