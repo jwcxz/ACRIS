@@ -14,19 +14,21 @@ class Plugin(backend.plugin.Plugin):
     def run(self): 
         backend.plugin.Plugin.run(self);
 
-        hueparams = { 'scale': [2, 10, 10], 'period': [.4, .2, .1], 'offset': [2, 10, 20]};
-        valrdmparams = { 'rangelo': 0.8, 'rangehi': 1.0 };
+        hueparams = { 'scale': [2, 10, 10], 'frequency': [1.0, .2, .1], 'offset': [2, 10, 20]};
+        valrdmparams = { 'rangelo': 0.6, 'rangehi': 0.75 };
         valparams = { 'offset': [0, .1, .2] };
         sat = [ 1.0, 1.0, 1.0 ];
 
         maxv = 100;
-        timedelay = 0.1;
+        timedelay = 0.05;
         step = 0;
 
         while self.enabled:
-            hue = [ 
-                hueparams['scale'][i] * math.sin(step * hueparams['period'][i]) +
-                hueparams['offset'][i] for i in xrange(3) ];
+            #hue = [ 
+                #hueparams['scale'][i] * math.sin(step * hueparams['frequency'][i]) +
+                #hueparams['offset'][i] for i in xrange(3) ];
+
+            hue = [5, 10, 20];
 
             _ = random.uniform(valrdmparams['rangelo'], valrdmparams['rangehi']);
             val = [ min(1.0, _+valparams['offset'][i]) for i in xrange(3) ]; 
@@ -37,4 +39,4 @@ class Plugin(backend.plugin.Plugin):
             self.right.each(rgb[0], rgb[1], rgb[2]);
 
             time.sleep(timedelay);
-            step += 1;
+            #step += 1;
