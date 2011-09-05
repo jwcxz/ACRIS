@@ -31,51 +31,54 @@ class Acris:
         self.skt.listen(blog);
 
         while True:
-            client, address = self.skt.accept();
-            print ":: Accepted", address
-            data = client.recv(size);
-            print "::   Received:", data[:-1];
-            if data:
-                # data contains a command and optional arguments
-                data = data.split(None);
-                cmd = data[0]
+            try:
+                client, address = self.skt.accept();
+                print ":: Accepted", address
+                data = client.recv(size);
+                print "::   Received:", data[:-1];
+                if data:
+                    # data contains a command and optional arguments
+                    data = data.split(None);
+                    cmd = data[0]
 
-                if cmd == "plugin":
-                    if data[1] in self.plugins:
-                        statusmsg = "Activating %s with args %r" %(data[1], data[2:]);
+                    if cmd == "plugin":
+                        if data[1] in self.plugins:
+                            statusmsg = "Activating %s with args %r" %(data[1], data[2:]);
+                            self.stop_plugin();
+                            self.activate_plugin(data[1], data[2:]);
+                        else:
+                            statusmsg = "Plugin %s (with args %r) not found)" %(data[1], data[2:]);
+
+                    elif cmd == "stop":
+                        statusmsg = "Stopping plugin and shutting lights off";
                         self.stop_plugin();
-                        self.activate_plugin(data[1], data[2:]);
+                        self.lights_off();
+
+                    elif cmd == "list":
+                        statusmsg = "Available plugins: %r" %self.plugins.keys();
+
+                    elif cmd == "refresh":
+                        statusmsg = "Reloading plugins"
+                        self.refresh_plugins();
+
+                    elif cmd == "die":
+                        self.stop_plugin();
+                        self.lights_off();
+                        statusmsg = "Exiting";
+                        print "::  ", statusmsg;  # hack
+                        client.send(statusmsg);   #
+                        self.skt.shutdown(socket.SHUT_RDWR);
+                        self.skt.close();
+                        sys.exit(0);
+
                     else:
-                        statusmsg = "Plugin %s (with args %r) not found)" %(data[1], data[2:]);
+                        statusmsg = "Invalid command";
 
-                elif cmd == "stop":
-                    statusmsg = "Stopping plugin and shutting lights off";
-                    self.stop_plugin();
-                    self.lights_off();
-
-                elif cmd == "list":
-                    statusmsg = "Available plugins: %r" %self.plugins.keys();
-
-                elif cmd == "refresh":
-                    statusmsg = "Reloading plugins"
-                    self.refresh_plugins();
-
-                elif cmd == "die":
-                    self.stop_plugin();
-                    self.lights_off();
-                    statusmsg = "Exiting";
-                    print "::  ", statusmsg;  # hack
-                    client.send(statusmsg);   #
-                    self.skt.shutdown(socket.SHUT_RDWR);
-                    self.skt.close();
-                    sys.exit(0);
-
-                else:
-                    statusmsg = "Invalid command";
-
-            print "::  ", statusmsg;
-            client.send(statusmsg+"\n");
-            client.close();
+                print "::  ", statusmsg;
+                client.send(statusmsg+"\n");
+                client.close();
+            except:
+                print "whoops"
 
     def lights_off(self):
         self.network.cmd([255, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0]);
