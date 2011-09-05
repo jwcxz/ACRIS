@@ -17,7 +17,7 @@ p.add_argument('-m', '--mask', dest='mask', action='store', default=None,
 p.add_argument('-a', '--address', dest='address', action='store', default=None,
         help='set instrument address');
 p.add_argument('-b', '--baud', dest='baud', action='store', default=None,
-        nargs=2, help='set device baud prescale and double');
+        nargs=2, help='set device baud prescale and double', metavar=('baud', 'double'));
 p.add_argument('-p', '--prog', dest='file', action='store', default=None,
         help='program the device');
 
