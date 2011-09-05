@@ -35,7 +35,7 @@ class Acris:
                 client, address = self.skt.accept();
                 print ":: Accepted", address
                 data = client.recv(size);
-                print "::   Received:", data[:-1];
+                print "::   Received:", data.rstrip();
                 if data:
                     # data contains a command and optional arguments
                     data = data.split(None);
