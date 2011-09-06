@@ -55,7 +55,7 @@ class Acris:
                         self.lights_off();
 
                     elif cmd == "list":
-                        statusmsg = "Available plugins: %r" %self.plugins.keys();
+                        statusmsg = "Available plugins: %s" % ' '.join(self.plugins.keys());
 
                     elif cmd == "refresh":
                         statusmsg = "Reloading plugins"
@@ -101,7 +101,7 @@ class Acris:
             reload(_);
             self.plugins[p] = _.Plugin;
 
-        print "-> Refreshed plugins: %r" %self.plugins.keys();
+        print "-> Refreshed plugins: %s" % ' '.join(self.plugins.keys());
 
 
 p = argparse.ArgumentParser(description="The ACRIS Master Server");
