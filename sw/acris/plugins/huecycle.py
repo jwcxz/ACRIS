@@ -27,7 +27,8 @@ class Plugin(backend.plugin.Plugin):
         if len(self.args) >= 2: timedelay = float(self.args[1]);
         else:                   timedelay = 0.05;
 
-        huestep = 1;
+        if len(self.args) >= 3: huestep = float(self.args[2]);
+        else:                   huestep = 1;
 
         while self.enabled:
             rgb = [ [ int(maxv * i) for i in backend.utils.hsv2rgb(hue + x, sat, val) ] for x in phase ];
