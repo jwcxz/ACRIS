@@ -4,7 +4,7 @@ class Plugin(backend.plugin.Plugin):
     def run(self): 
         backend.plugin.Plugin.run(self);
 
-        if len(self.args) >= 1: brightness = self.args[0];
+        if len(self.args) >= 1: brightness = int(self.args[0]);
         else:                   brightness = 200;
 
         if len(self.args) >= 2: offtime = float(self.args[1]);
