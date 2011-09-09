@@ -10,7 +10,7 @@ class Plugin(backend.plugin.Plugin):
         if len(self.args) >= 2: ontime = float(self.args[1]);
         else:                   ontime = .01
 
-        oncmd = [255, 100, 100, 100, 0, 0, 0, 100, 100, 100, 0, 0, 0, 100, 100, 100];
+        oncmd = [255, 220, 220, 220, 0, 0, 0, 220, 220, 220, 0, 0, 0, 220, 220, 220];
         offcmd = [255, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
         while self.enabled:
