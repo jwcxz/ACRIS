@@ -6,4 +6,5 @@ __all__ = [
     'wallset',
     'strobe',
     'doublerainbow',
+    'lavalamp',
     ];
