@@ -5,4 +5,5 @@ __all__ = [
     'setall',
     'wallset',
     'strobe',
+    'doublerainbow',
     ];
