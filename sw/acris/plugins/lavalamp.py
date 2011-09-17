@@ -18,17 +18,20 @@ class Plugin(backend.plugin.Plugin):
         timedelay = 0.05;
         step = 0;
 
+        freq = .08;
         phase = [ 0, 45, 90 ];
         minhue = 240;
         maxhue = 360;
         sat = 1.0;
         val = 100;
 
-        hueamp = (maxhue - minhue)/2;
-        hueoff = minhue + hueamp;
+        #hueamp = (maxhue - minhue)/2;
+        #hueoff = minhue + hueamp;
+        hueamp = maxhue - minhue;
+        hueoff = minue;
 
         while self.enabled:
-            hue = [ hueamp * math.sin(step * freq + p ) + hueoff for p in phase ];
+            hue = [ hueamp * abs(math.sin(step * freq + p )) + hueoff for p in phase ];
 
             rgb = [ [ int(maxv * i) for i in backend.utils.hsv2rgb(h, sat, val) ] for h in hue ];
             
