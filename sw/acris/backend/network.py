@@ -29,7 +29,7 @@ class Network:
     def c(self, v):
         # convert to a value acceptable for input (don't allow sync)
         _ = min(255, max(0, int(v)));
-        if _ == self.SYNC: 
+        if _ == ord(self.SYNC):
             return chr(_+1);
         else:
             return chr(_);
