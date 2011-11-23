@@ -7,3 +7,4 @@ orders/*
 *.lst
 *.o
 tags
+$savepcb*
