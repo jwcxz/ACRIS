@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPCB (2011-07-08)-stable date = Sun 07 Aug 2011 06:13:58 PM EDT
+Cmp-Mod V01 Created by CvPCB (2011-07-08)-stable date = Wed 23 Nov 2011 10:18:29 PM EST
 
 BeginCmp
 TimeStamp = /4DDBFDFD;
@@ -116,14 +116,14 @@ BeginCmp
 TimeStamp = /4E22799E;
 Reference = DA1;
 ValeurCmp = CONN_1;
-IdModule  = SIL-1;
+IdModule  = PIN;
 EndCmp
 
 BeginCmp
 TimeStamp = /4E227975;
 Reference = DB1;
 ValeurCmp = CONN_1;
-IdModule  = SIL-1;
+IdModule  = PIN;
 EndCmp
 
 BeginCmp
@@ -144,126 +144,126 @@ BeginCmp
 TimeStamp = /4E227A07;
 Reference = PINPGND1;
 ValeurCmp = CONN_1;
-IdModule  = SIL-1;
+IdModule  = PIN;
 EndCmp
 
 BeginCmp
 TimeStamp = /4E227A97;
 Reference = PINPLED1;
 ValeurCmp = CONN_1;
-IdModule  = SIL-1;
+IdModule  = PIN;
 EndCmp
 
 BeginCmp
 TimeStamp = /4E2279DE;
 Reference = PINPLGC1;
 ValeurCmp = CONN_1;
-IdModule  = SIL-1;
+IdModule  = PIN;
 EndCmp
 
 BeginCmp
 TimeStamp = /4DDBFD65;
 Reference = PLEDVCC1;
 ValeurCmp = CONN_1;
-IdModule  = SIL-1;
+IdModule  = PIN;
 EndCmp
 
 BeginCmp
 TimeStamp = /4DDC562B;
 Reference = PLEDVCC2;
 ValeurCmp = CONN_1;
-IdModule  = SIL-1;
+IdModule  = PIN;
 EndCmp
 
 BeginCmp
 TimeStamp = /4DDC55C5;
 Reference = PLEDVCC3;
 ValeurCmp = CONN_1;
-IdModule  = SIL-1;
+IdModule  = PIN;
 EndCmp
 
 BeginCmp
 TimeStamp = /4DDC5615;
 Reference = PLEDVCC4;
 ValeurCmp = CONN_1;
-IdModule  = SIL-1;
+IdModule  = PIN;
 EndCmp
 
 BeginCmp
 TimeStamp = /4E22FD34;
 Reference = PLEDVCC5;
 ValeurCmp = CONN_1;
-IdModule  = SIL-1;
+IdModule  = PIN;
 EndCmp
 
 BeginCmp
 TimeStamp = /4E22FCBD;
 Reference = PMISO1;
 ValeurCmp = CONN_1;
-IdModule  = SIL-1;
+IdModule  = PIN;
 EndCmp
 
 BeginCmp
 TimeStamp = /4E22FC70;
 Reference = PMOSI1;
 ValeurCmp = CONN_1;
-IdModule  = SIL-1;
+IdModule  = PIN;
 EndCmp
 
 BeginCmp
 TimeStamp = /4D1A6533;
 Reference = PO0;
 ValeurCmp = CONN_1;
-IdModule  = SIL-1;
+IdModule  = PIN;
 EndCmp
 
 BeginCmp
 TimeStamp = /4D1A653B;
 Reference = PO1;
 ValeurCmp = CONN_1;
-IdModule  = SIL-1;
+IdModule  = PIN;
 EndCmp
 
 BeginCmp
 TimeStamp = /4D1A653F;
 Reference = PO2;
 ValeurCmp = CONN_1;
-IdModule  = SIL-1;
+IdModule  = PIN;
 EndCmp
 
 BeginCmp
 TimeStamp = /4D1A6541;
 Reference = PO3;
 ValeurCmp = CONN_1;
-IdModule  = SIL-1;
+IdModule  = PIN;
 EndCmp
 
 BeginCmp
 TimeStamp = /4D1A6543;
 Reference = PO4;
 ValeurCmp = CONN_1;
-IdModule  = SIL-1;
+IdModule  = PIN;
 EndCmp
 
 BeginCmp
 TimeStamp = /4E2304DA;
 Reference = PPGMLGC1;
 ValeurCmp = CONN_1;
-IdModule  = SIL-1;
+IdModule  = PIN;
 EndCmp
 
 BeginCmp
 TimeStamp = /4E22FC9E;
 Reference = PSCK1;
 ValeurCmp = CONN_1;
-IdModule  = SIL-1;
+IdModule  = PIN;
 EndCmp
 
 BeginCmp
 TimeStamp = /4DDC28A6;
 Reference = PX1;
 ValeurCmp = CONN_1;
-IdModule  = SIL-1;
+IdModule  = PIN;
 EndCmp
 
 BeginCmp
@@ -319,6 +319,13 @@ BeginCmp
 TimeStamp = /4DDC2CAC;
 Reference = R10;
 ValeurCmp = 120;
+IdModule  = SMB-0402;
+EndCmp
+
+BeginCmp
+TimeStamp = /4ECDB369;
+Reference = R11;
+ValeurCmp = 10K;
 IdModule  = SMB-0402;
 EndCmp
 

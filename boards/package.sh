@@ -8,6 +8,12 @@ ps2pdf ledctrlr/ledctrlr.ps ledctrlr/ledctrlr.pdf
 ps2pdf ledmini/ledmini.ps ledmini/ledmini.pdf
 
 
+# convert brd pdf
+inkscape -z -D -b '#000000' -y 255 -d 600 -e commbrd/commbrd-brd.png commbrd/commbrd-brd.svg
+inkscape -z -D -b '#000000' -y 255 -d 600 -e ledctrlr/ledctrlr-brd.png ledctrlr/ledctrlr-brd.svg
+inkscape -z -D -b '#000000' -y 255 -d 600 -e ledmini/ledmini-brd.png ledmini/ledmini-brd.svg
+
+
 # fix BOM headings
 ./exportbom.sh commbrd/commbrd-bom.csv
 ./exportbom.sh ledctrlr/ledctrlr-bom.csv
@@ -16,19 +22,23 @@ ps2pdf ledmini/ledmini.ps ledmini/ledmini.pdf
 
 # make thumbnails
 convert -resize 400 -density 400 commbrd/commbrd.pdf commbrd/commbrd.png
-convert -resize 400 -density 400 commbrd/commbrd-brd.pdf commbrd/commbrd-brd.png 
+convert -resize 400 -density 400 commbrd/commbrd-brd.png commbrd/commbrd-brd_t.png 
 
 convert -resize 400 -density 400 ledctrlr/ledctrlr.pdf ledctrlr/ledctrlr.png
-convert -resize 400 -density 400 ledctrlr/ledctrlr-brd.pdf ledctrlr/ledctrlr-brd.png
+convert -resize 400 -density 400 ledctrlr/ledctrlr-brd.png ledctrlr/ledctrlr-brd_t.png
 
 convert -resize 400 -density 400 ledmini/ledmini.pdf ledmini/ledmini.png
-convert -resize 400 -density 400 ledmini/ledmini-brd.pdf ledmini/ledmini-brd.png
+convert -resize 400 -density 400 ledmini/ledmini-brd.png ledmini/ledmini-brd_t.png
 
 
 # copy relevant individual files
-cp commbrd/commbrd{,-brd}.{pdf,png} export/
-cp ledctrlr/ledctrlr{,-brd}.{pdf,png} export/
-cp ledmini/ledmini{,-brd}.{pdf,png} export/
+cp commbrd/commbrd.{pdf,png} export/
+cp ledctrlr/ledctrlr.{pdf,png} export/
+cp ledmini/ledmini.{pdf,png} export/
+
+cp commbrd/commbrd-brd*.png export/
+cp ledctrlr/ledctrlr-brd*.png export/
+cp ledmini/ledmini-brd*.png export/
 
 cp commbrd/commbrd-bom.csv export/
 cp ledctrlr/ledctrlr-bom.csv export/

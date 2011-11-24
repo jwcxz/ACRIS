@@ -1,5 +1,5 @@
 M48
-;DRILL file {PCBnew (2011-07-08)-stable} date Wed 10 Aug 2011 10:39:43 PM EDT
+;DRILL file {PCBnew (2011-07-08)-stable} date Wed 23 Nov 2011 11:36:52 PM EST
 ;FORMAT={-:-/ absolute / inch / decimal}
 FMAT,2
 INCH,TZ
@@ -14,6 +14,7 @@ M72
 T1
 X1.661Y-3.106
 X1.708Y-3.311
+X1.760Y-3.220
 X1.771Y-3.090
 X1.857Y-3.114
 X1.870Y-2.720
