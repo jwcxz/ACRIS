@@ -1,0 +1,304 @@
+# EESchema Netlist Version 1.1 created  Fri 25 Nov 2011 03:30:01 PM EST
+(
+ ( /4ECF2EE2 SM0603  C4 10nF {Lib=C}
+  (    1 N-000034 )
+  (    2 GND )
+ )
+ ( /4ECF2CED USB-A-PLUG  J1 USB-A-PLUG {Lib=USB-A-PLUG}
+  (    1 N-000034 )
+  (    2 N-000022 )
+  (    3 N-000036 )
+  (    4 GND )
+ )
+ ( /4E3ED1CD SM0603  FB1 FILTER {Lib=FILTER}
+  (    1 N-000034 )
+  (    2 VCC )
+ )
+ ( /4DE32EA5 SIL-1  PTXD1 CONN_1 {Lib=CONN_1}
+  (    1 N-000004 )
+ )
+ ( /4DE32E8C SIL-1  PRXD1 CONN_1 {Lib=CONN_1}
+  (    1 N-000029 )
+ )
+ ( /4DE32C26 SM1206  D1 LED {Lib=LED}
+  (    1 VCC )
+  (    2 N-000005 )
+ )
+ ( /4DE32BAB SM0805  R1 1K {Lib=R}
+  (    1 GND )
+  (    2 N-000005 )
+ )
+ ( /4DE3186E SIL-1  PGND1 CONN_1 {Lib=CONN_1}
+  (    1 GND )
+ )
+ ( /4DE3185C SIL-1  PVCC1 CONN_1 {Lib=CONN_1}
+  (    1 VCC )
+ )
+ ( /4DE31580 RJ45_8  J2 RJ45 {Lib=RJ45}
+  (    1 N-000006 )
+  (    2 N-000037 )
+  (    3 N-000007 )
+  (    4 N-000001 )
+  (    5 N-000008 )
+  (    6 N-000002 )
+  (    7 N-000009 )
+  (    8 N-000035 )
+  (    9 ? )
+ )
+ ( /4DE3156D RJ45_8  J3 RJ45 {Lib=RJ45}
+  (    1 N-000006 )
+  (    2 N-000037 )
+  (    3 N-000007 )
+  (    4 N-000001 )
+  (    5 N-000008 )
+  (    6 N-000002 )
+  (    7 N-000009 )
+  (    8 N-000035 )
+  (    9 ? )
+ )
+ ( /4DE31533 SM0805  R4 120 {Lib=R}
+  (    1 N-000037 )
+  (    2 N-000006 )
+ )
+ ( /4DE3120F LED-1206  D3 LED {Lib=LED}
+  (    1 N-000026 )
+  (    2 N-000018 )
+ )
+ ( /4DE31208 LED-1206  D2 LED {Lib=LED}
+  (    1 N-000027 )
+  (    2 N-000011 )
+ )
+ ( /4DE311FF SM0805  R3 1K {Lib=R}
+  (    1 VCC )
+  (    2 N-000026 )
+ )
+ ( /4DE311FC SM0805  R2 1K {Lib=R}
+  (    1 VCC )
+  (    2 N-000027 )
+ )
+ ( /4DE311E4 SM0805  C2 4.7uF {Lib=CP1}
+  (    1 VCC )
+  (    2 GND )
+ )
+ ( /4DE311CF SM0805  C3 0.1uF {Lib=C}
+  (    1 N-000028 )
+  (    2 GND )
+ )
+ ( /4DE311CC SM0805  C1 0.1uF {Lib=C}
+  (    1 VCC )
+  (    2 GND )
+ )
+ ( /4DE311AD SOIC8  U2 SN75176B {Lib=SN75176B}
+  (    1 N-000004 )
+  (    2 N-000019 )
+  (    3 N-000019 )
+  (    4 N-000029 )
+  (    5 GND )
+  (    6 N-000037 )
+  (    7 N-000006 )
+  (    8 VCC )
+ )
+ ( /4DE3118E SSOP28  U1 FT232RL {Lib=FT232RL}
+  (    1 N-000004 )
+  (    2 ? )
+  (    3 ? )
+  (    4 VCC )
+  (    5 N-000029 )
+  (    6 ? )
+  (    7 GND )
+  (    8 ? )
+  (    9 ? )
+  (   10 ? )
+  (   11 ? )
+  (   12 ? )
+  (   13 N-000019 )
+  (   14 ? )
+  (   15 N-000036 )
+  (   16 N-000022 )
+  (   17 N-000028 )
+  (   18 GND )
+  (   19 ? )
+  (   20 VCC )
+  (   21 GND )
+  (   22 N-000018 )
+  (   23 N-000011 )
+  (   24 ? )
+  (   25 GND )
+  (   26 GND )
+  (   27 ? )
+  (   28 ? )
+ )
+)
+*
+{ Allowed footprints by component:
+$component C4
+ SM*
+ C?
+ C1-1
+$endlist
+$component D1
+ LED-3MM
+ LED-5MM
+ LED-10MM
+ LED-0603
+ LED-0805
+ LED-1206
+ LEDV
+$endlist
+$component R1
+ R?
+ SM0603
+ SM0805
+ R?-*
+$endlist
+$component R4
+ R?
+ SM0603
+ SM0805
+ R?-*
+$endlist
+$component D3
+ LED-3MM
+ LED-5MM
+ LED-10MM
+ LED-0603
+ LED-0805
+ LED-1206
+ LEDV
+$endlist
+$component D2
+ LED-3MM
+ LED-5MM
+ LED-10MM
+ LED-0603
+ LED-0805
+ LED-1206
+ LEDV
+$endlist
+$component R3
+ R?
+ SM0603
+ SM0805
+ R?-*
+$endlist
+$component R2
+ R?
+ SM0603
+ SM0805
+ R?-*
+$endlist
+$component C2
+ CP*
+ SM*
+$endlist
+$component C3
+ SM*
+ C?
+ C1-1
+$endlist
+$component C1
+ SM*
+ C?
+ C1-1
+$endlist
+$component U2
+ DIL-8
+$endlist
+$endfootprintlist
+}
+{ Pin List by Nets
+Net 1 "" ""
+ J3 4
+ J2 4
+Net 2 "" ""
+ J3 6
+ J2 6
+Net 4 "" ""
+ U1 1
+ U2 1
+ PTXD1 1
+Net 5 "" ""
+ R1 2
+ D1 2
+Net 6 "" ""
+ J2 1
+ J3 1
+ U2 7
+ R4 2
+Net 7 "" ""
+ J3 3
+ J2 3
+Net 8 "" ""
+ J3 5
+ J2 5
+Net 9 "" ""
+ J3 7
+ J2 7
+Net 11 "" ""
+ U1 23
+ D2 2
+Net 18 "" ""
+ D3 2
+ U1 22
+Net 19 "" ""
+ U1 13
+ U2 2
+ U2 3
+Net 22 "" ""
+ U1 16
+ J1 2
+Net 26 "" ""
+ D3 1
+ R3 2
+Net 27 "" ""
+ D2 1
+ R2 2
+Net 28 "" ""
+ U1 17
+ C3 1
+Net 29 "" ""
+ PRXD1 1
+ U1 5
+ U2 4
+Net 30 "GND" "GND"
+ PGND1 1
+ U1 21
+ R1 1
+ C4 2
+ C2 2
+ C3 2
+ J1 4
+ U1 7
+ U2 5
+ C1 2
+ U1 18
+ U1 26
+ U1 25
+Net 31 "VCC" "VCC"
+ C1 1
+ C2 1
+ R2 1
+ R3 1
+ U1 20
+ U1 4
+ FB1 2
+ PVCC1 1
+ U2 8
+ D1 1
+Net 34 "" ""
+ FB1 1
+ J1 1
+ C4 1
+Net 35 "" ""
+ J3 8
+ J2 8
+Net 36 "" ""
+ J1 3
+ U1 15
+Net 37 "" ""
+ J3 2
+ J2 2
+ R4 1
+ U2 6
+}
+#End
