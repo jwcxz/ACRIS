@@ -7,4 +7,5 @@ __all__ = [
     'strobe',
     'doublerainbow',
     'lavalamp',
+    'keepalive',
     ];
