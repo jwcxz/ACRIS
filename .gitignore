@@ -8,3 +8,4 @@ orders/*
 *.o
 tags
 $savepcb*
+*.swp

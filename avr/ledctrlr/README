@@ -1,0 +1,16 @@
+This is the main LED controller application that is run on the AVR.
+Essentially, it takes input from the RS-485 network and then converts it to a
+stream of serial data for the TLC5940 serial inputs.
+
+
+Serial format:
+    [SYNC][ADDR][LED0RED][LED0GRN][LED0BLU][LED1RED][LED1GRN][LED1BLU]...[LED4RED][LED4GRN][LED4BLU]
+
+
+Addressing:
+    Each device should have a unique address from 0x00 to 0xEF.  0xF0-0xFF are
+    reserved for awesomeness.
+
+    Essentially (and this goes for the bootloader too), if you try to operate
+    on 0xF0, it will actually operate on all devices from 0x00 through 0x0F.
+    If you try to operate on 0xF1, it will actually affect 0x10 through 0x1F.

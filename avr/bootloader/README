@@ -1,0 +1,56 @@
+More information:
+    http://jwcxz.com/projects/acris/bootloader.php
+
+
+This bootloader provides the following features:
+    1. fast startup time (i.e. bootloader->application time)
+    2. downloading of program to device
+    3. set address of instrument
+    4. set the transmission baud rate (via the divisor)
+    5. set a mask (only operate on some devices)
+    6. view the instrument address on the debug LEDs
+    7. program verification (not ready)
+
+
+Transmission is done through a serial protocol:
+    [SYNC][CMD][ARG0][ARG1]...[ARGn]
+
+    Fn  Args    Description
+    ___ _______ ____________________________________________________
+    170 0       SYNC -- start of a packet
+
+    N   0       NOP -- sent to wake bootloader up
+
+    A   1       Set 1-byte address of the device in EEPROM
+
+    B   2       [High][Low][Double?] -- set divisor and U2XN of the UART in EEPROM
+
+    D   0       Show the high nibble of the instrument address on the debug LEDs
+
+    E   0       Show the low nibble of the instrument address on the debug LEDs
+
+    M   1       [InstAddr] Instrument address to work with for all following commands
+                    0xFF - all instruments
+                    0xF0-0xFE - blocks of 16
+
+    P   2       [Addr][Page...] - Send program one page at a time
+                    To simplify the bootloader, it does NOT take an Intel HEX
+                    file as an input.  Rather, a special "program" script reads
+                    the HEX file and outputs the following format:
+                        [Starting Address][Page][Checksum]
+                    The checksum is the one's complement of the sum of the
+                    page stream.
+
+                    Note: this means that the stream length depends on the page
+                    size (whereas Intel HEX files have known lengths).
+                    Furthermore, it requires that unused bytes be 0-filled or
+                    something.  I'd rather make the programmer
+
+    R   0       BOOT - boot the application
+
+
+TODO:
+    1.  Write the verification step
+    2.  Allow reading bytes from EEPROM to debug LEDs
+    3.  Decide whether to modify the bootloader to be able to write to and read
+        from any EEPROM address
