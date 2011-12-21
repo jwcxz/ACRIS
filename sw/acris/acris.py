@@ -36,6 +36,7 @@ class Acris:
                 print ":: Accepted", address
                 data = client.recv(size);
                 print "::   Received:", data.rstrip();
+                statusmsg = "";
                 if data:
                     # data contains a command and optional arguments
                     data = data.split(None);
