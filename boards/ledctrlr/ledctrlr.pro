@@ -1,4 +1,4 @@
-update=Sun 17 Jul 2011 03:53:03 PM EDT
+update=Mon 28 Nov 2011 02:22:00 PM EST
 version=1
 last_client=pcbnew
 [cvpcb]
@@ -85,11 +85,10 @@ LibName34=SparkFun
 version=1
 [pcbnew]
 version=1
-PadDrlX=320
-PadDimH=600
-PadDimV=600
+PadDrlX=531
+PadDimH=984
+PadDimV=984
 BoardThickness=630
-SgPcb45=1
 TxtPcbV=800
 TxtPcbH=600
 TxtModV=600
@@ -118,3 +117,4 @@ LibName12=Elko_ThroughHole_RevA
 LibName13=w_smd_dil
 LibName14=soic8
 LibName15=Crystals_RevA_09Aug2010
+LibName16=osttaxx0161
