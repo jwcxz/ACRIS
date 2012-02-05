@@ -34,4 +34,5 @@ void dbg_init(void) {
     // this requires the debug bank to be the bottom 4 bits of a bank
     // TODO: make it more advanced
     DBGLED_DDR |= 0x0F;
+    DBGLED_PRT &= 0xF0; // clear leds
 }

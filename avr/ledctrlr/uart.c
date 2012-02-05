@@ -45,9 +45,7 @@ uint8_t uart_rx(void) {
 	unsigned char tmp;
     cli();
 
-    // now that interrupts are shut off before reading, don't wait for the
-    // rxbuf to get filled
-	//while ( uart_rxbuf_count == 0 );
+	while ( uart_rxbuf_count == 0 );
 
 	tmp = *uart_rxbuf_optr;
 	uart_rxbuf_count--;
@@ -83,10 +81,9 @@ void uart_tx(uint8_t data) {
 ISR(USART_RX_vect) {
 	unsigned char data;
 
-    if( UCSR0A & _BV(UPE0) ) {
+    if ( UCSR0A & _BV(UPE0) ) {
         // parity error
         dbg_on(DBG_PRTYERR);
-        // XXX: check frame errors and data overrun errors (FE0 and DOR0)
     } else {
         data = UDR0;
 
