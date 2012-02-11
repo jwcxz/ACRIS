@@ -1,6 +1,6 @@
 import backend.controller
 
-class WallSconce(backend.controller.Controller):
+class HKNBoard(backend.controller.Controller):
     """ these are the LED boards I created to demo ACRIS at the HKN expo """
 
     def each(self, top, center, bottom):
