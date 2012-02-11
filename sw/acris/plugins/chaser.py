@@ -48,7 +48,7 @@ class Plugin(backend.plugin.Plugin):
             self.right.all(rgbs[-1]);
             # now the hkn boards
             for i in xrange(0, self.numleds-2, 3):
-                self.hkns[i].each(rgb[i], rgb[i+1], rgb[i+2]);
+                self.hkns[i].each(rgbs[i], rgbs[i+1], rgbs[i+2]);
 
             # prepare to apply new step
             time.sleep(timedelay);
