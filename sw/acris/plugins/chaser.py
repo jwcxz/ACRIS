@@ -4,7 +4,7 @@ import backend.plugin
 import backend.utils
 
 import controllers.wallsconce
-import controllers.hknboards
+import controllers.hknboard
 
 class Plugin(backend.plugin.Plugin):
     def __init__(self, network, args):
@@ -13,7 +13,7 @@ class Plugin(backend.plugin.Plugin):
         self.left = controllers.wallsconce.WallSconce(network, 1);
         self.right = controllers.wallsconce.WallSconce(network, 0);
 
-        self.hkns = [ controllers.hknboards.HKNBoard(network, 0x30 + i) for i in xrange(4) ];
+        self.hkns = [ controllers.hknboard.HKNBoard(network, 0x30 + i) for i in xrange(4) ];
         self.numleds = 2+9;
 
     def run(self):
