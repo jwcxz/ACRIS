@@ -3,7 +3,7 @@
 cd `dirname $0`
 
 echo "Press ^C to stop"
-./bootloader.py -n
+./bootloader.py -P /dev/ttyS0 -n
 
 echo "Programming..."
-./bootloader.py -p $@
+./bootloader.py -P /dev/ttyS0 -p $@

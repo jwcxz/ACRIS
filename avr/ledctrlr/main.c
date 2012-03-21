@@ -37,13 +37,13 @@ uint8_t* argptr = args; //   ... associated pointer
 static uint8_t cmdstate;
 
 int main(void) {
+    // initialize debug LEDs
+    dbg_init();
+
     // initialize TLC
     tlc_init();
     // set everything off
     tlc_drive();
-
-    // initialize debug LEDs
-    dbg_init();
 
     // get the address of the device
     instaddr = get_addr();
@@ -52,23 +52,36 @@ int main(void) {
     uart_init();
 
     // show address of the device on the debug LEDs
-    dbg_set(0xFF);
-    _delay_ms(100);
-    show_addr();
-
+    dbg_set(0x0);
+    //_delay_ms(100);
+    //show_addr();
+    
     // enable interrupts
     sei();
     rxen = 1;
 
+    uint8_t i = 0;
+
     while (1) {
+        if ( UCSR0A & (_BV(FE0) | _BV(DOR0) | _BV(UPE0)) ) {
+            cli();
+            // reset the UART
+            UCSR0B = 0;
+            UCSR0B = _BV(RXCIE0) | _BV(RXEN0);
+            sei();
+        }
+
         if ( rxen == 0 && uart_rxbuf_count < UART_RX_BUFSZ/2 ) {
             // buffer has been partially depleted, so we can start accepting
             // data again
+            dbg_off(DBG_OVFLWERR);
             rxen = 1;
             sei();
         }
 
-        if ( uart_data_rdy() ) receive_data();
+        if ( uart_data_rdy() ) {
+            receive_data();
+        }
     }
 
 	return 0;
@@ -78,7 +91,7 @@ void receive_data(void) {
     unsigned char inbyte;
 
     inbyte = uart_rx();
-    dbg_set(inbyte&0xF);
+    dbg_set(inbyte);
 
     if ( inbyte == CMD_SYNC )  {
         // the sync byte is always treated as a trigger to reset the state

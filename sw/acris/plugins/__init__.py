@@ -8,4 +8,6 @@ __all__ = [
     'doublerainbow',
     'lavalamp',
     'keepalive',
+    'vumeter',
+    'chaser',
     ];
