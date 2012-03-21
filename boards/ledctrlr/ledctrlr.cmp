@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPcb (2012-03-17 BZR 3466)-stable date = Wed 21 Mar 2012 01:41:52 PM EDT
+Cmp-Mod V01 Created by PcbNew date = Wed 21 Mar 2012 06:05:17 PM EDT
 
 BeginCmp
 TimeStamp = /4DDBFDFD;
@@ -81,35 +81,35 @@ BeginCmp
 TimeStamp = /4DDC03FC;
 Reference = D1;
 ValeurCmp = LED;
-IdModule  = LED-1206;
+IdModule  = LED-1206-3D;
 EndCmp
 
 BeginCmp
 TimeStamp = /4DDC0B98;
 Reference = D2;
 ValeurCmp = LED;
-IdModule  = LED-1206;
+IdModule  = LED-1206-3D;
 EndCmp
 
 BeginCmp
 TimeStamp = /4DDC0C44;
 Reference = D3;
 ValeurCmp = LED;
-IdModule  = LED-1206;
+IdModule  = LED-1206-3D;
 EndCmp
 
 BeginCmp
 TimeStamp = /4DDC0C6F;
 Reference = D4;
 ValeurCmp = LED;
-IdModule  = LED-1206;
+IdModule  = LED-1206-3D;
 EndCmp
 
 BeginCmp
 TimeStamp = /4DDC0C78;
 Reference = D5;
 ValeurCmp = LED;
-IdModule  = LED-1206;
+IdModule  = LED-1206-3D;
 EndCmp
 
 BeginCmp
@@ -123,7 +123,7 @@ BeginCmp
 TimeStamp = /4D1A428B;
 Reference = IC2;
 ValeurCmp = SN75176B;
-IdModule  = DIP-8__300;
+IdModule  = SOIC8;
 EndCmp
 
 BeginCmp
@@ -361,28 +361,28 @@ BeginCmp
 TimeStamp = /4D1A4475;
 Reference = TLC1;
 ValeurCmp = TLC5940;
-IdModule  = DIP-28__300;
+IdModule  = tssop-28-thermal;
 EndCmp
 
 BeginCmp
 TimeStamp = /4D1A469F;
 Reference = TLC2;
 ValeurCmp = TLC5940;
-IdModule  = DIP-28__300;
+IdModule  = tssop-28-thermal;
 EndCmp
 
 BeginCmp
 TimeStamp = /4D1A46AA;
 Reference = TLC3;
 ValeurCmp = TLC5940;
-IdModule  = DIP-28__300;
+IdModule  = tssop-28-thermal;
 EndCmp
 
 BeginCmp
 TimeStamp = /4DDBFCAC;
 Reference = U1;
 ValeurCmp = LM7805;
-IdModule  = LM78XXV;
+IdModule  = LM78XXV-3D;
 EndCmp
 
 BeginCmp

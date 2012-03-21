@@ -1,4 +1,4 @@
-update=Mon 28 Nov 2011 02:22:00 PM EST
+update=Wed 21 Mar 2012 06:03:48 PM EDT
 version=1
 last_client=pcbnew
 [cvpcb]
@@ -85,9 +85,10 @@ LibName34=SparkFun
 version=1
 [pcbnew]
 version=1
+LastNetListRead=ledctrlr.net
 PadDrlX=531
-PadDimH=984
-PadDimV=984
+PadDimH=531
+PadDimV=531
 BoardThickness=630
 TxtPcbV=800
 TxtPcbH=600
@@ -99,7 +100,6 @@ DrawLar=150
 EdgeLar=150
 TxtLar=120
 MSegLar=150
-LastNetListRead=ledctrlr.net
 [pcbnew/libraries]
 LibDir=../libs
 LibName1=sockets
@@ -118,3 +118,6 @@ LibName13=w_smd_dil
 LibName14=soic8
 LibName15=Crystals_RevA_09Aug2010
 LibName16=osttaxx0161
+LibName17=tssop-28-thermal
+LibName18=led-1206-3d
+LibName19=lm78xxv-3d
