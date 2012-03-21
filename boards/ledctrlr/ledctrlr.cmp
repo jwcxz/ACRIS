@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPCB (2011-07-08)-stable date = Wed 23 Nov 2011 12:11:19 PM EST
+Cmp-Mod V01 Created by CvPcb (2012-03-17 BZR 3466)-stable date = Wed 21 Mar 2012 01:41:52 PM EDT
 
 BeginCmp
 TimeStamp = /4DDBFDFD;
@@ -162,10 +162,38 @@ IdModule  = SM1206;
 EndCmp
 
 BeginCmp
-TimeStamp = /4DDBFF64;
-Reference = JP2;
-ValeurCmp = JUMPER;
-IdModule  = SM1206;
+TimeStamp = /4F6A108A;
+Reference = LED0;
+ValeurCmp = CONN_4;
+IdModule  = OSTTA040161;
+EndCmp
+
+BeginCmp
+TimeStamp = /4F6A1097;
+Reference = LED1;
+ValeurCmp = CONN_4;
+IdModule  = OSTTA040161;
+EndCmp
+
+BeginCmp
+TimeStamp = /4F6A109D;
+Reference = LED2;
+ValeurCmp = CONN_4;
+IdModule  = OSTTA040161;
+EndCmp
+
+BeginCmp
+TimeStamp = /4F6A10A3;
+Reference = LED3;
+ValeurCmp = CONN_4;
+IdModule  = OSTTA040161;
+EndCmp
+
+BeginCmp
+TimeStamp = /4F6A10A9;
+Reference = LED4;
+ValeurCmp = CONN_4;
+IdModule  = OSTTA040161;
 EndCmp
 
 BeginCmp
@@ -199,139 +227,6 @@ EndCmp
 BeginCmp
 TimeStamp = /4DDEAE72;
 Reference = PCRNR4;
-ValeurCmp = CONN_1;
-IdModule  = 1pin;
-EndCmp
-
-BeginCmp
-TimeStamp = /4D1A6559;
-Reference = PLEDB0;
-ValeurCmp = CONN_1;
-IdModule  = 1pin;
-EndCmp
-
-BeginCmp
-TimeStamp = /4D1A655E;
-Reference = PLEDB1;
-ValeurCmp = CONN_1;
-IdModule  = 1pin;
-EndCmp
-
-BeginCmp
-TimeStamp = /4D1A6560;
-Reference = PLEDB2;
-ValeurCmp = CONN_1;
-IdModule  = 1pin;
-EndCmp
-
-BeginCmp
-TimeStamp = /4D1A6562;
-Reference = PLEDB3;
-ValeurCmp = CONN_1;
-IdModule  = 1pin;
-EndCmp
-
-BeginCmp
-TimeStamp = /4D1A6587;
-Reference = PLEDB4;
-ValeurCmp = CONN_1;
-IdModule  = 1pin;
-EndCmp
-
-BeginCmp
-TimeStamp = /4D1A6549;
-Reference = PLEDG0;
-ValeurCmp = CONN_1;
-IdModule  = 1pin;
-EndCmp
-
-BeginCmp
-TimeStamp = /4D1A654E;
-Reference = PLEDG1;
-ValeurCmp = CONN_1;
-IdModule  = 1pin;
-EndCmp
-
-BeginCmp
-TimeStamp = /4D1A6550;
-Reference = PLEDG2;
-ValeurCmp = CONN_1;
-IdModule  = 1pin;
-EndCmp
-
-BeginCmp
-TimeStamp = /4D1A6552;
-Reference = PLEDG3;
-ValeurCmp = CONN_1;
-IdModule  = 1pin;
-EndCmp
-
-BeginCmp
-TimeStamp = /4D1A6581;
-Reference = PLEDG4;
-ValeurCmp = CONN_1;
-IdModule  = 1pin;
-EndCmp
-
-BeginCmp
-TimeStamp = /4D1A6533;
-Reference = PLEDR0;
-ValeurCmp = CONN_1;
-IdModule  = 1pin;
-EndCmp
-
-BeginCmp
-TimeStamp = /4D1A653B;
-Reference = PLEDR1;
-ValeurCmp = CONN_1;
-IdModule  = 1pin;
-EndCmp
-
-BeginCmp
-TimeStamp = /4D1A653F;
-Reference = PLEDR2;
-ValeurCmp = CONN_1;
-IdModule  = 1pin;
-EndCmp
-
-BeginCmp
-TimeStamp = /4D1A6541;
-Reference = PLEDR3;
-ValeurCmp = CONN_1;
-IdModule  = 1pin;
-EndCmp
-
-BeginCmp
-TimeStamp = /4D1A6543;
-Reference = PLEDR4;
-ValeurCmp = CONN_1;
-IdModule  = 1pin;
-EndCmp
-
-BeginCmp
-TimeStamp = /4DDBFD65;
-Reference = PLEDVCC1;
-ValeurCmp = CONN_1;
-IdModule  = 1pin;
-EndCmp
-
-BeginCmp
-TimeStamp = /4DDC562B;
-Reference = PLEDVCC2;
-ValeurCmp = CONN_1;
-IdModule  = 1pin;
-EndCmp
-
-BeginCmp
-TimeStamp = /4DDC55C5;
-Reference = PLEDVCC3;
-ValeurCmp = CONN_1;
-IdModule  = 1pin;
-EndCmp
-
-BeginCmp
-TimeStamp = /4DDC5615;
-Reference = PLEDVCC4;
 ValeurCmp = CONN_1;
 IdModule  = 1pin;
 EndCmp
