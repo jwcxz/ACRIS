@@ -9,3 +9,4 @@ orders/*
 tags
 $savepcb*
 *.swp
+upload.sh

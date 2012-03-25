@@ -1,4 +1,4 @@
-update=Sat 24 Mar 2012 05:50:05 PM EDT
+update=Sun 25 Mar 2012 02:38:30 PM EDT
 version=1
 last_client=pcbnew
 [cvpcb]
@@ -99,7 +99,7 @@ VEgarde=100
 DrawLar=150
 EdgeLar=150
 TxtLar=120
-MSegLar=150
+MSegLar=130
 [pcbnew/libraries]
 LibDir=../libs
 LibName1=sockets
@@ -122,3 +122,4 @@ LibName17=tssop-28-thermal
 LibName18=led-1206-3d
 LibName19=lm78xxv-3d
 LibName20=pin
+LibName21=screw

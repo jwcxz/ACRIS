@@ -1,7 +1,7 @@
 (export (version D)
   (design
     (source /home/j/projects/acris/boards/ledctrlr/ledctrlr.sch)
-    (date "Sat 24 Mar 2012 08:57:30 PM EDT")
+    (date "Sat 24 Mar 2012 09:45:11 PM EDT")
     (tool "eeschema (2012-03-17 BZR 3466)-stable"))
   (components
     (comp (ref TLC1)
@@ -125,8 +125,8 @@
       (value 100uF)
       (footprint Elko_vert_DM7-5_RM2-5)
       (fields
-        (field (name Part) ECA-1CM470)
-        (field (name DigikeyPart) P5137-ND))
+        (field (name Part) ESK107M025AE3AA)
+        (field (name DigikeyPart) 399-6103-ND))
       (libsource (lib device) (part CP1))
       (sheetpath (names /) (tstamps /))
       (tstamp 4DDC21B3))

@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPcb (2012-03-17 BZR 3466)-stable date = Sat 24 Mar 2012 08:44:05 PM EDT
+Cmp-Mod V01 Created by CvPcb (2012-03-17 BZR 3466)-stable date = Sun 25 Mar 2012 02:40:11 PM EDT
 
 BeginCmp
 TimeStamp = /4DDBFE8A;
@@ -172,28 +172,28 @@ BeginCmp
 TimeStamp = /4DDEAE64;
 Reference = PCRNR1;
 ValeurCmp = CONN_1;
-IdModule  = 1pin;
+IdModule  = screw;
 EndCmp
 
 BeginCmp
 TimeStamp = /4DDEAE6E;
 Reference = PCRNR2;
 ValeurCmp = CONN_1;
-IdModule  = 1pin;
+IdModule  = screw;
 EndCmp
 
 BeginCmp
 TimeStamp = /4DDEAE70;
 Reference = PCRNR3;
 ValeurCmp = CONN_1;
-IdModule  = 1pin;
+IdModule  = screw;
 EndCmp
 
 BeginCmp
 TimeStamp = /4DDEAE72;
 Reference = PCRNR4;
 ValeurCmp = CONN_1;
-IdModule  = 1pin;
+IdModule  = screw;
 EndCmp
 
 BeginCmp
