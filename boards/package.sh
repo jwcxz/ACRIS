@@ -12,7 +12,7 @@ for board in commbrd commdngl ledctrlr ledmini; do
     inkscape -z -D -b '#000000' -y 255 -d 600 -e $board/${board}-brd.png $board/${board}-brd.svg
 
     # fix BOM headings
-    ./exportbom.sh ${board}/${board}-bom.csv
+    ./exportbom.sh ${board}/${board}.csv
 
     # make thumbnails
     convert -resize 400 -density 400 $board/${board}.pdf $board/${board}.png

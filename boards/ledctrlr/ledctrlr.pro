@@ -1,4 +1,4 @@
-update=Wed 21 Mar 2012 06:03:48 PM EDT
+update=Sat 24 Mar 2012 05:50:05 PM EDT
 version=1
 last_client=pcbnew
 [cvpcb]
@@ -121,3 +121,4 @@ LibName16=osttaxx0161
 LibName17=tssop-28-thermal
 LibName18=led-1206-3d
 LibName19=lm78xxv-3d
+LibName20=pin
