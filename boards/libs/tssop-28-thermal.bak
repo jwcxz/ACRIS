@@ -1,10 +1,10 @@
-PCBNEW-LibModule-V1  Tue 27 Mar 2012 04:37:53 PM EDT
+PCBNEW-LibModule-V1  Tue 27 Mar 2012 04:32:55 PM EDT
 # encoding utf-8
 $INDEX
 tssop-28-thermal
 $EndINDEX
 $MODULE tssop-28-thermal
-Po 0 0 0 15 4F722511 00000000 ~~
+Po 0 0 0 15 4F7223F4 00000000 ~~
 Li tssop-28-thermal
 Cd TSSOP-28-thermal
 Sc 00000000
@@ -216,9 +216,10 @@ $EndPAD
 $PAD
 Sh "29" R 3819 1339 0 0 0
 Dr 0 0 0
-At SMD N 00008000
+At SMD N 00888000
 Ne 2 "GND"
 Po 0 0
+.SolderPasteRatio -0.3
 $EndPAD
 $PAD
 Sh "29" C 138 138 0 0 0
@@ -338,48 +339,6 @@ Dr 0 0 0
 At SMD N 00000001
 Ne 0 ""
 Po 0 0
-$EndPAD
-$PAD
-Sh "29" R 2520 945 0 0 0
-Dr 0 0 0
-At SMD N 00880000
-Ne 0 ""
-Po 0 0
-$EndPAD
-$PAD
-Sh "29" C 138 138 0 0 0
-Dr 138 0 0
-At STD N 0000FFFF
-Ne 2 "GND"
-Po 1000 0
-$EndPAD
-$PAD
-Sh "29" C 138 138 0 0 0
-Dr 138 0 0
-At STD N 0000FFFF
-Ne 2 "GND"
-Po 500 0
-$EndPAD
-$PAD
-Sh "29" C 138 138 0 0 0
-Dr 138 0 0
-At STD N 0000FFFF
-Ne 2 "GND"
-Po 0 0
-$EndPAD
-$PAD
-Sh "29" C 138 138 0 0 0
-Dr 138 0 0
-At STD N 0000FFFF
-Ne 2 "GND"
-Po -500 0
-$EndPAD
-$PAD
-Sh "29" C 138 138 0 0 0
-Dr 138 0 0
-At STD N 0000FFFF
-Ne 2 "GND"
-Po -1000 0
 $EndPAD
 $SHAPE3D
 Na "smd/smd_dil/tssop-28.wrl"
