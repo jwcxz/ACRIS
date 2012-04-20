@@ -13,8 +13,8 @@ class Plugin(backend.plugin.Plugin):
         self.left = controllers.wallsconce.WallSconce(network, 1);
         self.right = controllers.wallsconce.WallSconce(network, 0);
 
-        self.hkns = [ controllers.hknboard.HKNBoard(network, 0x30 + i) for i in xrange(4) ];
-        self.numleds = 2+9;
+        self.hkns = [ controllers.hknboard.HKNBoard(network, 0x40 + i) for i in xrange(4) ];
+        self.numleds = 4*5;
 
     def run(self):
         backend.plugin.Plugin.run(self);
@@ -23,7 +23,7 @@ class Plugin(backend.plugin.Plugin):
         else:                   maxv = 90;
 
         if len(self.args) >= 2: timedelay = float(self.args[1]);
-        else:                   timedelay = 0.04;
+        else:                   timedelay = 0.05;
 
         if len(self.args) >= 3: decay = int(self.args[2]);
         else:                   decay = 0.4;
@@ -47,8 +47,8 @@ class Plugin(backend.plugin.Plugin):
             self.left.all(rgbs[0]);
             self.right.all(rgbs[-1]);
             # now the hkn boards
-            for i in xrange(0, self.numleds-2, 3):
-                self.hkns[i].each(rgbs[i], rgbs[i+1], rgbs[i+2]);
+            for i in xrange(0, self.numleds, 5):
+                self.hkns[i/5].each(rgbs[i:i+5]);
 
             # prepare to apply new step
             time.sleep(timedelay);

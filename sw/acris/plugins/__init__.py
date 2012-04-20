@@ -10,4 +10,8 @@ __all__ = [
     'keepalive',
     'vumeter',
     'chaser',
+    'csfbars',
+    'csffw',
+    'csfwaves',
+    'csftext',
     ];
