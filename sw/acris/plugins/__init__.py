@@ -14,4 +14,5 @@ __all__ = [
     'csffw',
     'csfwaves',
     'csftext',
+    'csfvumeter',
     ];
