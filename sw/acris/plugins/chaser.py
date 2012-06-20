@@ -20,13 +20,13 @@ class Plugin(backend.plugin.Plugin):
         backend.plugin.Plugin.run(self);
 
         if len(self.args) >= 1: maxv = int(self.args[0]);
-        else:                   maxv = 90;
+        else:                   maxv = 255;
 
         if len(self.args) >= 2: timedelay = float(self.args[1]);
-        else:                   timedelay = 0.05;
+        else:                   timedelay = 0.01;
 
         if len(self.args) >= 3: decay = int(self.args[2]);
-        else:                   decay = 0.4;
+        else:                   decay = 0.7;
 
         if len(self.args) >= 4: huestep = int(self.args[3]);
         else:                   huestep = 1;

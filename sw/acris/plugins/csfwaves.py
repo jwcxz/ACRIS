@@ -16,13 +16,12 @@ class Plugin(backend.plugin.Plugin):
         self.right = controllers.wallsconce.WallSconce(network, 0);
 
         self.hkns = [ controllers.hknboard.HKNBoard(network, 0x40 + i) for i in xrange(4) ];
-        self.numleds = 2+9;
 
     def run(self):
         backend.plugin.Plugin.run(self);
 
         if len(self.args) >= 1: maxv = int(self.args[0]);
-        else:                   maxv = 90;
+        else:                   maxv = 255;
 
         if len(self.args) >= 2: timestep = float(self.args[1]);
         else:                   timestep = .01;
@@ -34,7 +33,7 @@ class Plugin(backend.plugin.Plugin):
         else:                   huestep = 1;
 
         if len(self.args) >= 5: framestep = int(self.args[4]);
-        else:                   framestep = 1;
+        else:                   framestep = 2;
 
         pattern = [
                 [ 1,0,0,0 ],

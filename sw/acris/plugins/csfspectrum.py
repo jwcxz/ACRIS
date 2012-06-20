@@ -16,13 +16,12 @@ class Plugin(backend.plugin.Plugin):
         self.right = controllers.wallsconce.WallSconce(network, 0);
 
         self.hkns = [ controllers.hknboard.HKNBoard(network, 0x30 + i) for i in xrange(4) ];
-        self.numleds = 2+9;
 
     def run(self):
         backend.plugin.Plugin.run(self);
 
         if len(self.args) >= 1: maxv = int(self.args[0]);
-        else:                   maxv = 90;
+        else:                   maxv = 255;
 
         if len(self.args) >= 2: alpha = float(self.args[1]);
         else:                   alpha = .3;

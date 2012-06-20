@@ -1,4 +1,5 @@
-EESchema-LIBRARY Version 2.3  Date: 2/13/2011 10:19:47 PM
+EESchema-LIBRARY Version 2.3  Date: Mon 14 May 2012 08:26:43 AM EDT
+#encoding utf-8
 #
 # 1.0V
 #
@@ -26203,24 +26204,24 @@ T 0 2710 2735 70 0 1 0 1.~Add~a~line~in~the~tDocu~layer~to~make~sure~the~labels~
 T 0 4845 7735 70 0 1 0 1.~Add~part~STANDOFF~to~the~schematic.~This~part~has~a~keepout~layer~to~show~you~where~the~head~of~the~standoff~screw~will~be.~  Normal 1 C C
 T 0 3445 7935 70 0 1 0 1.~Add~the~part~FIDUCIAL~to~the~schematic.~It's~OK~to~use~the~smallest~1x2mm~footprint.  Normal 1 C C
 T 0 2085 2435 70 0 1 0 1.~All~footprints~need~>Name~(on~the~tNames~layer).  Normal 1 C C
-T 0 4640 3335 70 0 1 0 1.~All~label~text~sizes~will~not~be~smaller~than~0.04"~for~readability.~0.032"~is~the~hard~minimum.~0.05"~is~good~and~large.  Normal 1 C C
-T 0 2365 9435 70 0 1 0 1.~All~parts~stay~on~a~0.1"~grid.~Do~not~violate~this~rule.  Normal 1 C C
+T 0 4640 3335 70 0 1 0 "1. All label text sizes will not be smaller than 0.04'' for readability. 0.032'' is the hard minimum. 0.05'' is good and large."  Normal 1 C C
+T 0 2365 9435 70 0 1 0 "1. All parts stay on a 0.1'' grid. Do not violate this rule."  Normal 1 C C
 T 0 3100 1435 70 0 1 0 1.~All~schematic~components~need~>Name~and~>Value~(on~the~tNames/tValues~layer).  Normal 1 C C
 T 0 1380 5635 70 0 1 0 1.~Avoid~90~degree~corners.~  Normal 1 C C
-T 0 2710 5135 70 0 1 0 1.~Change~the~Isolate~setting~on~ground~pours~to~12~mil~(0.012").~  Normal 1 C C
-T 0 1735 7035 70 0 1 0 1.~Create~the~board~frame~on~a~0.1"~grid.  Normal 1 C C
-T 0 1560 10535 70 0 1 0 1.~Directory~names~will~be:~"Thingy"  Normal 1 C C
+T 0 2710 5135 70 0 1 0 "1. Change the Isolate setting on ground pours to 12 mil (0.012''). "  Normal 1 C C
+T 0 1735 7035 70 0 1 0 "1. Create the board frame on a 0.1'' grid."  Normal 1 C C
+T 0 1560 10535 70 0 1 0 "1. Directory names will be: ''Thingy''"  Normal 1 C C
 T 0 2815 7435 70 0 1 0 1.~For~example:~charge~circuit,~accelerometer,~microcontroller,~etc.~  Normal 1 C C
-T 0 3235 5335 70 0 1 0 1.~For~normal~prototyping~vias,~use~0.04"~hole~with~a~0.074"~diameter~(not~auto).  Normal 1 C C
+T 0 3235 5335 70 0 1 0 "1. For normal prototyping vias, use 0.04'' hole with a 0.074'' diameter (not auto)."  Normal 1 C C
 T 0 3270 3735 70 0 1 0 1.~Hand~routing~and~touch-up~of~the~autorouter~is~expected~for~production~boards.~  Normal 1 C C
 T 0 3380 635 70 0 1 0 1.~If~you~see~any~'U$2'~part~indentifiers,~do~not~print.~See~Schematic~Layout~rule~#4-8.  Normal 1 C C
 T 0 1940 6935 70 0 1 0 1.~Make~the~lower~left~corner~start~at~0,0.~  Normal 1 C C
-T 0 6030 8235 70 0 1 0 1.~Open~the~library,~click~on~the~"device."~Select~the~problem~device.~Click~on~"Prefix"~button.~Type~the~correct~prefix~letter.~Save~and~update~the~library.~  Normal 1 C C
+T 0 6030 8235 70 0 1 0 "1. Open the library, click on the ''device.'' Select the problem device. Click on ''Prefix'' button. Type the correct prefix letter. Save and update the library. "  Normal 1 C C
 T 0 2430 4635 70 0 1 0 1.~Revise~the~Date~code~on~every~minor~and~major~revision!  Normal 1 C C
-T 0 2220 6535 70 0 1 0 1.~See~SparkFun~tutorial:~"Removing~Layers~in~Eagle"  Normal 1 C C
-T 0 1275 2135 70 0 1 0 1.~Size~should~be~0.016"~  Normal 1 C C
-T 0 1275 2335 70 0 1 0 1.~Size~should~be~0.016"~  Normal 1 C C
-T 0 1240 1335 70 0 1 0 1.~Size~should~be~0.07"~  Normal 1 C C
+T 0 2220 6535 70 0 1 0 "1. See SparkFun tutorial: ''Removing Layers in Eagle''"  Normal 1 C C
+T 0 1275 2135 70 0 1 0 "1. Size should be 0.016'' "  Normal 1 C C
+T 0 1275 2335 70 0 1 0 "1. Size should be 0.016'' "  Normal 1 C C
+T 0 1240 1335 70 0 1 0 "1. Size should be 0.07'' "  Normal 1 C C
 T 0 995 10235 70 0 1 0 1.~Thingy-v10.sch  Normal 1 C C
 T 0 4950 4035 70 0 1 0 1.~To~do~this,~add~the~LOGO-SFE~part~to~the~schematic.~Make~sure~to~put~this~part~in~the~lower~right~hand~corner~of~the~schematic.  Normal 1 C C
 T 0 785 9035 70 0 1 0 1.~U#~-~ICs  Normal 1 C C
@@ -26228,7 +26229,7 @@ T 0 1660 4435 70 0 1 0 1.~White~for~top~silkscreen~(tPlace)  Normal 1 C C
 T 0 4255 7335 70 0 1 0 10.~Components~must~have~correct~values~assigned~to~each~part.~For~example~a~capacitor~value~would~be:~0.1uF/25V~  Normal 1 C C
 T 0 5585 5435 70 0 1 0 10.~If~something~is~soldered~into~a~hole~(header,~connector,~prototype~vias,~etc),~use~a~via~with~a~larger~annular~ring~so~that~it~is~easier~to~solder.  Normal 1 C C
 T 0 2050 5235 70 0 1 0 11.~Use~ground~pours~on~the~top~and~bottom~layers.  Normal 1 C C
-T 0 1665 5035 70 0 1 0 12.~Set~the~default~via~size~to~0.020."  Normal 1 C C
+T 0 1665 5035 70 0 1 0 "12. Set the default via size to 0.020.''"  Normal 1 C C
 T 0 2120 4735 70 0 1 0 13.~Add~a~Date~Code~on~the~bottom~layer~of~the~board  Normal 1 C C
 T 0 2190 4535 70 0 1 0 14.~In~the~PCB~Layout~Editor~use~the~following~colors:  Normal 1 C C
 T 0 3240 4135 70 0 1 0 15.~Every~board~should~have~the~full~SparkFun~logo~or~at~least~the~smaller~SFE~Flame  Normal 1 C C
@@ -26238,7 +26239,7 @@ T 0 3450 3635 70 0 1 0 18.~Make~sure~to~load~the~SparkFun.dru~for~the~DRC~check.
 T 0 1230 5935 70 0 1 0 2.~12~mil~=~500mA~  Normal 1 C C
 T 0 2155 2235 70 0 1 0 2.~All~footprints~need~>Value~(on~the~tValues~layer).  Normal 1 C C
 T 0 1770 9335 70 0 1 0 2.~All~GND~connections~use~the~GND~symbol.  Normal 1 C C
-T 0 2120 6835 70 0 1 0 2.~Change~the~line~width~of~the~board~frame~to~.008"  Normal 1 C C
+T 0 2120 6835 70 0 1 0 "2. Change the line width of the board frame to .008''"  Normal 1 C C
 T 0 895 10335 70 0 1 0 2.~File~names~are  Normal 1 C C
 T 0 3305 1235 70 0 1 0 2.~Give~some~space~between~the~>Name~and~>Value~identifier~and~the~component~frame.  Normal 1 C C
 T 0 2575 3235 70 0 1 0 2.~Label~any~LED~with~its~purpose~(power,~status,~D4,~Lock,~etc).  Normal 1 C C
@@ -26266,7 +26267,7 @@ T 0 1805 9935 70 0 1 0 4.~Minor~versions~are:~Thingy-v11,~v12,~v13  Normal 1 C C
 T 0 2785 9135 70 0 1 0 4.~Name~all~components~with~standard~names~(No~dollars~signs~allowed!):  Normal 1 C C
 T 0 5200 1935 70 0 1 0 4.~Origin~of~the~footprint~must~be~located~in~the~center~of~the~footprint.~Where~possible,~the~footprint~should~be~symmetric~on~both~axises.  Normal 1 C C
 T 0 1800 8735 70 0 1 0 4.~Y#~-~Antennas~and~Crystals/Resonators  Normal 1 C C
-T 0 3905 6435 70 0 1 0 5.~All~parts~are~place~on~a~0.05"~grid.~You~may~not~break~this~rule~unless~you~have~a~very~good~reason.  Normal 1 C C
+T 0 3905 6435 70 0 1 0 "5. All parts are place on a 0.05'' grid. You may not break this rule unless you have a very good reason."  Normal 1 C C
 T 0 1205 8635 70 0 1 0 5.~D#~-~LEDs~and~Diodes  Normal 1 C C
 T 0 2505 8135 70 0 1 0 5.~Every~schematic~will~have~the~part~FRAME-LETTER~added~to~it.  Normal 1 C C
 T 0 2225 2935 70 0 1 0 5.~Label~switches~and~switch~states~(On/Off,~USB,~etc).  Normal 1 C C
@@ -26278,12 +26279,12 @@ T 0 1420 135 70 0 1 0 6.~Make~sure~scale~factor~is~'1'  Normal 1 C C
 T 0 1805 2835 70 0 1 0 6.~Makes~sure~labels~are~on~a~straight~line  Normal 1 C C
 T 0 4815 9735 70 0 1 0 6.~Prototypes/New~Products~start~in~the~sandbox~then~migrate~to~the~store~front~specific~category~once~listed~in~the~storefront.~  Normal 1 C C
 T 0 960 8535 70 0 1 0 6.~S#~-~Switches  Normal 1 C C
-T 0 1350 6335 70 0 1 0 6.~Use~10~mil~(0.010")~traces.  Normal 1 C C
-T 0 4570 8035 70 0 1 0 6.~Use~two~fiducials~on~each~board~where~applicable.~Use~your~judgement.~Small~boards~(less~than~1x1")~can~skip~this~rule.  Normal 1 C C
-T 0 3275 7835 70 0 1 0 7.~If~board~is~larger~than~1",~then~seriously~consider~standoffs.~Use~your~judgement.  Normal 1 C C
+T 0 1350 6335 70 0 1 0 "6. Use 10 mil (0.010'') traces."  Normal 1 C C
+T 0 4570 8035 70 0 1 0 "6. Use two fiducials on each board where applicable. Use your judgement. Small boards (less than 1x1'') can skip this rule."  Normal 1 C C
+T 0 3275 7835 70 0 1 0 "7. If board is larger than 1'', then seriously consider standoffs. Use your judgement."  Normal 1 C C
 T 0 1485 8435 70 0 1 0 7.~JP#~-~Connectors~and~Headers  Normal 1 C C
 T 0 1945 5835 70 0 1 0 7.~Keep~at~least~8~mil~of~space~between~traces.  Normal 1 C C
-T 0 3410 8335 70 0 1 0 8.~'U$3'~is~bad.~If~a~part~automatically~puts~a~"$"~in~the~name,~it~needs~to~be~fixed.  Normal 1 C C
+T 0 3410 8335 70 0 1 0 "8. 'U$3' is bad. If a part automatically puts a ''$'' in the name, it needs to be fixed."  Normal 1 C C
 T 0 3730 7635 70 0 1 0 8.~Add~fiducials,~standoff~components~and~logo~box~to~the~lower~right~area~of~the~schematic~sheet.  Normal 1 C C
 T 0 2085 5735 70 0 1 0 8.~Route~with~straight~lines~and~45~degree~corners.  Normal 1 C C
 T 0 4185 5535 70 0 1 0 9.~Route~from~the~center~of~pads.~Avoid~routing~into~the~pads~-~this~causes~traces~to~be~not~centered~on~a~pad.  Normal 1 C C
@@ -30096,8 +30097,8 @@ P 2 1 0 0  0 350  0 -50 N
 P 2 1 0 0  200 350  0 350 N
 X VBUS 5V -100 100 100 R 40 40 1 1 B
 X GND GND -100 0 100 R 40 40 1 1 B
-X D+ USB_ -100 300 100 R 40 40 1 1 B
-X D- USB_ -100 200 100 R 40 40 1 1 B
+X D- USBm -100 200 100 R 40 40 1 1 B
+X D+ USBp -100 300 100 R 40 40 1 1 B
 ENDDRAW
 ENDDEF
 #

@@ -20,7 +20,7 @@ class Plugin(backend.plugin.Plugin):
                                    channels = 1,
                                    rate = 44100,
                                    input = True,
-                                   input_device_index=1,
+                                   input_device_index=0,
                                    frames_per_buffer = self.chunk);
 
     def run(self):

@@ -16,7 +16,6 @@ class Plugin(backend.plugin.Plugin):
         self.right = controllers.wallsconce.WallSconce(network, 0);
 
         self.hkns = [ controllers.hknboard.HKNBoard(network, 0x40 + i) for i in xrange(4) ];
-        self.numleds = 2+9;
 
     def run(self):
         backend.plugin.Plugin.run(self);
@@ -25,7 +24,7 @@ class Plugin(backend.plugin.Plugin):
         else:                   text = "ACRIS";
 
         if len(self.args) >= 2: maxv = int(self.args[1]);
-        else:                   maxv = 90;
+        else:                   maxv = 255;
 
         if len(self.args) >= 3: timestep = float(self.args[3]);
         else:                   timestep = .01;
@@ -34,7 +33,7 @@ class Plugin(backend.plugin.Plugin):
         else:                   decay = .7;
 
         if len(self.args) >= 4: huestep = int(self.args[4]);
-        else:                   huestep = 0;
+        else:                   huestep = 1;
 
         if len(self.args) >= 5: framestep = int(self.args[5]);
         else:                   framestep = 5;
@@ -61,6 +60,8 @@ class Plugin(backend.plugin.Plugin):
             elif o in range(ord('A'), ord('Z')):
                 # got a letter
                 t = chars[o-ord('A')];
+            elif c == '.':
+                t = chars[-1];
 
             if t != []:
                 for row in xrange(len(txtmtx)):
@@ -316,7 +317,13 @@ rawchars = [
       [1,0,0,1],
       [0,1,1,1],
       [0,0,0,1],
-      [0,1,1,0] ] ];
+      [0,1,1,0] ],
+    
+    [ [0,0,0,0],
+      [0,0,0,0],
+      [0,0,0,0],
+      [0,0,0,0],
+      [0,0,0,0] ] ];
     
 # let's correct for my ineptitude!
 chars = [];

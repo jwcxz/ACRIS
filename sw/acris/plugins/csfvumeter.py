@@ -34,7 +34,7 @@ class Plugin(backend.plugin.Plugin):
         v = [0, 0, 0, 0, 0];
 
         if len(self.args) >= 1: maxv = int(self.args[0]);
-        else:                   maxv = 90;
+        else:                   maxv = 255;
 
         if len(self.args) >= 2: alpha = float(self.args[1]);
         else:                   alpha = .5;

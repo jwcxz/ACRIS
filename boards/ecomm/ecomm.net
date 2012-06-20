@@ -1,0 +1,297 @@
+# EESchema Netlist Version 1.1 created  Wed 23 May 2012 08:53:03 AM EDT
+(
+ ( /4FAF7B95 SIL-4  PUSB1 CONN_4 {Lib=CONN_4}
+  (    1 N-000012 )
+  (    2 N-000013 )
+  (    3 N-000014 )
+  (    4 GND )
+ )
+ ( /4FAF7BA4 SM0603  FB1 FILTER {Lib=FILTER}
+  (    1 N-000012 )
+  (    2 VCC )
+ )
+ ( /4FAF7BB3 SM0805  C1 10nF {Lib=C}
+  (    1 N-000012 )
+  (    2 GND )
+ )
+ ( /4FAF7BC2 SM0805  C2 0.1uF {Lib=C}
+  (    1 VCC )
+  (    2 GND )
+ )
+ ( /4FAF7BD1 SM0805  C3 4.7uF {Lib=C}
+  (    1 VCC )
+  (    2 GND )
+ )
+ ( /4FAF7BE0 LED-1206  D1 LED {Lib=LED}
+  (    1 N-000006 )
+  (    2 GND )
+ )
+ ( /4FAF7BEF SM0805  R1 1K {Lib=R}
+  (    1 N-000006 )
+  (    2 VCC )
+ )
+ ( /4FAF7BFE SSOP28  U1 FT232RL {Lib=FT232RL}
+  (    1 N-000007 )
+  (    2 ? )
+  (    3 ? )
+  (    4 VCC )
+  (    5 N-000016 )
+  (    6 ? )
+  (    7 GND )
+  (    9 ? )
+  (   10 ? )
+  (   11 ? )
+  (   12 ? )
+  (   13 N-000015 )
+  (   14 ? )
+  (   15 N-000014 )
+  (   16 N-000013 )
+  (   17 N-000001 )
+  (   18 GND )
+  (   19 ? )
+  (   20 VCC )
+  (   21 GND )
+  (   22 N-000003 )
+  (   23 N-000002 )
+  (   25 GND )
+  (   26 GND )
+  (   27 ? )
+  (   28 ? )
+ )
+ ( /4FAF7C0D LED-1206  D2 LED {Lib=LED}
+  (    1 N-000004 )
+  (    2 N-000002 )
+ )
+ ( /4FAF7C1C LED-1206  D3 LED {Lib=LED}
+  (    1 N-000005 )
+  (    2 N-000003 )
+ )
+ ( /4FAF7C2B SM0805  R3 1K {Lib=R}
+  (    1 N-000004 )
+  (    2 VCC )
+ )
+ ( /4FAF7C3A SM0805  R2 1K {Lib=R}
+  (    1 N-000005 )
+  (    2 VCC )
+ )
+ ( /4FAF8053 SM0603  C4 0.1uF {Lib=C}
+  (    1 N-000001 )
+  (    2 GND )
+ )
+ ( /4FAF85C8 SIL-1  PTXD1 CONN_1 {Lib=CONN_1}
+  (    1 N-000007 )
+ )
+ ( /4FAF8640 SIL-1  PRXD1 CONN_1 {Lib=CONN_1}
+  (    1 N-000016 )
+ )
+ ( /4FAF8880 SIL-1  PVCC1 CONN_1 {Lib=CONN_1}
+  (    1 VCC )
+ )
+ ( /4FAF890E SIL-1  PGND1 CONN_1 {Lib=CONN_1}
+  (    1 GND )
+ )
+ ( /4FB1EF10 SparkFun-USB-A-PCB  J1 USBPCB {Lib=USBPCB}
+  (   5V N-000012 )
+  (  GND GND )
+  ( USB_ N-000013 )
+ )
+ ( /4FBCDC88 DIL8  IC1 SN75176B {Lib=SN75176B}
+  (    1 N-000016 )
+  (    2 N-000015 )
+  (    3 N-000015 )
+  (    4 N-000007 )
+  (    5 GND )
+  (    6 N-000010 )
+  (    7 N-000011 )
+  (    8 VCC )
+ )
+ ( /4FBCE34D $noname  J2 RJ45 {Lib=RJ45}
+  (    1 N-000011 )
+  (    2 N-000010 )
+  (    3 ? )
+  (    4 ? )
+  (    5 ? )
+  (    6 ? )
+  (    7 ? )
+  (    8 ? )
+  (    9 ? )
+ )
+ ( /4FBCE4C2 $noname  J3 RJ45 {Lib=RJ45}
+  (    1 N-000011 )
+  (    2 N-000010 )
+  (    3 ? )
+  (    4 ? )
+  (    5 ? )
+  (    6 ? )
+  (    7 ? )
+  (    8 ? )
+  (    9 ? )
+ )
+ ( /4FBCE646 $noname  R4 120 {Lib=R}
+  (    1 N-000011 )
+  (    2 N-000010 )
+ )
+)
+*
+{ Allowed footprints by component:
+$component C1
+ SM*
+ C?
+ C1-1
+$endlist
+$component C2
+ SM*
+ C?
+ C1-1
+$endlist
+$component C3
+ SM*
+ C?
+ C1-1
+$endlist
+$component D1
+ LED-3MM
+ LED-5MM
+ LED-10MM
+ LED-0603
+ LED-0805
+ LED-1206
+ LEDV
+$endlist
+$component R1
+ R?
+ SM0603
+ SM0805
+ R?-*
+ SM1206
+$endlist
+$component D2
+ LED-3MM
+ LED-5MM
+ LED-10MM
+ LED-0603
+ LED-0805
+ LED-1206
+ LEDV
+$endlist
+$component D3
+ LED-3MM
+ LED-5MM
+ LED-10MM
+ LED-0603
+ LED-0805
+ LED-1206
+ LEDV
+$endlist
+$component R3
+ R?
+ SM0603
+ SM0805
+ R?-*
+ SM1206
+$endlist
+$component R2
+ R?
+ SM0603
+ SM0805
+ R?-*
+ SM1206
+$endlist
+$component C4
+ SM*
+ C?
+ C1-1
+$endlist
+$component IC1
+ DIL-8
+$endlist
+$component R4
+ R?
+ SM0603
+ SM0805
+ R?-*
+ SM1206
+$endlist
+$endfootprintlist
+}
+{ Pin List by Nets
+Net 1 "" ""
+ C4 1
+ U1 17
+Net 2 "" ""
+ D2 2
+ U1 23
+Net 3 "" ""
+ D3 2
+ U1 22
+Net 4 "" ""
+ R3 1
+ D2 1
+Net 5 "" ""
+ R2 1
+ D3 1
+Net 6 "" ""
+ R1 1
+ D1 1
+Net 7 "" ""
+ IC1 4
+ PTXD1 1
+ U1 1
+Net 8 "VCC" "VCC"
+ IC1 8
+ PVCC1 1
+ C2 1
+ U1 20
+ U1 4
+ R1 2
+ C3 1
+ R3 2
+ R2 2
+ FB1 2
+Net 9 "GND" "GND"
+ C3 2
+ C2 2
+ C1 2
+ PUSB1 4
+ D1 2
+ U1 26
+ U1 25
+ U1 21
+ U1 18
+ IC1 5
+ J1 GND
+ PGND1 1
+ C4 2
+ U1 7
+Net 10 "" ""
+ J2 2
+ R4 2
+ IC1 6
+ J3 2
+Net 11 "" ""
+ R4 1
+ IC1 7
+ J3 1
+ J2 1
+Net 12 "" ""
+ J1 5V
+ PUSB1 1
+ C1 1
+ FB1 1
+Net 13 "" ""
+ U1 16
+ PUSB1 2
+Net 14 "" ""
+ PUSB1 3
+ J1 USB_
+ U1 15
+Net 15 "" ""
+ IC1 2
+ U1 13
+ IC1 3
+Net 16 "" ""
+ PRXD1 1
+ U1 5
+ IC1 1
+}
+#End
