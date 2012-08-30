@@ -6,12 +6,19 @@ parser = argparse.ArgumentParser(description="Client interface for ACRIS",
         epilog="Runs a raw command when no switches are given; brings up a color chooser if rgb arguments are required but not given", 
         prog="ACRIS Client");
 
-parser.add_argument('-k', '--kill', action='store_true', dest='kill', help='kill the server');
-parser.add_argument('-s', '--stop', action='store_true', dest='stop', help='stop the lights');
 parser.add_argument('-r', '--refresh', action='store_true', dest='refresh', help='reload plugins');
 parser.add_argument('-l', '--list', action='store_true', dest='list', help='list available plugins');
-parser.add_argument('-p', '--plugin', action='store', dest='plugin', nargs='+', metavar=('PLUGIN', 'ARGS'), help='plugin to activate with arguments');
+parser.add_argument('-a', '--activated', action='store_true', dest='activated', help='list activated plugins');
+parser.add_argument('-A', '--addresses', action='store_true', dest='addresses', help='list addresses in use');
+
+parser.add_argument('-p', '--plugin', action='store', dest='plugin', nargs='+', metavar=('PLUGIN', 'ARGS'), help='activate a plugin with arguments');
+parser.add_argument('-s', '--stop', action='store', dest='stop', nargs=1, metavar='PLUGIN', help='stop a plugin');
+parser.add_argument('-S', '--stop-all', action='store_true', dest='stopall', help='stop all active plugins');
+
+parser.add_argument('-k', '--kill', action='store_true', dest='kill', help='kill the server');
+
 parser.add_argument('-R', '--raw', action='store', dest='raw', nargs='+', metavar='RAWDATA', help='raw data to send to server');
+
 parser.add_argument('-H', '--host', action='store', dest='host', default='localhost', help='ACRIS server host');
 parser.add_argument('-P', '--port', action='store', dest='port', default=55555, type=int, help='ACRIS server port');
 
@@ -26,6 +33,12 @@ if args.refresh:
 
 if args.list:
     commands.append('list');
+
+if args.activated:
+    commands.append('activated');
+
+if args.addresses:
+    commands.append('addresses');
 
 if args.plugin:
     if len(args.plugin) == 1:
@@ -43,10 +56,14 @@ if args.plugin:
                 args.plugin.extend([ str(int(color[i:i+2], 16)) for i in xrange(0,6,2) ]);
 
     commands.append('plugin ' + ' '.join(args.plugin));
-elif args.raw:
+
+if args.stop:
+    commands.append('stop ' + args.stop[0]);
+elif args.stopall:
+    commands.append('stopall');
+
+if args.raw:
     commands.append(' '.join(args.raw));
-elif args.stop:
-    commands.append('stop');
 
 if args.kill:
     commands = ['die'];
