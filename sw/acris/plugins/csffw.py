@@ -13,9 +13,13 @@ class Plugin(backend.plugin.Plugin):
         backend.plugin.Plugin.__init__(self, network, args);
 
         self.left = controllers.wallsconce.WallSconce(network, 1);
+        self.addresses.append(self.left.address);
+
         self.right = controllers.wallsconce.WallSconce(network, 0);
+        self.addresses.append(self.right.address);
 
         self.hkns = [ controllers.hknboard.HKNBoard(network, 0x40 + i) for i in xrange(4) ];
+        self.addresses.extend([_.address for _ in self.hkns]);
 
     def run(self):
         backend.plugin.Plugin.run(self);

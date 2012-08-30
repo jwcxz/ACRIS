@@ -9,7 +9,10 @@ class Plugin(backend.plugin.Plugin):
     def __init__(self, network, args):
         backend.plugin.Plugin.__init__(self, network, args);
         self.left = controllers.wallsconce.WallSconce(network, 1);
+        self.addresses.append(self.left.address);
+
         self.right = controllers.wallsconce.WallSconce(network, 0);
+        self.addresses.append(self.right.address);
 
     def run(self): 
         backend.plugin.Plugin.run(self);

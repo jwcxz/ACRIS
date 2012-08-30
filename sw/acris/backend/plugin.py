@@ -9,6 +9,7 @@ class Plugin(threading.Thread):
         self.network = network;
         self.args = args;
         self.enabled = False;
+        self.addresses = [];
 
     def run(self):
         # called to start the thread

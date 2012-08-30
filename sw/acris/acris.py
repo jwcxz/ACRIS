@@ -11,11 +11,16 @@ class Acris:
         self.network = backend.network.Network(serport, serbaud, serparity);
 
         # build plugins list
+        # name -> (obj, description)
         self.plugins = {};
         self.refresh_plugins();
 
-        # current plugin
-        self.plugin = None;
+        # current plugins
+        # name -> instance
+        self.activated = {};
+
+        # addresses in use by plugins
+        self.used_addresses = [];
 
         # socket configuration
         self.skthost = skthost;
@@ -45,26 +50,44 @@ class Acris:
                     if cmd == "plugin":
                         if data[1] in self.plugins:
                             statusmsg = "Activating %s with args %r" %(data[1], data[2:]);
-                            self.stop_plugin();
-                            self.activate_plugin(data[1], data[2:]);
+                            if not self.activate_plugin(data[1], data[2:]):
+                                statusmsg = "Failed to activate %s: addresses in use" %(data[1]);
                         else:
                             statusmsg = "Plugin %s (with args %r) not found)" %(data[1], data[2:]);
 
                     elif cmd == "stop":
-                        statusmsg = "Stopping plugin and shutting lights off";
-                        self.stop_plugin();
+                        statusmsg = "Stopping %s" %(data[1]);
+                        if not self.stop_plugin(data[1]):
+                            statusmsg = "Failed to stop %s: not activated" %(data[1]);
+
+                    elif cmd == "stopall":
+                        statusmsg = "Stopping all plugins and shutting lights off";
+                        act = self.activated.keys();
+                        for p in act:
+                            self.stop_plugin(p);
                         self.lights_off();
 
                     elif cmd == "list":
-                        statusmsg = "Available plugins: %s" % ' '.join(self.plugins.keys());
+                        statusmsg = "Available plugins: "
+                        for p in self.plugins:
+                            statusmsg += "\n    %s: %s" % (p, self.plugins[p][1]);
+
+                    elif cmd == "activated":
+                        statusmsg = "Activated plugins: %s" %( ' '.join(self.activated.keys()) );
+
+                    elif cmd == "addresses":
+                        statusmsg = "Addresses in use: %s" %( ' '.join(["0x%02X" %(a) for a in self.used_addresses]) );
 
                     elif cmd == "refresh":
                         statusmsg = "Reloading plugins"
                         self.refresh_plugins();
 
                     elif cmd == "die":
-                        self.stop_plugin();
+                        act = self.activated.keys();
+                        for p in act:
+                            self.stop_plugin(p);
                         self.lights_off();
+
                         statusmsg = "Exiting";
                         print "::  ", statusmsg;  # hack
                         client.send(statusmsg);   #
@@ -85,14 +108,40 @@ class Acris:
         self.network.cmd([255, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0]);
 
     def activate_plugin(self, pluginname, args):
-        pluginobj = self.plugins[pluginname];
-        self.plugin = pluginobj(self.network, args);
-        self.plugin.start();
+        pluginobj = self.plugins[pluginname][0];
+        newplugin = pluginobj(self.network, args);
 
-    def stop_plugin(self):
-        if self.plugin != None and self.plugin.enabled:
-            self.plugin.stop();
-            self.plugin = None; # garbage collect
+        # ensure that only one plugin can access each address
+        for addr in newplugin.addresses:
+            if addr in self.used_addresses:
+                print "Addresses in use already:", newplugin.addresses, self.used_addresses;
+                return False;
+
+        self.activated[pluginname] = newplugin;
+        self.used_addresses.extend(newplugin.addresses);
+        self.activated[pluginname].start();
+        return True;
+
+    def stop_plugin(self, pluginname):
+        if pluginname in self.activated and self.activated[pluginname] != None:
+            if self.activated[pluginname].enabled:
+                self.activated[pluginname].stop();
+                
+            # free up addresses
+            for addr in self.activated[pluginname].addresses:
+                if addr in self.used_addresses:
+                    self.used_addresses.remove(addr);
+                else:
+                    print "Warning: 0x%02X not in address list" % addr;
+
+            # garbage collect
+            del(self.activated[pluginname]);
+            return True
+
+        else:
+            print "Error: %s not activated" %(plugginname);
+            return False
+
 
     def refresh_plugins(self):
         reload(plugins);
@@ -100,7 +149,7 @@ class Acris:
         for p in plugins.__all__:
             _ = __import__('plugins.'+p, globals(), locals(), [p], -1);
             reload(_);
-            self.plugins[p] = _.Plugin;
+            self.plugins[p] = (_.Plugin, plugins.enabled[p]);
 
         print "-> Refreshed plugins: %s" % ' '.join(self.plugins.keys());
 

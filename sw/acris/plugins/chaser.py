@@ -10,11 +10,11 @@ class Plugin(backend.plugin.Plugin):
     def __init__(self, network, args):
         backend.plugin.Plugin.__init__(self, network, args);
 
-        self.left = controllers.wallsconce.WallSconce(network, 1);
-        self.right = controllers.wallsconce.WallSconce(network, 0);
-
         self.hkns = [ controllers.hknboard.HKNBoard(network, 0x40 + i) for i in xrange(4) ];
+        self.addresses.extend([_.address for _ in self.hkns]);
+
         self.numleds = 4*5;
+
 
     def run(self):
         backend.plugin.Plugin.run(self);
@@ -44,8 +44,6 @@ class Plugin(backend.plugin.Plugin):
             
             # set outputs
             # first, set the two wall sconces at each side
-            self.left.all(rgbs[0]);
-            self.right.all(rgbs[-1]);
             # now the hkn boards
             for i in xrange(0, self.numleds, 5):
                 self.hkns[i/5].each(rgbs[i:i+5]);

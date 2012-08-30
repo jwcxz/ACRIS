@@ -12,7 +12,10 @@ class Plugin(backend.plugin.Plugin):
         backend.plugin.Plugin.__init__(self, network, args);
 
         self.left = controllers.wallsconce.WallSconce(network, 1);
+        self.addresses.append(self.left.address);
+
         self.right = controllers.wallsconce.WallSconce(network, 0);
+        self.addresses.append(self.right.address);
 
         self.chunk = 512;
         self.pa = pyaudio.PyAudio();
