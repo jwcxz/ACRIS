@@ -1,0 +1,9 @@
+commbrd  - First attempt at a USB->RS485 converter
+commdngl - USB-dongle that connects directly to a computer and delivers RS-485
+ecomm    - Etchable USB->RS485 converter (proven)
+ledctrlr - The main ACRIS LED controller board
+ledmini  - Super tiny LED controller
+libs     - Board libs
+myropcb  - First run sent to Myro for production
+
+plus a few scripts to nicely export things to my site
