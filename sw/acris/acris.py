@@ -139,7 +139,7 @@ class Acris:
             return True
 
         else:
-            print "Error: %s not activated" %(plugginname);
+            print "Error: %s not activated" %(pluginname);
             return False
 
 
