@@ -14,7 +14,8 @@ enabled = {
     'csffw':    'Fireworks on derptrix',
     'csfwaves': 'Oscillations on derptrix',
     'csftext':  'Display scrolling text on derptrix',
-    'csfvumeter': 'VU-meter on derptrix'
+    'csfvumeter': 'VU-meter on derptrix',
+    '58livroom' : '58 Bromfield #1 living room'
     };
 
 __all__ = enabled.keys();
