@@ -4,6 +4,7 @@ import backend.plugin
 import backend.utils
 
 import controllers.five
+import controllers.wallsconce
 
 import random
 
@@ -14,7 +15,7 @@ class Plugin(backend.plugin.Plugin):
         self.leftcouch = controllers.five.FiveRGBLeft(network, 0x41);
         self.addresses.append(self.leftcouch.address);
 
-        self.rightcouch = controllers.five.FiveRGBRight(network, 0x40);
+        self.rightcouch = controllers.five.FiveRGBRight(network, 0x42);
         self.addresses.append(self.rightcouch.address);
 
         self.leftarch = controllers.five.FiveRGBLeft(network, 0x42);
@@ -22,6 +23,12 @@ class Plugin(backend.plugin.Plugin):
 
         self.rightarch = controllers.five.FiveRGBRight(network, 0x43);
         self.addresses.append(self.rightcouch.address);
+
+        self.leftsconce = controllers.wallsconce.WallSconce(network, 1);
+        self.addresses.append(self.leftsconce.address);
+
+        self.rightsconce = controllers.wallsconce.WallSconce(network, 0);
+        self.addresses.append(self.rightsconce.address);
 
     def updatecouch(self, vector):
         """small helper function to update couch devices
@@ -68,5 +75,8 @@ class Plugin(backend.plugin.Plugin):
 
             #self.leftarch.all(couch_rgbs[4]);
             #self.rightarch.all(couch_rgbs[5]);
+
+            self.leftsconce.twotone(couch_rgbs[3], couch_rgbs[4]);
+            self.rightsconce.twotone(couch_rgbs[3], couch_rgbs[4]);
 
             time.sleep(timestep);
