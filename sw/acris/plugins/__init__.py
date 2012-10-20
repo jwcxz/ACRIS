@@ -15,7 +15,8 @@ enabled = {
     'csfwaves': 'Oscillations on derptrix',
     'csftext':  'Display scrolling text on derptrix',
     'csfvumeter': 'VU-meter on derptrix',
-    '58livroom' : '58 Bromfield #1 living room'
+    '58livroom' : '58 Bromfield #1 living room',
+    'futurenoir': 'Blade-runner like effect for Future Noir'
     };
 
 __all__ = enabled.keys();
