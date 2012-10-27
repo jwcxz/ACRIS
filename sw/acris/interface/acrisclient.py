@@ -40,6 +40,11 @@ if args.activated:
 if args.addresses:
     commands.append('addresses');
 
+if args.stop:
+    commands.append('stop ' + args.stop[0]);
+elif args.stopall:
+    commands.append('stopall');
+
 if args.plugin:
     if len(args.plugin) == 1:
         if args.plugin[0] == 'wallset':
@@ -56,11 +61,6 @@ if args.plugin:
                 args.plugin.extend([ str(int(color[i:i+2], 16)) for i in xrange(0,6,2) ]);
 
     commands.append('plugin ' + ' '.join(args.plugin));
-
-if args.stop:
-    commands.append('stop ' + args.stop[0]);
-elif args.stopall:
-    commands.append('stopall');
 
 if args.raw:
     commands.append(' '.join(args.raw));

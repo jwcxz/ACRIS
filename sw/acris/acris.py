@@ -111,11 +111,16 @@ class Acris:
         pluginobj = self.plugins[pluginname][0];
         newplugin = pluginobj(self.network, args);
 
-        # ensure that only one plugin can access each address
-        for addr in newplugin.addresses:
-            if addr in self.used_addresses:
-                print "Addresses in use already:", newplugin.addresses, self.used_addresses;
-                return False;
+        # if pulgin is already activated, replace it; otherwise ensure that
+        # only one plugin can access each address
+        if pluginname in self.activated:
+            print "Plugin already active.  Restarting...";
+            self.stop_plugin(plugginname);
+        else:
+            for addr in newplugin.addresses:
+                if addr in self.used_addresses:
+                    print "Addresses in use already:", newplugin.addresses, self.used_addresses;
+                    return False;
 
         self.activated[pluginname] = newplugin;
         self.used_addresses.extend(newplugin.addresses);
