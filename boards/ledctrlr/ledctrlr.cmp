@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPcb (2012-03-17 BZR 3466)-stable date = Sat 31 Mar 2012 01:00:43 AM EDT
+Cmp-Mod V01 Created by CvPcb (2012-03-17 BZR 3466)-stable date = Sat 27 Oct 2012 04:22:12 PM EDT
 
 BeginCmp
 TimeStamp = /4DDBFE8A;
@@ -337,6 +337,13 @@ IdModule  = SM0805;
 EndCmp
 
 BeginCmp
+TimeStamp = /508C4A05;
+Reference = R12;
+ValeurCmp = 10K;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
 TimeStamp = /4D1A5263;
 Reference = SW1;
 ValeurCmp = SW_PUSH;
@@ -344,24 +351,24 @@ IdModule  = PUSH_SW;
 EndCmp
 
 BeginCmp
-TimeStamp = /4F71FDED;
+TimeStamp = /508C432B;
 Reference = TLC1;
-ValeurCmp = TLC5940-TSSOP;
-IdModule  = tssop-28-thermal;
+ValeurCmp = TLC5940;
+IdModule  = DIP-28__300;
 EndCmp
 
 BeginCmp
-TimeStamp = /4F71FE3B;
+TimeStamp = /508C4347;
 Reference = TLC2;
-ValeurCmp = TLC5940-TSSOP;
-IdModule  = tssop-28-thermal;
+ValeurCmp = TLC5940;
+IdModule  = DIP-28__300;
 EndCmp
 
 BeginCmp
-TimeStamp = /4F71FE41;
+TimeStamp = /508C434D;
 Reference = TLC3;
-ValeurCmp = TLC5940-TSSOP;
-IdModule  = tssop-28-thermal;
+ValeurCmp = TLC5940;
+IdModule  = DIP-28__300;
 EndCmp
 
 BeginCmp
