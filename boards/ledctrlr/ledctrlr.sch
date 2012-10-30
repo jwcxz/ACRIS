@@ -1,4 +1,4 @@
-EESchema Schematic File Version 2  date Sat 27 Oct 2012 04:21:05 PM EDT
+EESchema Schematic File Version 2  date Mon 29 Oct 2012 07:47:27 PM EDT
 LIBS:power
 LIBS:device
 LIBS:transistors
@@ -41,7 +41,7 @@ $Descr USLetter 11000 8500
 encoding utf-8
 Sheet 1 1
 Title "5-RGB LED Controller Board"
-Date "27 oct 2012"
+Date "29 oct 2012"
 Rev "2.0"
 Comp "J. Colosimo"
 Comment1 ""
@@ -843,31 +843,31 @@ $EndComp
 Text GLabel 8550 1050 2    60   Output ~ 0
 LEDRED0
 Text GLabel 8550 1350 2    60   Output ~ 0
-LEDRED1
-Text GLabel 8550 1650 2    60   Output ~ 0
-LEDRED2
-Text GLabel 8550 1950 2    60   Output ~ 0
-LEDRED3
-Text GLabel 8550 2250 2    60   Output ~ 0
-LEDRED4
-Text GLabel 8550 3200 2    60   Output ~ 0
 LEDGRN0
-Text GLabel 8550 3500 2    60   Output ~ 0
+Text GLabel 8550 1650 2    60   Output ~ 0
+LEDBLU0
+Text GLabel 8550 1950 2    60   Output ~ 0
+LEDRED1
+Text GLabel 8550 2250 2    60   Output ~ 0
 LEDGRN1
+Text GLabel 8550 3200 2    60   Output ~ 0
+LEDBLU1
+Text GLabel 8550 3500 2    60   Output ~ 0
+LEDRED2
 Text GLabel 8550 3800 2    60   Output ~ 0
 LEDGRN2
 Text GLabel 8550 4100 2    60   Output ~ 0
-LEDGRN3
-Text GLabel 8550 4400 2    60   Output ~ 0
-LEDGRN4
-Text GLabel 8550 5350 2    60   Output ~ 0
-LEDBLU0
-Text GLabel 8550 5650 2    60   Output ~ 0
-LEDBLU1
-Text GLabel 8550 5950 2    60   Output ~ 0
 LEDBLU2
-Text GLabel 8550 6250 2    60   Output ~ 0
+Text GLabel 8550 4400 2    60   Output ~ 0
+LEDRED3
+Text GLabel 8550 5350 2    60   Output ~ 0
+LEDGRN3
+Text GLabel 8550 5650 2    60   Output ~ 0
 LEDBLU3
+Text GLabel 8550 5950 2    60   Output ~ 0
+LEDRED4
+Text GLabel 8550 6250 2    60   Output ~ 0
+LEDGRN4
 Text GLabel 8550 6550 2    60   Output ~ 0
 LEDBLU4
 Text GLabel 9700 2900 0    60   Input ~ 0
@@ -1078,10 +1078,10 @@ F 1 "TLC5940" H 7850 6050 60  0000 C CNN
 	-1   0    0    -1  
 $EndComp
 $Comp
-L VCC #PWR?
+L VCC #PWR030
 U 1 1 508C4765
 P 5750 1800
-F 0 "#PWR?" H 5750 1900 30  0001 C CNN
+F 0 "#PWR030" H 5750 1900 30  0001 C CNN
 F 1 "VCC" H 5750 1900 30  0000 C CNN
 	1    5750 1800
 	1    0    0    -1  

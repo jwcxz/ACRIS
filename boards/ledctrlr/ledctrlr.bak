@@ -1,4 +1,4 @@
-EESchema Schematic File Version 2  date Sat 27 Oct 2012 04:19:56 PM EDT
+EESchema Schematic File Version 2  date Mon 29 Oct 2012 07:15:26 PM EDT
 LIBS:power
 LIBS:device
 LIBS:transistors
@@ -41,7 +41,7 @@ $Descr USLetter 11000 8500
 encoding utf-8
 Sheet 1 1
 Title "5-RGB LED Controller Board"
-Date "27 oct 2012"
+Date "29 oct 2012"
 Rev "2.0"
 Comp "J. Colosimo"
 Comment1 ""
