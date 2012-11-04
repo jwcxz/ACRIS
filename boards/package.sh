@@ -1,5 +1,12 @@
 #!/bin/sh
 
+# needs
+# board.ps  - schematic
+# board.csv - bom
+# board.svg - layout
+# board.g** - gerber files
+# board.drl - drill file
+
 rm ./export/*
 # package kicad files
 zip -r export/acris-kicad.zip libs/
