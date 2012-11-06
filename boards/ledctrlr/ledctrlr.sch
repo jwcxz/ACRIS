@@ -1,4 +1,4 @@
-EESchema Schematic File Version 2  date Sat 03 Nov 2012 11:20:31 PM EDT
+EESchema Schematic File Version 2  date Mon 05 Nov 2012 06:34:16 PM EST
 LIBS:power
 LIBS:device
 LIBS:transistors
@@ -41,7 +41,7 @@ $Descr USLetter 11000 8500
 encoding utf-8
 Sheet 1 1
 Title "5-RGB LED Controller Board"
-Date "4 nov 2012"
+Date "5 nov 2012"
 Rev "2.0"
 Comp "J. Colosimo"
 Comment1 ""
@@ -152,18 +152,6 @@ F 2 "PAD" H 4790 4460 60  0001 C CNN
 F 4 "N/A" H 4700 4500 60  0001 C CNN "Part"
 F 5 "N/A" H 4700 4500 60  0001 C CNN "DigikeyPart"
 	1    4700 4500
-	1    0    0    -1  
-$EndComp
-$Comp
-L CONN_1 PX2
-U 1 1 4DDC2882
-P 4700 2500
-F 0 "PX2" H 4750 2500 40  0000 L CNN
-F 1 "CONN_1" H 4700 2555 30  0001 C CNN
-F 2 "PAD" H 4790 2460 60  0001 C CNN
-F 4 "N/A" H 4700 2500 60  0001 C CNN "Part"
-F 5 "N/A" H 4700 2500 60  0001 C CNN "DigikeyPart"
-	1    4700 2500
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -992,7 +980,7 @@ Text Label 5300 2600 0    60   ~ 0
 XLAT
 Text Label 5300 2700 0    60   ~ 0
 BLANK
-Text Label 5350 4400 0    60   ~ 0
+Text Label 5300 2500 0    60   ~ 0
 GSCLK
 Text Label 4600 4600 0    60   ~ 0
 XERR1
@@ -1038,8 +1026,6 @@ Text Label 4700 2350 0    60   ~ 0
 XTAL1
 Text Label 4700 2100 0    60   ~ 0
 XTAL2
-Text Label 4500 2500 0    60   ~ 0
-XPB0
 Text Label 4500 2900 0    60   ~ 0
 XPB4
 Text Label 4500 3750 0    60   ~ 0
@@ -1117,6 +1103,20 @@ F 5 "RMCF0805JT10K0CT-ND" V 5750 2150 60  0001 C CNN "DigikeyPart"
 	1    5750 2150
 	-1   0    0    1   
 $EndComp
+$Comp
+L CONN_1 PX2
+U 1 1 50984858
+P 4700 4400
+F 0 "PX2" H 4750 4400 40  0000 L CNN
+F 1 "CONN_1" H 4700 4455 30  0001 C CNN
+F 2 "PAD" H 4790 4360 60  0001 C CNN
+F 4 "N/A" H 4700 4400 60  0001 C CNN "Part"
+F 5 "N/A" H 4700 4400 60  0001 C CNN "DigikeyPart"
+	1    4700 4400
+	1    0    0    -1  
+$EndComp
+Text Label 4500 4400 0    60   ~ 0
+XPD3
 Wire Wire Line
 	1700 1550 1700 1850
 Wire Wire Line
@@ -1237,9 +1237,6 @@ Wire Wire Line
 Connection ~ 6400 2600
 Wire Wire Line
 	6400 2600 4500 2600
-Connection ~ 6650 4400
-Wire Wire Line
-	4500 4400 6650 4400
 Wire Wire Line
 	6150 950  7200 950 
 Wire Wire Line
@@ -1522,8 +1519,6 @@ Connection ~ 2550 1850
 Wire Wire Line
 	4500 3850 4550 3850
 Wire Wire Line
-	4500 2500 4550 2500
-Wire Wire Line
 	2100 6300 2250 6300
 Connection ~ 2100 6300
 Wire Wire Line
@@ -1667,4 +1662,9 @@ Wire Wire Line
 	5750 1800 5750 1900
 Wire Wire Line
 	8000 5450 8000 5450
+Wire Wire Line
+	4500 4400 4550 4400
+Wire Wire Line
+	4500 2500 6650 2500
+Connection ~ 6650 2500
 $EndSCHEMATC
