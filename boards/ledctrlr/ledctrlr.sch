@@ -1,4 +1,4 @@
-EESchema Schematic File Version 2  date Mon 05 Nov 2012 06:34:16 PM EST
+EESchema Schematic File Version 2  date Wed 07 Nov 2012 06:37:59 AM EST
 LIBS:power
 LIBS:device
 LIBS:transistors
@@ -41,7 +41,7 @@ $Descr USLetter 11000 8500
 encoding utf-8
 Sheet 1 1
 Title "5-RGB LED Controller Board"
-Date "5 nov 2012"
+Date "7 nov 2012"
 Rev "2.0"
 Comp "J. Colosimo"
 Comment1 ""
@@ -980,7 +980,7 @@ Text Label 5300 2600 0    60   ~ 0
 XLAT
 Text Label 5300 2700 0    60   ~ 0
 BLANK
-Text Label 5300 2500 0    60   ~ 0
+Text Label 5300 4400 0    60   ~ 0
 GSCLK
 Text Label 4600 4600 0    60   ~ 0
 XERR1
@@ -1106,17 +1106,17 @@ $EndComp
 $Comp
 L CONN_1 PX2
 U 1 1 50984858
-P 4700 4400
-F 0 "PX2" H 4750 4400 40  0000 L CNN
-F 1 "CONN_1" H 4700 4455 30  0001 C CNN
-F 2 "PAD" H 4790 4360 60  0001 C CNN
-F 4 "N/A" H 4700 4400 60  0001 C CNN "Part"
-F 5 "N/A" H 4700 4400 60  0001 C CNN "DigikeyPart"
-	1    4700 4400
+P 4700 2500
+F 0 "PX2" H 4750 2500 40  0000 L CNN
+F 1 "CONN_1" H 4700 2555 30  0001 C CNN
+F 2 "PAD" H 4790 2460 60  0001 C CNN
+F 4 "N/A" H 4700 2500 60  0001 C CNN "Part"
+F 5 "N/A" H 4700 2500 60  0001 C CNN "DigikeyPart"
+	1    4700 2500
 	1    0    0    -1  
 $EndComp
-Text Label 4500 4400 0    60   ~ 0
-XPD3
+Text Label 4500 2500 0    60   ~ 0
+XPB0
 Wire Wire Line
 	1700 1550 1700 1850
 Wire Wire Line
@@ -1663,8 +1663,8 @@ Wire Wire Line
 Wire Wire Line
 	8000 5450 8000 5450
 Wire Wire Line
-	4500 4400 4550 4400
+	4500 4400 6650 4400
+Connection ~ 6650 4400
 Wire Wire Line
-	4500 2500 6650 2500
-Connection ~ 6650 2500
+	4500 2500 4550 2500
 $EndSCHEMATC

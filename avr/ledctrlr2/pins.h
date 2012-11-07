@@ -19,7 +19,10 @@
 #define TLCDATA_DDR DDRB
 
     // TLC control
-#define GSCLK_PIN   PB0
+#define GSCLK_PIN   PD3
+#define GSCLK_PRT   PORTD
+#define GSCLK_DDR   DDRD
+
 #define XLAT_PIN    PB1
 #define BLANK_PIN   PB2
 #define TLCTRL_PRT  PORTB
@@ -32,6 +35,6 @@
 #define XERR_PRT    PORTD
 #define XERR_DDR    DDRD
 
-    // remaining pins: PB4, PC4, PC5, PD3, PD4
+    // remaining pins: PB0, PB4, PC4, PC5, PD4
 
 #endif
