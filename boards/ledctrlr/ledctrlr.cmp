@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPcb (2012-03-17 BZR 3466)-stable date = Sat 27 Oct 2012 04:22:12 PM EDT
+Cmp-Mod V01 Created by CvPcb (2012-03-17 BZR 3466)-stable date = Mon 12 Nov 2012 04:35:17 PM EST
 
 BeginCmp
 TimeStamp = /4DDBFE8A;
@@ -137,35 +137,35 @@ BeginCmp
 TimeStamp = /4F6A108A;
 Reference = LED0;
 ValeurCmp = CONN_4;
-IdModule  = OSTTA040161;
+IdModule  = OSTTA040161p;
 EndCmp
 
 BeginCmp
 TimeStamp = /4F6A1097;
 Reference = LED1;
 ValeurCmp = CONN_4;
-IdModule  = OSTTA040161;
+IdModule  = OSTTA040161p;
 EndCmp
 
 BeginCmp
 TimeStamp = /4F6A109D;
 Reference = LED2;
 ValeurCmp = CONN_4;
-IdModule  = OSTTA040161;
+IdModule  = OSTTA040161p;
 EndCmp
 
 BeginCmp
 TimeStamp = /4F6A10A3;
 Reference = LED3;
 ValeurCmp = CONN_4;
-IdModule  = OSTTA040161;
+IdModule  = OSTTA040161p;
 EndCmp
 
 BeginCmp
 TimeStamp = /4F6A10A9;
 Reference = LED4;
 ValeurCmp = CONN_4;
-IdModule  = OSTTA040161;
+IdModule  = OSTTA040161p;
 EndCmp
 
 BeginCmp
@@ -232,7 +232,7 @@ IdModule  = PAD;
 EndCmp
 
 BeginCmp
-TimeStamp = /4DDC2882;
+TimeStamp = /50984858;
 Reference = PX2;
 ValeurCmp = CONN_1;
 IdModule  = PAD;
