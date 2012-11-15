@@ -1,47 +1,69 @@
-/* A C R I S   P R O J E C T ********
- * LED Controller                   *
- * http://jwcxz.com/projects/acris  *
- *                                  *
- * J. Colosimo -- http://jwcxz.com/ *
- *                                  *
- * LED actions                      *
- ************************************/
-
 #include "led.h"
 #include "tlc.h"
 
-void led_action(void) {
-    // this is just a wrapper function that decides what to do based on the
-    // current command
-    
-    led_set();
-
-    /* 
-    // delete the default call to led_set() above and replace it with the
-    // following switch statement to support multiple types of actions
-    switch (action) {
-
-        default:
-            led_set();
-            break;
-    }
-    */
-
-    tlc_drive();
+__inline__ uint8_t addr_match(uint8_t addr) {
+    return ( 
+        ( (addr < 0xF0) && (my_addr == addr) ) ||
+        ( (my_addr >> 4) == (addr & 0x0F) )
+    );
 }
 
-void led_set(void) {
-    uint8_t i, j;
-    uint16_t red, grn, blu;
+void led_action(uint8_t action, uint8_t args[]) {
+    // interpret the controller command and arguments
+    
+    uint8_t color, idx, i;
 
-    for ( i=0 ; i<5 ; i++ ) {
-        red = ser2led(args[3*i]);
-        grn = ser2led(args[3*i+1]);
-        blu = ser2led(args[3*i+2]);
+    if ( addr_match(args[0]) ) {
+        // this command applies to this address
+        // we're done with the address
+        args = &(args[1]);
+        
+        switch(action) {
+            // refer to README in this directory for a description of the
+            // commands
+            case CMD_LDSET:
+                for (color = 0 ; color < 3 ; color++ ) {
+                    for (idx=0 ; idx<15 ; idx+=3) {
+                        set_led(tlc[(color+idx)/5],
+                                (color+idx)%5,
+                                ser2led(args[color+idx]));
+                    }
+                }
+                
+                break;
 
-        for ( j=1 ; j<=3 ; j++ ) { set(tlc[0], 3*i + j, red); }
-        for ( j=1 ; j<=3 ; j++ ) { set(tlc[1], 3*i + j, grn); }
-        for ( j=1 ; j<=3 ; j++ ) { set(tlc[2], 3*i + j, blu); }
+            case CMD_HDSET:
+                
+                break;
 
+            case CMD_LDALL:
+                for (color = 0 ; color < 3 ; color++ ) {
+                    for (idx=0 ; idx<15 ; idx+=3) {
+                        set_led(tlc[(color+idx)/5],
+                                (color+idx)%5,
+                                ser2led(args[color]));
+                    }
+                }
+
+                break;
+
+            case CMD_HDALL:
+                
+                break;
+                
+            default:
+                return;
+                break;
+        }
+        
+        tlc_drive();
+    }
+}
+
+__inline__ void set_led(uint8_t driver, uint8_t led, uint16_t value) {
+    uint8_t i;
+
+    for (i=0 ; i<3 ; i++) {
+        set(tlc[driver], 3*led+i, value);
     }
 }

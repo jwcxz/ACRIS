@@ -9,7 +9,7 @@
 
 // buffer sizes (handle up to the maximum number of command arguments for
 // receive, some small number for transmit)
-#define UART_RX_BUFSZ   1+1+1+13
+#define UART_RX_BUFSZ   32 // 1+24 necessary
 #define UART_TX_BUFSZ   4
 
 void uart_init(void);

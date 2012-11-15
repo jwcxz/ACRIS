@@ -2,12 +2,19 @@
 #include "dbgled.h"
 #include "eeprom.h"
 
+__inline__ void uart_set_rx(void) {
+    _OFF(UARTWR_PRT, UARTWR_PIN);
+}
+__inline__ void uart_set_tx(void) {
+    _ON(UARTWR_PRT, UARTWR_PIN);
+}
+
+
 void uart_init(void) {
     // set rs485 tristate to "read"
     UARTWR_DDR |= _BV(UARTWR_PIN);
-    _OFF(UARTWR_PRT, UARTWR_PIN);
-    // XXX: if we ever enable transmission, we'll need to switch between "read"
-    // and "write" on the interrupts
+    uart_set_rx();
+    
     
     uint16_t baud = get_baud();
 	UBRR0H = (unsigned char) (baud>>8);
@@ -26,10 +33,10 @@ void uart_init(void) {
 	uart_rxbuf_iptr = uart_rxbuf;
 	uart_rxbuf_optr = uart_rxbuf;
     uart_rxbuf_count = 0;
-    /* XXX: enable with TX
+
 	uart_txbuf_iptr = uart_txbuf;
 	uart_txbuf_optr = uart_txbuf;
-    */
+    uart_txbuf_count = 0;
 }
 
 uint8_t uart_rx(void) {
@@ -72,8 +79,8 @@ uint8_t uart_data_rdy(void) {
 	return ( uart_rxbuf_count );
 }
 
-/* XXX: enable with TX
 void uart_tx(uint8_t data) {
+    // blocking call -- prevent return until we've cleared some of the buffer
 	while ( uart_txbuf_count >= UART_TX_BUFSZ );
 
 	*uart_txbuf_iptr = data;
@@ -85,7 +92,6 @@ void uart_tx(uint8_t data) {
 
 	_ON(UCSR0B,UDRIE0);
 }
-*/
 
 /* INTERRUPT VECTORS */
 ISR(USART_RX_vect) {
@@ -117,11 +123,10 @@ ISR(USART_RX_vect) {
     }
 }
 
-/*
 ISR(USART_TX_vect) {
 	if ( uart_txbuf_count > 0 ) {
         // set rs485 tristate to "write"
-        _ON(UARTWR_PRT, UARTWR_PIN);
+        uart_set_tx();
 
 		UDR0 = *uart_txbuf_optr;
 		uart_txbuf_count--;
@@ -129,8 +134,10 @@ ISR(USART_TX_vect) {
 		uart_txbuf_optr++;
 		if ( uart_txbuf_optr >= uart_txbuf + UART_TX_BUFSZ )
 			uart_txbuf_optr = uart_txbuf;
+        
+        // back to read
+        uart_set_rx();
 	} else {
 		_OFF(UCSR0B, UDRIE0);
 	}
 }
-*/

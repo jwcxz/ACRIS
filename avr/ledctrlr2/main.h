@@ -24,23 +24,27 @@ extern unsigned short int uart_txbuf_count = 0;
 */
 
 /* GLOBAL VARIABLES */
-extern uint8_t instaddr;    // instrument address
+extern uint8_t my_addr;    // instrument address
 
 // tlc driver data holder
 // XXX: remove volatile
-extern volatile uint8_t tlc[3][24];
-
-extern uint8_t action;          // current action
-extern uint8_t numargs;         // number of arguments to expect
-extern uint8_t args[15];        // array to store arguments
-extern uint8_t* argptr;         //   ... associated pointer
+extern uint8_t tlc[3][24];
 
 int main(void);
 void receive_data(void);
+
+#define MAXARGS 24
 
 // state machine states
 #define CST_IDLE 0
 #define CST_SYNC 1
 #define CST_ARGS 2
+
+// commands
+#define CMD_LDSET_LEGACY 0xAA
+#define CMD_LDSET 0x00
+#define CMD_HDSET 0x01
+#define CMD_LDALL 0x10
+#define CMD_HDALL 0x11
 
 #endif
