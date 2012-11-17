@@ -1,7 +1,6 @@
 #include "tlc.h"
 
 void tlc_init(void) {
-    
     TLCTRL_DDR |= _BV(XLAT_PIN) | _BV(BLANK_PIN);
     _ON(TLCTRL_PRT, BLANK_PIN);
     _OFF(TLCTRL_PRT, XLAT_PIN);
@@ -41,20 +40,6 @@ void tlc_drive(void) {
         for ( out=0 ; out<24 ; out++ ) {
             SPDR = tlc[chip][out];
             while ( !(SPSR & _BV(SPIF)) );
-
-            // this is bitbang mode...  I wouldn't recommend it
-            /*
-            for ( val1=8 ; val1>0 ; val1-- ) {
-                val = val1 - 1;
-
-                _OFF(SCLK_PRT, SCLK_PIN);
-                _delay_us(SCLKHPD);
-                if ( ( tlc[chip][out] >> val ) & 1 ) _ON(SDAT_PRT, SDAT_PIN); else _OFF(SDAT_PRT, SDAT_PIN);
-                _delay_us(SCLKHPD);
-                _ON(SCLK_PRT, SCLK_PIN);
-                _delay_us(SCLKPD);
-            }
-            // */
         }
     }
 

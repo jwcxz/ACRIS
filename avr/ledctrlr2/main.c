@@ -29,7 +29,7 @@ uint8_t tlc[3][24];
 uint8_t action;         // current action
 uint8_t numargs;        // number of arguments to expect
 uint8_t args[MAXARGS];  // array to store arguments
-uint8_t* argptr = args; //   ... associated pointer
+uint8_t *argptr = args; //   ... associated pointer
 
 static uint8_t cmdstate;
 
@@ -76,6 +76,7 @@ void receive_data(void) {
             case CST_IDLE:
                 cmdstate = CST_IDLE;
                 break;
+                
             case CST_SYNC:
                 // save command for later processing
                 action = inbyte;
@@ -110,6 +111,7 @@ void receive_data(void) {
                         cmdstate = CST_IDLE;
                         break;
                 }
+                break;
 
             case CST_ARGS:
                 *argptr++ = inbyte;
