@@ -2,9 +2,9 @@
 #define _PINS_H_
 
     // UART control
-#define WEN_PRT  PORTD
-#define WEN_PIN  PD2
-#define WEN_DDR  DDRD
+#define TXEN_PRT  PORTD
+#define TXEN_PIN  PD2
+#define TXEN_DDR  DDRD
 
     // debug
 #define DBGLED_MSK  0x0F

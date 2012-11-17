@@ -1,28 +1,16 @@
-/* A C R I S   P R O J E C T ********
- * LED Controller                   *
- * http://jwcxz.com/projects/acris  *
- *                                  *
- * J. Colosimo -- http://jwcxz.com/ *
- *                                  *
- * TLC array modification, control  *
- ************************************/
-
 #include "tlc.h"
 
 void tlc_init(void) {
-    XLAT_DDR  |= _BV(XLAT_PIN);
-    XLAT_PRT  &= ~_BV(XLAT_PIN);
-
-    BLANK_DDR |= _BV(BLANK_PIN);
+    
+    TLCTRL_DDR |= _BV(XLAT_PIN) | _BV(BLANK_PIN);
+    _ON(TLCTRL_PRT, BLANK_PIN);
+    _OFF(TLCTRL_PRT, XLAT_PIN);
+    
     GSCLK_DDR |= _BV(GSCLK_PIN);
 
-    BLANK_PRT |= _BV(BLANK_PIN);
-
     // SPI initialization
-    SDAT_DDR |=  _BV(SDAT_PIN);
-    SCLK_DDR |=  _BV(SCLK_PIN);
-    SDSS_DDR |=  _BV(SDSS_PIN);
-    SCLK_PRT &= ~_BV(SCLK_PIN);
+    TLCDATA_DDR |= _BV(MOSI_PIN) | _BV(SCLK_PIN) | _BV(SDSS_PIN);
+    _OFF(TLCDATA_PRT, SCLK_PIN);
 
     //SPSR = _BV(SPI2X);            // double speed SPI
     SPCR = _BV(SPE) | _BV(MSTR);    // enable spi in master
@@ -71,9 +59,9 @@ void tlc_drive(void) {
     }
 
     // pulse the latch
-    _ON(XLAT_PRT, XLAT_PIN);
+    _ON(TLCTRL_PRT, XLAT_PIN);
     _delay_us(XLATPD);
-    _OFF(XLAT_PRT, XLAT_PIN);
+    _OFF(TLCTRL_PRT, XLAT_PIN);
     _delay_us(XLATPD);
 }
 
@@ -108,17 +96,4 @@ uint16_t get(volatile uint8_t driver[], uint8_t posn) {
         return ( ( (uint16_t) (driver[idx-1]) & 0x0F ) << 8 ) | driver[idx];
     }
 
-}
-
-void set_output(uint8_t chan, uint8_t led, uint16_t val) {
-    // stupid wrapper function to set LEDs
-    uint8_t i;
-
-    for ( i=(led+1) ; i<=3*(led+1) ; i++ ) set(tlc[chan], i, val);
-}
-
-// convert 8-bit serial input data into a 12-bit output for the TLC
-// and try to preserve the full range of the TLC's control
-uint16_t ser2led(uint8_t ser) {
-    return (((uint16_t) ser) << 4) | (ser >> 4);
 }

@@ -17,6 +17,11 @@ volatile uint8_t *uart_rxbuf_optr = uart_rxbuf;
 volatile uint8_t uart_rxbuf_count = 0;
 volatile uint8_t rxen = 0;
 
+volatile uint8_t uart_txbuf[UART_TX_BUFSZ];
+volatile uint8_t *uart_txbuf_iptr = uart_txbuf;
+volatile uint8_t *uart_txbuf_optr = uart_txbuf;
+volatile uint8_t uart_txbuf_count = 0;
+
 uint8_t my_addr = 0;
 
 uint8_t tlc[3][24];

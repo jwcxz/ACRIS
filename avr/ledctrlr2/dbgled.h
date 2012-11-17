@@ -1,6 +1,8 @@
 #ifndef _DBGLED_H_
 #define _DBGLED_H_
 
+#include "main.h"
+
 /* DEBUG LIGHTING */
 #define DBG_PRTYERR     0x1
 #define DBG_OVFLWERR    0x2

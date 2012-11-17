@@ -3,16 +3,16 @@
 #include "eeprom.h"
 
 __inline__ void uart_set_rx(void) {
-    _OFF(UARTWR_PRT, UARTWR_PIN);
+    _OFF(TXEN_PRT, TXEN_PIN);
 }
 __inline__ void uart_set_tx(void) {
-    _ON(UARTWR_PRT, UARTWR_PIN);
+    _ON(TXEN_PRT, TXEN_PIN);
 }
 
 
 void uart_init(void) {
     // set rs485 tristate to "read"
-    UARTWR_DDR |= _BV(UARTWR_PIN);
+    TXEN_DDR |= _BV(TXEN_PIN);
     uart_set_rx();
     
     

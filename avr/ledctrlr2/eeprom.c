@@ -8,6 +8,7 @@
  ************************************/
 
 #include "eeprom.h"
+#include "uart.h"
 #include <avr/eeprom.h>
 
 uint8_t get_addr(void) {

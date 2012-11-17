@@ -10,9 +10,9 @@
 #include "dbgled.h"
 
 void show_addr(void) {
-    dbg_set(instaddr >> 4);
+    dbg_set(my_addr >> 4);
     _delay_ms(500);
-    dbg_set(instaddr & 0x0F);
+    dbg_set(my_addr & 0x0F);
     _delay_ms(500);
 }
 
