@@ -28,7 +28,7 @@ for board in commbrd commdngl ledctrlr ledmini; do
     # copy relevant individual files
     cp $board/${board}.{pdf,png} export/
     cp $board/${board}-brd*.png export/
-    cp $board/${board}-bom.csv export/
+    cp $board/${board}.csv export/
 
     # package gerber+drill files
     zip -r export/${board}-gerber.zip $board/${board}-*.g* $board/${board}.drl
