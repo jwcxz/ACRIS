@@ -36,12 +36,12 @@ static uint8_t cmdstate;
 int main(void) {
     // initialize debug LEDs
     dbg_init();
-    dbg_set(0x0);
+    dbg_set(0x8);
 
     // initialize TLC
     tlc_init();
     // set everything off
-    tlc_drive();
+    //tlc_drive();
 
     // get the address of the device
     my_addr = get_addr();
@@ -87,22 +87,27 @@ void receive_data(void) {
                 switch (inbyte) {
                     case CMD_LDSET:
                     case CMD_LDSET_LEGACY:
+                        dbg_set(0x4);
                         action = CMD_LDSET; // replace legacy action code
                         numargs = 16;
                         cmdstate = CST_ARGS;
                         break;
 
                     case CMD_HDSET:
+                        dbg_set(0x4|0x1);
                         numargs = 24;
                         cmdstate = CST_ARGS;
                         break;
 
                     case CMD_LDALL:
+                        dbg_set(0x2);
+                        numargs = 24;
                         numargs = 4;
                         cmdstate = CST_ARGS;
                         break;
 
                     case CMD_HDALL:
+                        dbg_set(0x2|0x1);
                         numargs = 6;
                         cmdstate = CST_ARGS;
                         break;

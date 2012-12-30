@@ -8,7 +8,8 @@
 __inline__ uint8_t addr_match(uint8_t addr) {
     return ( 
         ( (addr < 0xF0) && (my_addr == addr) ) ||
-        ( (my_addr >> 4) == (addr & 0x0F) )
+        ( (my_addr >> 4) == (addr & 0x0F) ) ||
+        ( addr == 0xFF )
     );
 }
 
@@ -40,7 +41,7 @@ void set_led(uint8_t ledno, uint8_t channel, uint16_t value) {
 
     switch (ledno) {
         case 0:
-            for (i=0 ; i<3 ; i++) {
+            for (i=1 ; i<=3 ; i++) {
                 set(tlc[0], 3*channel+i, value);
             }
 
@@ -49,13 +50,13 @@ void set_led(uint8_t ledno, uint8_t channel, uint16_t value) {
         case 1:
             if (channel <= 1) {
                 // R, G
-                for (i=0 ; i<3 ; i++) {
+                for (i=1 ; i<=3 ; i++) {
                     set(tlc[0], 3*3+3*channel+i, value);
                 }
             } else {
                 // B
 
-                for (i=0 ; i<3 ; i++) {
+                for (i=1 ; i<=3 ; i++) {
                     set(tlc[1], i, value);
                 }
             }
@@ -63,7 +64,7 @@ void set_led(uint8_t ledno, uint8_t channel, uint16_t value) {
             break;
 
         case 2:
-            for (i=0 ; i<3 ; i++) {
+            for (i=1 ; i<=3 ; i++) {
                 set(tlc[1], 3*1+3*channel+i, value);
             }
 
@@ -72,12 +73,12 @@ void set_led(uint8_t ledno, uint8_t channel, uint16_t value) {
         case 3:
             if ( channel == 0 ) {
                 // R
-                for (i=0 ; i<3 ; i++) {
+                for (i=1 ; i<=3 ; i++) {
                     set(tlc[1], 3*4+i, value);
                 }
             } else {
                 // G, B
-                for (i=0 ; i<3 ; i++) {
+                for (i=1 ; i<=3 ; i++) {
                     set(tlc[2], 3*(channel-1)+i, value);
                 }
             }
@@ -85,7 +86,7 @@ void set_led(uint8_t ledno, uint8_t channel, uint16_t value) {
             break;
 
         case 4:
-            for (i=0 ; i<3 ; i++) {
+            for (i=1 ; i<=3 ; i++) {
                 set(tlc[2], 3*2+3*channel+i, value);
             }
 
@@ -194,9 +195,9 @@ void led_action(uint8_t action, uint8_t args[]) {
 
             case CMD_HDALL:
                 // 0/R R/R G/G G/B B/B
-                red = ((args[0]&0xF) << 4) | args[1];
-                grn = (args[2] << 8) | ((args[3]&0xF0) >> 4);
-                blu = (args[2] << 8) | ((args[3]&0xF0) >> 4);
+                red = hd_lword(args[0], args[1]);
+                grn = hd_rword(args[2], args[3]);
+                blu = hd_lword(args[3], args[4]);
 
                 for ( led=0 ; led<5 ; led++ ) {
                     set_led(led, 0, red);
