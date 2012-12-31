@@ -115,7 +115,7 @@ class Acris:
         # only one plugin can access each address
         if pluginname in self.activated:
             print "Plugin already active.  Restarting...";
-            self.stop_plugin(plugginname);
+            self.stop_plugin(pluginname);
         else:
             for addr in newplugin.addresses:
                 if addr in self.used_addresses:
