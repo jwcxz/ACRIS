@@ -6,6 +6,8 @@
 // latch pulse speed
 #define XLATPD 1
 
+__inline__ void pulse_xlat(void);
+
 void tlc_init(void);
 void tlc_drive(void);
 

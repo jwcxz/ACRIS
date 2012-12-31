@@ -1,6 +1,15 @@
 #include "tlc.h"
 
+__inline__ void pulse_xlat(void) {
+    _ON(TLCTRL_PRT, XLAT_PIN);
+    _delay_us(XLATPD);
+    _OFF(TLCTRL_PRT, XLAT_PIN);
+    _delay_us(XLATPD);
+}
+
 void tlc_init(void) {
+    uint8_t i;
+
     TLCTRL_DDR |= _BV(XLAT_PIN) | _BV(BLANK_PIN);
     _ON(TLCTRL_PRT, BLANK_PIN);
     _OFF(TLCTRL_PRT, XLAT_PIN);
@@ -14,6 +23,15 @@ void tlc_init(void) {
     //SPSR = _BV(SPI2X);            // double speed SPI
     SPCR = _BV(SPE) | _BV(MSTR);    // enable spi in master
     SPCR |= _BV(SPR1);              // speed register (don't set this too fast)
+
+    // initialize the shift register with all 0s
+    for ( i=0 ; i<24*3 ; i++ ) {
+        SPDR = 0;
+        while ( !(SPSR & _BV(SPIF)) );
+    }
+
+    // pulse the latch
+    pulse_xlat();
 
     // BLANK counter hits every 4096 GSCLK cycles
     TCCR1A = _BV(COM1B1);
@@ -44,10 +62,7 @@ void tlc_drive(void) {
     }
 
     // pulse the latch
-    _ON(TLCTRL_PRT, XLAT_PIN);
-    _delay_us(XLATPD);
-    _OFF(TLCTRL_PRT, XLAT_PIN);
-    _delay_us(XLATPD);
+    pulse_xlat();
 }
 
 /* HELPER FUNCTIONS */
