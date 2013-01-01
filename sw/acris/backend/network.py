@@ -25,11 +25,14 @@ class Network:
 
     def inst(self, addr, command, args):
         # silly wrapper to perform a command on a single light
-        self.cmd([addr, command] + args);
+        self.cmd([command, addr] + args);
 
     def group(self, group, args):
         # send a command to a group of lights
-        self.cmd(self, [250+self.c(group), command] + args);
+        self.cmd([command, 250+self.c(group)] + args);
+        
+    def stopall(self):
+        self.cmd([Commands.LDSET, 0xFF] + [0]*15);
 
     # utilities
     def c(self, v):

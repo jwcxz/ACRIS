@@ -105,13 +105,13 @@ class Acris:
                 print "whoops"
 
     def lights_off(self):
-        self.network.cmd([255, 0,0,0, 0,0,0, 0,0,0, 0,0,0, 0,0,0]);
+        self.network.stopall();
 
     def activate_plugin(self, pluginname, args):
         pluginobj = self.plugins[pluginname][0];
         newplugin = pluginobj(self.network, args);
 
-        # if pulgin is already activated, replace it; otherwise ensure that
+        # if plugin is already activated, replace it; otherwise ensure that
         # only one plugin can access each address
         if pluginname in self.activated:
             print "Plugin already active.  Restarting...";
