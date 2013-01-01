@@ -1,7 +1,7 @@
 import serial
 
 class Commands:
-    LDSET = 0x00;
+    LDSET = 0xAA;
     HDSET = 0x01;
     LDALL = 0x10;
     HDALL = 0x11;
@@ -16,7 +16,6 @@ class Network:
 
     def cmd(self, args, sendsync=True):
         # send a command string
-        print args
         s = "";
         if sendsync: s += self.SYNC;
         for a in args: s += self.c(a);
