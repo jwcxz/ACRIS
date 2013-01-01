@@ -1,7 +1,13 @@
 import serial
 
+class Commands:
+    LDSET = 0x00;
+    HDSET = 0x01;
+    LDALL = 0x10;
+    HDALL = 0x11;
+
 class Network:
-    SYNC = chr(170);
+    SYNC = chr(0x55);
 
     def __init__(self, port='/dev/ttyS0', baud=38400, parity=serial.PARITY_EVEN):
         # the default baud rate is 38400, but it will vary based on user
@@ -10,6 +16,7 @@ class Network:
 
     def cmd(self, args, sendsync=True):
         # send a command string
+        print args
         s = "";
         if sendsync: s += self.SYNC;
         for a in args: s += self.c(a);
@@ -17,13 +24,13 @@ class Network:
         self.cxn.write(s);
         self.cxn.flush();
 
-    def inst(self, addr, args):
+    def inst(self, addr, command, args):
         # silly wrapper to perform a command on a single light
-        self.cmd([addr]+args);
+        self.cmd([addr, command] + args);
 
     def group(self, group, args):
         # send a command to a group of lights
-        self.cmd(self, [250+self.c(group)]+args);
+        self.cmd(self, [250+self.c(group), command] + args);
 
     # utilities
     def c(self, v):

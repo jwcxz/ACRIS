@@ -1,16 +1,16 @@
-/* A C R I S   P R O J E C T ********
- * LED Controller                   *
- * http://jwcxz.com/projects/acris  *
- *                                  *
- * J. Colosimo -- http://jwcxz.com/ *
- *                                  *
- * debug LED control                *
- ************************************/
+#ifndef _DBGLED_H_
+#define _DBGLED_H_
 
 #include "main.h"
+
+/* DEBUG LIGHTING */
+#define DBG_PRTYERR     0x1
+#define DBG_OVFLWERR    0x2
 
 void show_addr(void);
 void dbg_set(uint8_t);
 void dbg_on(uint8_t);
 void dbg_off(uint8_t);
 void dbg_init(void);
+
+#endif

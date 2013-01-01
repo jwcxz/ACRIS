@@ -1,37 +1,32 @@
+/* A C R I S   P R O J E C T ********
+ * LED Controller                   *
+ * http://jwcxz.com/projects/acris  *
+ *                                  *
+ * J. Colosimo -- http://jwcxz.com/ *
+ *                                  *
+ * TLC array modification, control  *
+ ************************************/
+
 #include "tlc.h"
 
-__inline__ void pulse_xlat(void) {
-    _ON(TLCTRL_PRT, XLAT_PIN);
-    _delay_us(XLATPD);
-    _OFF(TLCTRL_PRT, XLAT_PIN);
-    _delay_us(XLATPD);
-}
-
 void tlc_init(void) {
-    uint8_t i;
+    XLAT_DDR  |= _BV(XLAT_PIN);
+    XLAT_PRT  &= ~_BV(XLAT_PIN);
 
-    TLCTRL_DDR |= _BV(XLAT_PIN) | _BV(BLANK_PIN);
-    _ON(TLCTRL_PRT, BLANK_PIN);
-    _OFF(TLCTRL_PRT, XLAT_PIN);
-    
+    BLANK_DDR |= _BV(BLANK_PIN);
     GSCLK_DDR |= _BV(GSCLK_PIN);
 
+    BLANK_PRT |= _BV(BLANK_PIN);
+
     // SPI initialization
-    TLCDATA_DDR |= _BV(MOSI_PIN) | _BV(SCLK_PIN) | _BV(SDSS_PIN);
-    _OFF(TLCDATA_PRT, SCLK_PIN);
+    SDAT_DDR |=  _BV(SDAT_PIN);
+    SCLK_DDR |=  _BV(SCLK_PIN);
+    SDSS_DDR |=  _BV(SDSS_PIN);
+    SCLK_PRT &= ~_BV(SCLK_PIN);
 
     //SPSR = _BV(SPI2X);            // double speed SPI
     SPCR = _BV(SPE) | _BV(MSTR);    // enable spi in master
     SPCR |= _BV(SPR1);              // speed register (don't set this too fast)
-
-    // initialize the shift register with all 0s
-    for ( i=0 ; i<24*3 ; i++ ) {
-        SPDR = 0;
-        while ( !(SPSR & _BV(SPIF)) );
-    }
-
-    // pulse the latch
-    pulse_xlat();
 
     // BLANK counter hits every 4096 GSCLK cycles
     TCCR1A = _BV(COM1B1);
@@ -58,11 +53,28 @@ void tlc_drive(void) {
         for ( out=0 ; out<24 ; out++ ) {
             SPDR = tlc[chip][out];
             while ( !(SPSR & _BV(SPIF)) );
+
+            // this is bitbang mode...  I wouldn't recommend it
+            /*
+            for ( val1=8 ; val1>0 ; val1-- ) {
+                val = val1 - 1;
+
+                _OFF(SCLK_PRT, SCLK_PIN);
+                _delay_us(SCLKHPD);
+                if ( ( tlc[chip][out] >> val ) & 1 ) _ON(SDAT_PRT, SDAT_PIN); else _OFF(SDAT_PRT, SDAT_PIN);
+                _delay_us(SCLKHPD);
+                _ON(SCLK_PRT, SCLK_PIN);
+                _delay_us(SCLKPD);
+            }
+            // */
         }
     }
 
     // pulse the latch
-    pulse_xlat();
+    _ON(XLAT_PRT, XLAT_PIN);
+    _delay_us(XLATPD);
+    _OFF(XLAT_PRT, XLAT_PIN);
+    _delay_us(XLATPD);
 }
 
 /* HELPER FUNCTIONS */
@@ -96,4 +108,17 @@ uint16_t get(volatile uint8_t driver[], uint8_t posn) {
         return ( ( (uint16_t) (driver[idx-1]) & 0x0F ) << 8 ) | driver[idx];
     }
 
+}
+
+void set_output(uint8_t chan, uint8_t led, uint16_t val) {
+    // stupid wrapper function to set LEDs
+    uint8_t i;
+
+    for ( i=(led+1) ; i<=3*(led+1) ; i++ ) set(tlc[chan], i, val);
+}
+
+// convert 8-bit serial input data into a 12-bit output for the TLC
+// and try to preserve the full range of the TLC's control
+uint16_t ser2led(uint8_t ser) {
+    return (((uint16_t) ser) << 4) | (ser >> 4);
 }

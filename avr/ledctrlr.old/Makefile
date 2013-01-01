@@ -63,9 +63,6 @@
 #####         Target Specific Details          #####
 #####     Customize these for your project     #####
 
-# board revision
-BRDREV?=2
-
 # Name of target controller 
 # (e.g. 'at90s8515', see the available avr-gcc mmcu 
 # options for possible values)
@@ -92,7 +89,7 @@ PROJECTNAME=ledctrlr
 # (list all files to compile, e.g. 'a.c b.cpp as.S'):
 # Use .cc, .cpp or .C suffix for C++ files, use .S 
 # (NOT .s !!!) for assembly source code files.
-PRJSRC=main.c dbgled.c eeprom.c ledset.c led.c tlc.c uart.c
+PRJSRC=main.c dbgled.c eeprom.c led.c tlc.c uart.c
 
 # additional includes (e.g. -I/path/to/mydir)
 INC=
@@ -149,7 +146,6 @@ HEXFORMAT=ihex
 
 # compiler
 CFLAGS=-I. $(INC) -g -mmcu=$(MCU) -O$(OPTLEVEL) \
-	-D"BRDREV=${BRDREV}"                    \
 	-fpack-struct -fshort-enums             \
 	-funsigned-bitfields -funsigned-char    \
 	-Wall -Wstrict-prototypes               \

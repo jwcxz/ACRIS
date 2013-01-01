@@ -1,9 +1,18 @@
+/* A C R I S   P R O J E C T ********
+ * LED Controller                   *
+ * http://jwcxz.com/projects/acris  *
+ *                                  *
+ * J. Colosimo -- http://jwcxz.com/ *
+ *                                  *
+ * debug LED control                *
+ ************************************/
+
 #include "dbgled.h"
 
 void show_addr(void) {
-    dbg_set(my_addr >> 4);
+    dbg_set(instaddr >> 4);
     _delay_ms(500);
-    dbg_set(my_addr & 0x0F);
+    dbg_set(instaddr & 0x0F);
     _delay_ms(500);
 }
 

@@ -1,20 +1,22 @@
+/* A C R I S   P R O J E C T ********
+ * LED Controller                   *
+ * http://jwcxz.com/projects/acris  *
+ *                                  *
+ * J. Colosimo -- http://jwcxz.com/ *
+ *                                  *
+ * UART interface                   *
+ ************************************/
+
 #include "uart.h"
 #include "dbgled.h"
 #include "eeprom.h"
 
-__inline__ void uart_set_rx(void) {
-    _OFF(TXEN_PRT, TXEN_PIN);
-}
-__inline__ void uart_set_tx(void) {
-    _ON(TXEN_PRT, TXEN_PIN);
-}
-
-
 void uart_init(void) {
     // set rs485 tristate to "read"
-    TXEN_DDR |= _BV(TXEN_PIN);
-    uart_set_rx();
-    
+    UARTWR_DDR |= _BV(UARTWR_PIN);
+    _OFF(UARTWR_PRT, UARTWR_PIN);
+    // XXX: if we ever enable transmission, we'll need to switch between "read"
+    // and "write" on the interrupts
     
     uint16_t baud = get_baud();
 	UBRR0H = (unsigned char) (baud>>8);
@@ -33,45 +35,26 @@ void uart_init(void) {
 	uart_rxbuf_iptr = uart_rxbuf;
 	uart_rxbuf_optr = uart_rxbuf;
     uart_rxbuf_count = 0;
-
+    /* XXX: enable with TX
 	uart_txbuf_iptr = uart_txbuf;
 	uart_txbuf_optr = uart_txbuf;
-    uart_txbuf_count = 0;
+    */
 }
 
 uint8_t uart_rx(void) {
 	unsigned char tmp;
     cli();
-    
-    // check for framing errors, overrun errors, and parity errors
-    // reset the uart if necessary
-    if ( UCSR0A & (_BV(FE0) | _BV(DOR0) | _BV(UPE0)) ) {
-        UCSR0B = 0;
-        UCSR0B = _BV(RXCIE0) | _BV(RXEN0);
-    }
 
-    // blocking call -- wait until we receive data
 	while ( uart_rxbuf_count == 0 );
 
 	tmp = *uart_rxbuf_optr;
 	uart_rxbuf_count--;
 
-    // increment pointer
 	uart_rxbuf_optr++;
 	if ( uart_rxbuf_optr >= uart_rxbuf + UART_RX_BUFSZ )
 		uart_rxbuf_optr = uart_rxbuf;
 
-    if ( rxen ) {
-        // receive is enabled, so enable interrupts
-        sei();
-    } else if ( uart_rxbuf_count < UART_RX_BUFSZ/2 ) {
-        // receive interrupt was disabled, but the buffer has been partially
-        // depleted, so we can start accepting data again
-        dbg_off(DBG_OVFLWERR);
-        rxen = 1;
-        sei();
-    }
-    
+    sei();
 	return tmp;
 }
 
@@ -79,8 +62,8 @@ uint8_t uart_data_rdy(void) {
 	return ( uart_rxbuf_count );
 }
 
+/* XXX: enable with TX
 void uart_tx(uint8_t data) {
-    // blocking call -- prevent return until we've cleared some of the buffer
 	while ( uart_txbuf_count >= UART_TX_BUFSZ );
 
 	*uart_txbuf_iptr = data;
@@ -92,16 +75,15 @@ void uart_tx(uint8_t data) {
 
 	_ON(UCSR0B,UDRIE0);
 }
+*/
 
 /* INTERRUPT VECTORS */
 ISR(USART_RX_vect) {
 	unsigned char data;
 
-    // check for framing errors, overrun errors, and parity errors
-    // reset the uart if necessary
-    if ( UCSR0A & (_BV(FE0) | _BV(DOR0) | _BV(UPE0)) ) {
-        UCSR0B = 0;
-        UCSR0B = _BV(RXCIE0) | _BV(RXEN0);
+    if ( UCSR0A & _BV(UPE0) ) {
+        // parity error
+        dbg_on(DBG_PRTYERR);
     } else {
         data = UDR0;
 
@@ -123,10 +105,11 @@ ISR(USART_RX_vect) {
     }
 }
 
+/* XXX: enable with TX
 ISR(USART_TX_vect) {
 	if ( uart_txbuf_count > 0 ) {
         // set rs485 tristate to "write"
-        uart_set_tx();
+        _ON(UARTWR_PRT, UARTWR_PIN);
 
 		UDR0 = *uart_txbuf_optr;
 		uart_txbuf_count--;
@@ -134,10 +117,8 @@ ISR(USART_TX_vect) {
 		uart_txbuf_optr++;
 		if ( uart_txbuf_optr >= uart_txbuf + UART_TX_BUFSZ )
 			uart_txbuf_optr = uart_txbuf;
-        
-        // back to read
-        uart_set_rx();
 	} else {
 		_OFF(UCSR0B, UDRIE0);
 	}
 }
+*/

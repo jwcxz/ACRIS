@@ -1,13 +1,13 @@
-/* A C R I S   P R O J E C T ********
- * LED Controller                   *
- * http://jwcxz.com/projects/acris  *
- *                                  *
- * J. Colosimo -- http://jwcxz.com/ *
- *                                  *
- * LED actions                      *
- ************************************/
+#ifndef _LED_H_
+#define _LED_H_
 
 #include "main.h"
 
-void led_action(void);
-void led_set(void);
+__inline__ uint8_t  addr_match(uint8_t);
+__inline__ uint16_t ld_upconv(uint8_t);
+__inline__ uint16_t hd_lword(uint8_t, uint8_t);
+__inline__ uint16_t hd_rword(uint8_t, uint8_t);
+
+void led_action(uint8_t, uint8_t *);
+    
+#endif

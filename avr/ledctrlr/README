@@ -1,11 +1,25 @@
-This is the main LED controller application that is run on the AVR.
-Essentially, it takes input from the RS-485 network and then converts it to a
-stream of serial data for the TLC5940 serial inputs.
+Revision 2.0 LED Controller Firmware
 
+Includes rev1.0 backwards compatibility.
 
-Serial format:
-    [SYNC][ADDR][LED0RED][LED0GRN][LED0BLU][LED1RED][LED1GRN][LED1BLU]...[LED4RED][LED4GRN][LED4BLU]
+Protocol: [0x55][CMD][ARG0][ARG1]...
 
+     CMD   NAME #ARGS ARGS / DESCRIPTION
+    ----  ----- ----- -----------------------------------------------------
+    0xAA  LDSET  16   ADDR 0RED 0GRN 0BLU 1RED 1GRN 1BLU ... 4RED 4GRN 4BLU
+    0x00                 8-bit control of each LED on the controller
+                         enforces backwards compatibility with the existing
+                         protocol (total 5*3*8=120 bits)
+    0x01  HDSET  24   ADDR 0000|0REDH 0REDL|0GRNH 0GRNL|0BLUH ...
+                         12-bit packed control of each LED
+                         (total 5*3*12=180 bits + 4 bits for alignment)
+    0x10  LDALL   4   ADDR RED GRN BLU
+                         8-bit control of all the LEDs on a given device
+                         (total 3*8=24 bits)
+    0x11  HDALL   6   ADDR 0000|REDH REDL|GRNH ...
+                         12-bit control of all the LEDs on a given device
+                         (total 3*12=36 bits -> 40 bits with the firstmost
+                         nibble ignored)
 
 Addressing:
     Each device should have a unique address from 0x00 to 0xEF.  0xF0-0xFF are
