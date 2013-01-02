@@ -10,6 +10,11 @@ volatile uint8_t *uart_rxbuf_optr = uart_rxbuf;
 volatile uint8_t uart_rxbuf_count = 0;
 volatile uint8_t rxen = 1;
 
+volatile uint8_t uart_txbuf[UART_TX_BUFSZ];
+volatile uint8_t *uart_txbuf_iptr = uart_txbuf;
+volatile uint8_t *uart_txbuf_optr = uart_txbuf;
+volatile uint8_t uart_txbuf_count = 0;
+
 // current command state
 static uint8_t curstate = CST_IDLE;
 
@@ -19,7 +24,7 @@ static uint8_t *page_buf_ptr;
 static uint16_t page_addr;
 
 // instrument address
-uint8_t instaddr;
+uint8_t my_addr;
 
 // baud rate divisor
 static uint16_t baud;
@@ -35,7 +40,7 @@ int main(void) {
     dbg_init();
     dbg_set(0x9);
 
-    instaddr = get_addr();
+    my_addr = get_addr();
 
     // set rs485 tristate to "read"
     TXEN_DDR |= _BV(TXEN_PIN);
@@ -111,11 +116,11 @@ void process_rx(void) {
                         break;
                         
                     case CMD_DISP_ADDR_H:
-                        dbg_set(instaddr>>4);
+                        dbg_set(my_addr>>4);
                         curstate = CST_IDLE;
                         break;
                     case CMD_DISP_ADDR_L:
-                        dbg_set(instaddr&0x0F);
+                        dbg_set(my_addr&0x0F);
                         curstate = CST_IDLE;
                         break;
 
@@ -154,7 +159,7 @@ void process_rx(void) {
         case CST_ADDR:
             addr_set(data);
             curstate = CST_IDLE;
-            instaddr = get_addr();
+            my_addr = get_addr();
             break;
 
         case CST_BAUD_H:
@@ -301,17 +306,17 @@ void write_page(void) {
 
 /* Check to see if the mask applies to this instrument */
 uint8_t applies_to_me(void) {
-    if ( instaddr == 0xFF ) {
+    if ( my_addr == 0xFF ) {
         // eeprom address hasn't been set yet, so listen to everything
         return 1;
     } else if ( mask == AM_ALL ) {
         // 0xFF = all addresses
         return 1;
-    } else if ( instaddr == mask ) {
+    } else if ( my_addr == mask ) {
         // we specifically targeted this device
         return 1;
-    } else if ( mask >= 0xF0 && ( instaddr >= (mask&0x0F)*16 && 
-                instaddr <= (mask&0x0F)*16+15 ) ) {
+    } else if ( mask >= 0xF0 && ( my_addr >= (mask&0x0F)*16 && 
+                my_addr <= (mask&0x0F)*16+15 ) ) {
         // the devices matches in block mode
         return 1;
     } else {

@@ -11,7 +11,7 @@
 #define PAGESIZE 128
 #define AM_ALL 255
 #define CMD_NOP 'N'
-//#define CMD_SYNC 170
+#define CMD_SYNC 0xAA
 #define CMD_ADDR 'A'
 #define CMD_BAUD 'B'
 #define CMD_BOOT 'R'
@@ -34,6 +34,7 @@
 #define CST_PROG_V   10
 
 #define UART_RX_BUFSZ   256
+#define UART_TX_BUFSZ   16
 
 /* UART BUFFERS */
 extern volatile uint8_t uart_rxbuf[UART_RX_BUFSZ];
@@ -42,8 +43,14 @@ extern volatile uint8_t *uart_rxbuf_optr;
 extern volatile uint8_t uart_rxbuf_count;
 extern volatile uint8_t rxen;
 
+extern volatile uint8_t uart_txbuf[UART_TX_BUFSZ];
+extern volatile uint8_t *uart_txbuf_iptr;
+extern volatile uint8_t *uart_txbuf_optr;
+extern volatile uint8_t uart_txbuf_count;
+extern volatile uint8_t txen;
+
 /* GLOBAL VARIABLES */
-extern uint8_t instaddr;    // instrument address
+extern uint8_t my_addr;    // instrument address
 
 int main(void);
 void receive_data(void);
