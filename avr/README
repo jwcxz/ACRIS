@@ -1,11 +1,4 @@
 This directory contains some AVR firmware code:
 
-main stuff (see READMEs in those dirs):
-    bootloader/ - ACRIS bootloader 
-    ledctrlr    - main LED controller firmware
-
-other stuff:
-    combine.sh  - combine bootloader hex file with application hex file for
-                  combined programming
-    boardtest/  - simple bring-up test that lets you flash some LEDs and stuff
-    huecycle/   - onboard color calculation (never tested)
+bootloader/ - ACRIS bootloader 
+ledctrlr    - main LED controller firmware

@@ -1,12 +1,3 @@
-/* A C R I S   P R O J E C T ********
- * LED Controller Bootloader        *
- * http://jwcxz.com/projects/acris  *
- *                                  *
- * J. Colosimo -- http://jwcxz.com/ *
- *                                  *
- * Main bootloader source file      *
- ************************************/
-
 #include "main.h"
 #include "eeprom.h"
 #include "dbgled.h"
@@ -47,8 +38,8 @@ int main(void) {
     instaddr = get_addr();
 
     // set rs485 tristate to "read"
-    UARTWR_DDR |= _BV(UARTWR_PIN);
-    _OFF(UARTWR_PRT, UARTWR_PIN);
+    TXEN_DDR |= _BV(TXEN_PIN);
+    _OFF(TXEN_PRT, TXEN_PIN);
     // set up uart for 9600 baud communication with no parity
 	UBRR0H = (uint8_t) (DEF_BAUD_PRESCALE_SLOW>>8);
 	UBRR0L = (uint8_t) DEF_BAUD_PRESCALE_SLOW;

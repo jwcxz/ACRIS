@@ -1,14 +1,4 @@
-/* A C R I S   P R O J E C T        *
- * LED Controller Bootloader        *
- * http://jwcxz.com/projects/acris  *
- *                                  *
- * J. Colosimo - http://jwcxz.com/  *
- *                                  *
- * Main bootloader header file      *
- ************************************/
-
 #include "config.h"
-#include "macros.h"
 
 #include <inttypes.h>
 #include <util/delay.h>
@@ -43,6 +33,7 @@
 #define CST_PROG_D   9
 #define CST_PROG_V   10
 
+#define UART_RX_BUFSZ   256
 
 /* UART BUFFERS */
 extern volatile uint8_t uart_rxbuf[UART_RX_BUFSZ];
