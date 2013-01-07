@@ -32,6 +32,8 @@
 #define XERR1_PIN   PD5
 #define XERR2_PIN   PD6
 #define XERR3_PIN   PD7
+#define XERRS_MSK   (_BV(XERR1_PIN) | _BV(XERR2_PIN) | _BV(XERR3_PIN))
+#define XERR_PIN    PIND
 #define XERR_PRT    PORTD
 #define XERR_DDR    DDRD
 

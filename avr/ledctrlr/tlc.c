@@ -34,10 +34,11 @@ void tlc_init(void) {
     pulse_xlat();
 
     // BLANK counter hits every 4096 GSCLK cycles
-    TCCR1A = _BV(COM1B1);
-    TCCR1B = _BV(WGM13);
-    TCCR1B |= _BV(CS10);
-    OCR1A = 1;
+    // mode 8: PWM phase and frequency correct
+    TCCR1A = _BV(COM1B1);   // clear 0C1B on compare match when upcounting, set when downcounting
+    TCCR1B = _BV(WGM13);    // mode 8
+    TCCR1B |= _BV(CS10);    // start timer, clk/1
+    OCR1A = 1;              // blank fires 
     OCR1B = 2;
     ICR1 = 18432; // = (GSCLKPD+1)*4096/2
 
@@ -47,6 +48,13 @@ void tlc_init(void) {
     TCCR2B |= _BV(CS20);
     OCR2A = 9;
     OCR2B = 0;
+    
+    // if we're on the new board revision, prepare the XERR pins
+#if (BRDREV == 2)
+    XERR_DDR &= ~(XERRS_MSK);
+    // enable pull-up
+    XERR_PRT |= XERRS_MSK;
+#endif
 }
 
 void tlc_drive(void) {
@@ -65,7 +73,24 @@ void tlc_drive(void) {
     pulse_xlat();
 }
 
-/* HELPER FUNCTIONS */
+// read error flags
+uint8_t tlc_read_xerr(void) {
+    // currently will only read thermal overflow
+    uint8_t xerr;
+
+#if (BRDREV == 2)
+    // TODO: this is dumb and probably won't work
+    while (TLCTRL_PRT & _BV(BLANK_PIN));
+    
+    xerr = XERR_PIN;
+    xerr = (xerr & XERRS_MSK) >> XERR1_PIN;
+#endif
+
+    return xerr;
+}
+
+
+/* LED ARRAY PACKING FUNCTIONS */
 void set(volatile uint8_t driver[], uint8_t posn, uint16_t value) {
     // store data to the packed driver byte array
     uint8_t idx;

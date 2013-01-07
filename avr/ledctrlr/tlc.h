@@ -11,6 +11,8 @@ __inline__ void pulse_xlat(void);
 void tlc_init(void);
 void tlc_drive(void);
 
+uint8_t tlc_read_xerr(void);
+
 void     set(volatile uint8_t driver[], uint8_t posn, uint16_t value);
 uint16_t get(volatile uint8_t driver[], uint8_t posn);
 
