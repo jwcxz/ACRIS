@@ -5,7 +5,7 @@ import math, time, serial, sys
 SYNC=0x55;
 timestep = 0.01;
 huestep = 2;
-maxrange = 64;
+maxrange = 2048;
 huephase=20;
 
 def convert(d):

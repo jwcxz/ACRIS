@@ -27,7 +27,7 @@ print ":: opened", cxn.portstr;
 
 
 def send(rgb):
-    sendarr = [ 0x11, 0x80 ];
+    sendarr = [ 0x11, 0xFF ];
     r,g,b = rgb;
     
     sendarr.append( r>>8 );
