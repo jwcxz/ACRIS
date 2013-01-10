@@ -7,6 +7,12 @@ class Controller:
     def __init__(self, network, address):
         self.network = network; # serial connection
         self.address = address; # device address
+        
+    def set_mode(self, newmode):
+        if newmode == "hd":
+            self.mode = "hd";
+        elif newmode == "ld":
+            self.mode = "ld";
 
     def set(self, args):
         if self.mode == "ld":
