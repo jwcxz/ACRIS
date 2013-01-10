@@ -112,6 +112,12 @@ void receive_data(void) {
                         cmdstate = CST_ARGS;
                         break;
                         
+                    case CMD_STATS:
+                        dbg_set(0x8);
+                        numargs = 1;
+                        cmdstate = CST_ARGS;
+                        break;
+
                     default:
                         cmdstate = CST_IDLE;
                         break;
@@ -123,8 +129,18 @@ void receive_data(void) {
 
                 if ( argptr - args == numargs ) {
                     // all arguments collected
+                    // perform appropriate action
+                    
+                    if (action == CMD_STATS) {
+                        // send back system status
+                        if (my_addr == args[0]) {
+                            uart_tx(tlc_read_xerr());
+                        }
+                    } else {
+                        led_action(action, args);
+                    }
+
                     cmdstate = CST_IDLE;
-                    led_action(action, args);
                 } else {
                     cmdstate = CST_ARGS;
                 }

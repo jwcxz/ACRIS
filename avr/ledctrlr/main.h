@@ -51,4 +51,6 @@ void receive_data(void);
 #define CMD_LDALL 0x10
 #define CMD_HDALL 0x11
 
+#define CMD_STATS 0x20
+
 #endif
