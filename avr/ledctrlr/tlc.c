@@ -76,7 +76,7 @@ void tlc_drive(void) {
 // read error flags
 uint8_t tlc_read_xerr(void) {
     // currently will only read thermal overflow
-    uint8_t xerr;
+    uint8_t xerr = 0;
 
 #if (BRDREV == 2)
     // TODO: this is dumb and probably won't work
