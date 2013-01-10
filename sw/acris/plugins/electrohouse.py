@@ -18,17 +18,14 @@ class Plugin(backend.plugin.Plugin):
         self.rightcouch = controllers.five.FiveRGBRight(network, 0x42);
         self.addresses.append(self.rightcouch.address);
 
-        self.leftarch = controllers.five.FiveRGBLeft(network, 0x42);
-        self.addresses.append(self.rightcouch.address);
-
-        self.rightarch = controllers.five.FiveRGBRight(network, 0x43);
-        self.addresses.append(self.rightcouch.address);
-
         self.leftsconce = controllers.wallsconce.WallSconce(network, 1);
         self.addresses.append(self.leftsconce.address);
 
         self.rightsconce = controllers.wallsconce.WallSconce(network, 0);
         self.addresses.append(self.rightsconce.address);
+        
+        for dev in [self.leftcouch, self.rightcouch, self.leftsconce, self.rightsconce]:
+            dev.set_mode("hd");
 
     def updatecouch(self, vector):
         """small helper function to update couch devices
@@ -43,7 +40,7 @@ class Plugin(backend.plugin.Plugin):
         backend.plugin.Plugin.run(self);
 
         if len(self.args) >= 1: maxv = int(self.args[0]);
-        else:                   maxv = 255;
+        else:                   maxv = 3172;
 
         if len(self.args) >= 2: style = self.args[1];
         else:                   style = "linear";
@@ -62,7 +59,7 @@ class Plugin(backend.plugin.Plugin):
         while self.enabled:
             for led in xrange(len(couch_hsvs)):
                 rgb = backend.utils.hsv2rgb(couch_hsvs[led][0], couch_hsvs[led][1], couch_hsvs[led][2]);
-                couch_rgbs[led] = [ int(max(0,min(255,maxv*_))) for _ in rgb ];
+                couch_rgbs[led] = [ int(max(0,min(4095,maxv*_))) for _ in rgb ];
                 if style == "linear":
                     couch_hsvs[led][0] += huestep;
                 elif style == "mirror":
@@ -72,9 +69,6 @@ class Plugin(backend.plugin.Plugin):
                         couch_hsvs[led][0] -= huestep;
 
             self.updatecouch(couch_rgbs);
-
-            #self.leftarch.all(couch_rgbs[4]);
-            #self.rightarch.all(couch_rgbs[5]);
 
             self.leftsconce.twotone(couch_rgbs[3], couch_rgbs[4]);
             self.rightsconce.twotone(couch_rgbs[3], couch_rgbs[4]);

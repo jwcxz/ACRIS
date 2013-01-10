@@ -15,7 +15,7 @@ enabled = {
     'csfwaves': 'Oscillations on derptrix',
     'csftext':  'Display scrolling text on derptrix',
     'csfvumeter': 'VU-meter on derptrix',
-    '58livroom' : '58 Bromfield #1 living room',
+    'electrohouse' : 'Electrohouse living room',
     'futurenoir': 'Blade-runner like effect for Future Noir'
     };
 
