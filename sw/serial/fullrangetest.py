@@ -4,12 +4,12 @@ import math, time, serial, sys
 
 SYNC=0x55;
 timestep = 0.01;
-huestep = 2;
-maxrange = 2048;
-huephase=20;
+huestep = 1;
+maxrange = 256;
+huephase=15;
 
 def convert(d):
-    if d == SYNC: d += 1;
+    #if d == SYNC: d += 1;
     return chr(min(255, max(0, int(d))));
 
 def hsv2rgb(h, s, v):
