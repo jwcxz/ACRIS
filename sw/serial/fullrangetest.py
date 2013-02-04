@@ -5,8 +5,8 @@ import math, time, serial, sys
 SYNC=0x55;
 timestep = 0.01;
 huestep = 1;
-maxrange = 2001;
-huephase=15;
+maxrange = 3172;
+huephase=45;
 
 def convert(d):
     #if d == SYNC: d += 1;
@@ -51,10 +51,10 @@ print ":: opened", cxn.portstr;
 hue = 0;
 
 while True:
-    rgb = [ [ int(maxrange*_) for _ in hsv2rgb(hue+offs, 1.0, 1.0) ] for offs in (0, huephase, 2*huephase, 3*huephase, 4*huephase) ];
+    rgb = [ [ int(maxrange*_) for _ in hsv2rgb(hue+offs, 1.0, 1.0) ] for offs in (2*huephase, 1*huephase, 0, 1*huephase, 2*huephase) ];
     #print rgb
     send(rgb);
-    hue = (hue+huestep) % 360.;
+    hue = (hue-huestep) % 360.;
     time.sleep(timestep);
     
 cxn.close();
