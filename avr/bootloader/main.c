@@ -32,6 +32,9 @@ static uint16_t baud;
 // device address mask
 static uint8_t mask = AM_ALL;
 
+// application start function
+void (*app_start)(void) = 0x0000;
+
 /* Main Loop */
 int main(void) {
     MCUCR = (1<<IVCE);
@@ -67,12 +70,12 @@ int main(void) {
         cli();
         MCUCR = (1<<IVCE);
         MCUCR = 0;
-        asm("jmp 0000");
+        app_start();
     } else if ( uart_rx() != CMD_NOP ) {
         cli();
         MCUCR = (1<<IVCE);
         MCUCR = 0;
-        asm("jmp 0000");
+        app_start();
     } else {
         // otherwise, go into receive data loop
         receive_data();
@@ -111,7 +114,7 @@ void process_rx(void) {
                         boot_rww_enable_safe();
                         MCUCR = (1<<IVCE);
                         MCUCR = 0;
-                        asm("jmp 0000");
+                        app_start();
                         curstate = CST_IDLE;
                         break;
                         
