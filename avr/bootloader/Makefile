@@ -78,7 +78,7 @@ PROGRAMMER_MCU=m168
 
 AVR_LFUSE=0xce
 AVR_HFUSE=0xd4
-AVR_EFUSE=0xfa
+AVR_EFUSE=0xf8
 
 # Name of our project
 # (use a single word, e.g. 'myproject')
@@ -119,14 +119,14 @@ EXTRALDFLAGS=-Wl,--section-start=.text=0x3800
 # described in the avrdude info page.
 # 
 #AVRDUDE_PROGRAMMERID=stk500
-#AVRDUDE_PROGRAMMERID=ponyser
-AVRDUDE_PROGRAMMERID=avrisp2
+AVRDUDE_PROGRAMMERID=ponyser
+#AVRDUDE_PROGRAMMERID=avrisp2
 
 # port--serial or parallel port to which your 
 # hardware programmer is attached
 #
-#AVRDUDE_PORT=/dev/ttyUSB0
-AVRDUDE_PORT=usb
+AVRDUDE_PORT=/dev/ttyS0
+#AVRDUDE_PORT=usb
 
 
 ####################################################
@@ -176,7 +176,7 @@ CC=avr-gcc
 OBJCOPY=avr-objcopy
 OBJDUMP=avr-objdump
 SIZE=avr-size
-AVRDUDE=avrdude -F -B 1.0
+AVRDUDE=avrdude -F
 REMOVE=rm -f
 
 ##### automatic target names ####
