@@ -24,7 +24,7 @@ def wbyte(a, b):
     return [ (a>>4)&0xFF , ((a&0xF) << 4) | ( (b>>8)&0xF ) , b&0xFF ];
 
 def send(rgb):
-    sendarr = [ 0x01, 0xFF ];
+    sendarr = [ 0x01, int(sys.argv[1]) ];
     
     sendarr.extend( wbyte(0, rgb[0][0])[1:3] );
     sendarr.extend( wbyte(rgb[0][1], rgb[0][2]) );
