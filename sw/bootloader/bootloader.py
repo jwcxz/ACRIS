@@ -41,7 +41,7 @@ btldr.activate();
 if args.nops == True:
     while True:
         btldr.write(btldr.CMDS['NOP']);
-        time.sleep(0.250);
+        time.sleep(0.150);
 
 if args.mask != None: 
     print "applying mask 0x%02x" % int(args.mask);
