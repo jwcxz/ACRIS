@@ -43,7 +43,7 @@ def send(rgb):
     cxn.write(sendstr);
     
 for step in range(4096):
-    send([step, 0, 0]);
+    send([0, 0, step]);
     time.sleep(0.005);
 
 cxn.close();

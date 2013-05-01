@@ -4,7 +4,7 @@ class Bootloader:
     PAGESIZE=128
         
     CMDS = {
-            'SYNC': chr(170),
+            'SYNC': chr(0xAA),
             'NOP' : 'N',
             'MASK': 'M',
             'ADDR': 'A',

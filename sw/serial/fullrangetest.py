@@ -5,8 +5,8 @@ import math, time, serial, sys
 SYNC=0x55;
 timestep = 0.01;
 huestep = 1;
-maxrange = 3172;
-huephase=45;
+maxrange = int(sys.argv[1]);
+huephase=15;
 
 def convert(d):
     #if d == SYNC: d += 1;
