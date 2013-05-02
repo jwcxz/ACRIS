@@ -8,8 +8,8 @@ import controllers.five
 import numpy as np;
 
 CMDS = {
-        'add_pulse'  : 1,
-        'del_pulse'  : 2,
+        'pulse_on'   : 1,
+        'pulse_off'  : 2,
         'set_decay'  : 3,
         'set_speed'  : 4,
         'set_shape'  : 5,
@@ -97,20 +97,20 @@ class Plugin(backend.plugin.Plugin):
                 # unpack data
                 command, params = data;
 
-                if command == CMDS['add_pulse']:
+                if command == CMDS['pulse_on']:
                     line = params[0];
                     hue = params[1] * 360./8.;
-                    self.add_pulse(line, params[1], hue);
+                    self.pulse_on(line, params[1], hue);
 
-                elif command == CMDS['del_pulse']:
+                elif command == CMDS['pulse_off']:
                     line, idx = params;
-                    self.del_pulse(line, idx);
+                    self.pulse_off(line, idx);
 
                 elif command == CMDS['set_decay']:
-                    self.params['decay'] = float(params[0]+1)/8. ** 2;
+                    self.params['decay'] = float(params[0]+1)/8.;
 
                 elif command == CMDS['set_speed']:
-                    self.params['speed'] = float(params[0]+1)/2. ** 2;
+                    self.params['speed'] = float(params[0]+1) * 5/8.;
 
                 elif command == CMDS['set_shape']:
                     self.params['shape'] = 1/float(params[0]+1);
@@ -125,7 +125,6 @@ class Plugin(backend.plugin.Plugin):
                 else:
                     print "unrecognized command";
 
-                print self.params;
 
             self.action();
 
@@ -182,17 +181,21 @@ class Plugin(backend.plugin.Plugin):
 
 
 
-    def add_pulse(self, line, index, hue):
+    def pulse_on(self, line, index, hue):
         new_pulse = Pulse(hue, self.params['decay'], self.params['speed']);
         self.pulses[line][index] = new_pulse;
 
-    def del_pulse(self, line, index):
-        self.pulses[line].pop(index, None);
+    def pulse_off(self, line, index):
+        print "%d: %d" % (line, len(self.pulses[line]));
+        self.pulses[line][index].switch_decay();
 
     def pulse_step(self):
         for line in self.pulses:
-            for pulse in line.values():
-                pulse.step();
+            for index in line.keys():
+                line[index].step();
+
+                if line[index].done:
+                    line.pop(index, None);
 
 
     def combine_pulses(self):
@@ -227,32 +230,38 @@ class Pulse:
         self.speed = speed;
         self.index = index;
         self.bound = 5;
+        self.done = False;
+        self.up = True;
 
-        print self.speed
         if self.speed > self.bound:
             self.vals = [1]*self.bound;
             self.index = self.bound
         else:
             self.vals = [0]*self.bound;
 
+    def switch_decay(self):
+        self.up = False;
+
     def step(self):
-        if self.index < self.bound:
-            # building up
-            iidx = int(self.index);
+        if self.up:
+            if self.index < self.bound:
+                # building up
+                iidx = int(self.index);
 
-            for i in xrange(iidx):
-                self.vals[i] = 1.0;
-            
-            fidx = self.index - iidx;
-            self.vals[iidx] = fidx;
-
-            self.index += self.speed;
-            if self.index >= self.bound:
+                for i in xrange(iidx):
+                    self.vals[i] = 1.0;
+                
+                fidx = self.index - iidx;
+                self.vals[iidx] = fidx;
+                self.index += self.speed;
+            else:
                 self.vals = [1.0]*self.bound;
                 self.index = self.bound;
         else:
             # decaying
             self.vals = [ (1 - self.decay)*val for val in self.vals ];
+            if sum(self.vals) < .001:
+                self.done = True;
 
 
     def rgb(self):
