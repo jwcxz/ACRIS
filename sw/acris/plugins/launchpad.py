@@ -38,6 +38,7 @@ class Plugin(backend.plugin.Plugin):
         
         for ia in inst_addrs:
             self.devs.append(controllers.five.FiveRGBLeft(network, ia));
+            self.devs[-1].set_mode('hd');
             self.addresses.append(ia);
 
         # set up zmq context
@@ -109,7 +110,7 @@ class Plugin(backend.plugin.Plugin):
                     self.params['decay'] = float(params[0]+1)/8. ** 2;
 
                 elif command == CMDS['set_speed']:
-                    self.params['decay'] = float(params[0]+1)/8. ** 2;
+                    self.params['speed'] = float(params[0]+1)/2. ** 2;
 
                 elif command == CMDS['set_shape']:
                     self.params['shape'] = 1/float(params[0]+1);
@@ -123,6 +124,8 @@ class Plugin(backend.plugin.Plugin):
 
                 else:
                     print "unrecognized command";
+
+                print self.params;
 
             self.action();
 
@@ -141,7 +144,7 @@ class Plugin(backend.plugin.Plugin):
         # combine lines to produce RGB array
         output = self.combine_pulses();
 
-        print output[0]
+        #print output[0]
 
         # drive display
         for o, d in zip(output, self.devs):
@@ -151,21 +154,23 @@ class Plugin(backend.plugin.Plugin):
     def action_strobe(self):
         # use speed slider to set on timesteps and shape slider to set off timesteps
         if not self.strobe_count[0]:
-            offmax = int(8*self.params['shape']);
+            #offmax = int(8*self.params['shape']);
+            offmax = 1
 
             # in off mdoe
             self.strobe_count[1] += 1;
-            if self.strobe_count[1] == offmax:
+            if self.strobe_count[1] >= offmax:
                 self.strobe_count = [1, 0];
 
             for d in self.devs:
                 d.all([0]*3);
         else:
             # in on mode
-            onmax = int(8*self.params['speed']);
+            #onmax = int(8*self.params['speed']);
+            onmax = 1
 
             self.strobe_count[1] += 1;
-            if self.strobe_count[1] == onmax:
+            if self.strobe_count[1] >= onmax:
                 self.strobe_count = [0, 0];
 
             for d in self.devs:
@@ -223,10 +228,15 @@ class Pulse:
         self.index = index;
         self.bound = 5;
 
-        self.vals = [0]*self.bound;
+        print self.speed
+        if self.speed > self.bound:
+            self.vals = [1]*self.bound;
+            self.index = self.bound
+        else:
+            self.vals = [0]*self.bound;
 
     def step(self):
-        if self.index < self.bound-1:
+        if self.index < self.bound:
             # building up
             iidx = int(self.index);
 
@@ -237,8 +247,9 @@ class Pulse:
             self.vals[iidx] = fidx;
 
             self.index += self.speed;
-            if self.index >= self.bound-1:
-                self.index = self.bound-1;
+            if self.index >= self.bound:
+                self.vals = [1.0]*self.bound;
+                self.index = self.bound;
         else:
             # decaying
             self.vals = [ (1 - self.decay)*val for val in self.vals ];
