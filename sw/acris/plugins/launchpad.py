@@ -5,16 +5,27 @@ import backend.utils as utils
 
 import controllers.five
 
+import numpy as np;
+
 CMDS = {
-        'add_pulse': 1,
-        'pulse_decay': 2,
-        'pulse_speed': 3,
-        'pulse_shape': 4,
-        'strobe_on': 5,
-        'strobe_off': 6,
-        'sine_on': 7,
-        'sine_off': 8,
+        'add_pulse'  : 1,
+        'del_pulse'  : 2,
+        'set_decay'  : 3,
+        'set_speed'  : 4,
+        'set_shape'  : 5,
+        'strobe_on'  : 6,
+        'strobe_off' : 7,
+        'sine_on'    : 8,
+        'sine_off'   : 9,
         };
+
+
+BLANK_OUTPUT = [];
+for i in xrange(5):
+    BLANK_OUTPUT.append([]);
+    for j in xrange(5):
+        BLANK_OUTPUT[-1].append([0,0,0]);
+
 
 class Plugin(backend.plugin.Plugin):
     def __init__(self, network, args):
@@ -45,7 +56,7 @@ class Plugin(backend.plugin.Plugin):
         p.add_argument('-t', '--timestep', dest='timestep', type=float,
                 default=0.01, help='timestep');
 
-        self.args = p.parse_args(' '.join(self.args));
+        self.args = p.parse_args(args);
 
 
         # starting action and parameters
@@ -58,6 +69,9 @@ class Plugin(backend.plugin.Plugin):
                 'shape': 1
                 }
 
+        # pulse params
+        self.pulses = [{}, {}, {}, {}, {}];
+
         # strobe params
         self.strobe_count = [0, 0];
 
@@ -66,8 +80,6 @@ class Plugin(backend.plugin.Plugin):
 
     def run(self):
         backend.plugin.Plugin.run(self);
-
-        self.pulses = [];
 
         self.zmq_sub.connect(self.args.source);
         self.zmq_sub.setsockopt(zmq.SUBSCRIBE, "");
@@ -81,23 +93,26 @@ class Plugin(backend.plugin.Plugin):
                 data = None;
 
             if data != None:
-                print data
                 # unpack data
                 command, params = data;
 
                 if command == CMDS['add_pulse']:
                     line = params[0];
                     hue = params[1] * 360./8.;
-                    self.add_pulse(line, hue);
+                    self.add_pulse(line, params[1], hue);
 
-                elif command == CMDS['pulse_decay']:
-                    self.params['decay'] = 1/float(params[0]);
+                elif command == CMDS['del_pulse']:
+                    line, idx = params;
+                    self.del_pulse(line, idx);
 
-                elif command == CMDS['pulse_speed']:
-                    self.params['speed'] = (params[0]+1)/8.;
+                elif command == CMDS['set_decay']:
+                    self.params['decay'] = float(params[0]+1)/8. ** 2;
 
-                elif command == CMDS['pulse_shape']:
-                    self.params['shape'] = 1/float(params[0]);
+                elif command == CMDS['set_speed']:
+                    self.params['decay'] = float(params[0]+1)/8. ** 2;
+
+                elif command == CMDS['set_shape']:
+                    self.params['shape'] = 1/float(params[0]+1);
 
                 elif command == CMDS['strobe_on']:
                     self.action = self.action_strobe;
@@ -126,7 +141,7 @@ class Plugin(backend.plugin.Plugin):
         # combine lines to produce RGB array
         output = self.combine_pulses();
 
-        print output
+        print output[0]
 
         # drive display
         for o, d in zip(output, self.devs):
@@ -135,7 +150,7 @@ class Plugin(backend.plugin.Plugin):
 
     def action_strobe(self):
         # use speed slider to set on timesteps and shape slider to set off timesteps
-        if not self.strobe[0]:
+        if not self.strobe_count[0]:
             offmax = int(8*self.params['shape']);
 
             # in off mdoe
@@ -144,7 +159,7 @@ class Plugin(backend.plugin.Plugin):
                 self.strobe_count = [1, 0];
 
             for d in self.devs:
-                self.devs.all([0]*3);
+                d.all([0]*3);
         else:
             # in on mode
             onmax = int(8*self.params['speed']);
@@ -154,7 +169,7 @@ class Plugin(backend.plugin.Plugin):
                 self.strobe_count = [0, 0];
 
             for d in self.devs:
-                self.devs.all([self.args.maxval]*3);
+                d.all([self.args.maxval]*3);
 
     def action_sine(self):
         # use the speed slider to adjust frequency of sine wave
@@ -162,62 +177,85 @@ class Plugin(backend.plugin.Plugin):
 
 
 
-    def add_pulse(self, line, hue):
-        self.pulses.append(Pulse(line, hue, self.params['decay'], self.params['speed'], self.params['shape']));
+    def add_pulse(self, line, index, hue):
+        new_pulse = Pulse(hue, self.params['decay'], self.params['speed']);
+        self.pulses[line][index] = new_pulse;
+
+    def del_pulse(self, line, index):
+        self.pulses[line].pop(index, None);
 
     def pulse_step(self):
-        for pulse in self.pulses:
-            pulse.step();
+        for line in self.pulses:
+            for pulse in line.values():
+                pulse.step();
+
 
     def combine_pulses(self):
-        output = [];
-        for i in xrange(5):
-            output.append([]);
-            for j in xrange(5):
-                output[-1].append([0,0,0]);
+        output = BLANK_OUTPUT[:];
 
-        for p in self.pulses:
-            line = p.line;
-            rgb = p.rgb(self.args.maxval);
+        for line in xrange(5):
+            for pulse in self.pulses[line].values():
+                rgb = pulse.rgb();
 
-            for i in xrange(5):
-                output[line][i] = [o+r for o,r in zip(output[line][i], rgb[i])];
+                output[line] = [
+                        [ prev + new for prev, new 
+                            in zip(output[line][led], rgb[led]) ]
+                        for led in xrange(5) ];
+
+            # after all elements of the line have been computed, convert to
+            # integer command form
+            num_pulses = len(self.pulses[line]);
+            if num_pulses:
+                multiplier = self.args.maxval/float(num_pulses);
+                for led in xrange(5):
+                    for comp in xrange(3):
+                        output[line][led][comp] = int(round(multiplier * output[line][led][comp]));
 
         return output;
 
 
 
 class Pulse:
-    def __init__(self, line, hue, decay, speed, shape, index=0, bound=5):
-        self.line = line;
+    def __init__(self, hue, decay, speed, index=0., bound=5):
         self.hue = hue;
         self.decay = decay;
         self.speed = speed;
-        self.shape = shape;
         self.index = index;
         self.bound = 5;
 
         self.vals = [0]*self.bound;
 
-        self.newval = 1.0;
-
     def step(self):
-        new = self.reflect();
+        if self.index < self.bound-1:
+            # building up
+            iidx = int(self.index);
 
-        # update vals
-        for i in xrange(self.bound):
-            self.vals[i] = (1 - self.shape) * self.vals[i] + \
-                           (self.shape) * new[i];
+            for i in xrange(iidx):
+                self.vals[i] = 1.0;
+            
+            fidx = self.index - iidx;
+            self.vals[iidx] = fidx;
 
-    def rgb(self, amp):
+            self.index += self.speed;
+            if self.index >= self.bound-1:
+                self.index = self.bound-1;
+        else:
+            # decaying
+            self.vals = [ (1 - self.decay)*val for val in self.vals ];
+
+
+    def rgb(self):
         out = [];
         for val in self.vals:
-            rgb = [int(round(amp*c)) for c in
-                        utils.hsv2rgb(self.hue, 1.0, val)];
+            rgb = utils.hsv2rgb(self.hue, 1.0, val);
             out.append(rgb);
 
         return out;
 
+    
+
+    """
+    # old crazy code... fuck this noise
     def reflect(self):
         iidx = int(self.index);
         fidx = self.index - iidx;
@@ -250,3 +288,4 @@ class Pulse:
             self.newval = (1 - self.decay) * self.newval;
 
         return new;
+    """
