@@ -8,15 +8,10 @@ import controllers.five
 import numpy as np;
 
 CMDS = {
-        'pulse_on'   : 1,
-        'pulse_off'  : 2,
-        'set_decay'  : 3,
-        'set_speed'  : 4,
-        'set_shape'  : 5,
-        'strobe_on'  : 6,
-        'strobe_off' : 7,
-        'sine_on'    : 8,
-        'sine_off'   : 9,
+        'action_on'  : 1,
+        'action_off' : 2,
+        'set'        : 3,
+        'set_action' : 4,
         };
 
 
@@ -59,25 +54,17 @@ class Plugin(backend.plugin.Plugin):
 
         self.args = p.parse_args(args);
 
+        self.new_action_type = Pulse;
+        self.params = [4,4,4];
 
-        # starting action and parameters
-        self.action = self.action_pulse
+        # line setup
+        self.lines = [];
+        for i in xrange(5):
+            new = [ [], [], [], [],
+                    [], [], [], [] ];
 
-        # common params
-        self.params = {
-                'decay': 0.5,
-                'speed': 0.25,
-                'shape': 1
-                }
+            self.lines.append(new);
 
-        # pulse params
-        self.pulses = [{}, {}, {}, {}, {}];
-
-        # strobe params
-        self.strobe_count = [0, 0];
-
-        # sine params
-        self.sine_count = 0;
 
     def run(self):
         backend.plugin.Plugin.run(self);
@@ -97,30 +84,29 @@ class Plugin(backend.plugin.Plugin):
                 # unpack data
                 command, params = data;
 
-                if command == CMDS['pulse_on']:
-                    line = params[0];
-                    hue = params[1] * 360./8.;
-                    self.pulse_on(line, params[1], hue);
-
-                elif command == CMDS['pulse_off']:
+                if command == CMDS['action_on']:
                     line, idx = params;
-                    self.pulse_off(line, idx);
 
-                elif command == CMDS['set_decay']:
-                    self.params['decay'] = float(params[0]+1)/8.;
+                    new_action = self.new_action_type();
+                    new_action.set_params([index] + self.params);
+                    self.lines[line][idx].append(new_action);
 
-                elif command == CMDS['set_speed']:
-                    self.params['speed'] = float(params[0]+1) * 5/8.;
+                elif command == CMDS['action_off']:
+                    line, idx = params;
+                    for action in self.pulses[line][idx]:
+                        action.switch_off();
 
-                elif command == CMDS['set_shape']:
-                    self.params['shape'] = 1/float(params[0]+1);
+                elif command == CMDS['set']:
+                    index, val = params;
+                    if index < 3:
+                        self.params[index] = val;
 
-                elif command == CMDS['strobe_on']:
-                    self.action = self.action_strobe;
-                elif command == CMDS['sine_on']:
-                    self.action = self.action_sine;
-                elif command == CMDS['strobe_off'] or command == CMDS['sine_off']:
-                    self.action = self.action_pulse;
+                elif command == CMDS['set_action']:
+                    val = params[0];
+                    if val == 'pulse':
+                        self.new_action_type = Pulse;
+                    elif val == 'sine':
+                        self.new_action_type = Sine;
 
                 else:
                     print "unrecognized command";
@@ -131,14 +117,15 @@ class Plugin(backend.plugin.Plugin):
             time.sleep(self.args.timestep);
 
 
-    def stop(self):
-        backend.plugin.Plugin.stop(self);
-        self.zmq_ctx.destroy();
+    def action(self):
+        # step all visualizations
+        for line in xrange(5):
+            for index in xrange(8):
+                for action in self.lines[line][index]:
+                    action.step();
+                    if action.done:
+                        self.lines[line][index].remove(action);
 
-
-    def action_pulse(self):
-        # update all pulse transmission lines
-        self.pulse_step();
 
         # combine lines to produce RGB array
         output = self.combine_pulses();
@@ -150,6 +137,39 @@ class Plugin(backend.plugin.Plugin):
             #d.each(o[0] + o[1] + o[2] + o[3] + o[4]);
             d.each(o);
 
+
+    def combine_pulses(self):
+        output = BLANK_OUTPUT[:];
+
+        for line in xrange(5):
+            for index in xrange(8):
+                for action in self.lines[line][index]:
+                    rgb = action.rgb();
+
+                    output[line] = [
+                            [ prev + new for prev, new 
+                                in zip(output[line][led], rgb[led]) ]
+                                    for led in xrange(5) ];
+
+            # after all elements of the line have been computed, convert to
+            # integer command form
+            num_pulses = sum([len(self.lines[line][index]) for index in xrange(8)]);
+            if num_pulses:
+                multiplier = self.args.maxval/float(num_pulses);
+                for led in xrange(5):
+                    for comp in xrange(3):
+                        output[line][led][comp] = int(round(multiplier * output[line][led][comp]));
+
+        return output;
+
+
+    def stop(self):
+        backend.plugin.Plugin.stop(self);
+        self.zmq_ctx.destroy();
+
+
+
+    """
     def action_strobe(self):
         # use speed slider to set on timesteps and shape slider to set off timesteps
         if not self.strobe_count[0]:
@@ -175,19 +195,7 @@ class Plugin(backend.plugin.Plugin):
             for d in self.devs:
                 d.all([self.args.maxval]*3);
 
-    def action_sine(self):
-        # use the speed slider to adjust frequency of sine wave
-        pass
 
-
-
-    def pulse_on(self, line, index, hue):
-        new_pulse = Pulse(hue, self.params['decay'], self.params['speed']);
-        self.pulses[line][index] = new_pulse;
-
-    def pulse_off(self, line, index):
-        print "%d: %d" % (line, len(self.pulses[line]));
-        self.pulses[line][index].switch_decay();
 
     def pulse_step(self):
         for line in self.pulses:
@@ -196,54 +204,62 @@ class Plugin(backend.plugin.Plugin):
 
                 if line[index].done:
                     line.pop(index, None);
-
-
-    def combine_pulses(self):
-        output = BLANK_OUTPUT[:];
-
-        for line in xrange(5):
-            for pulse in self.pulses[line].values():
-                rgb = pulse.rgb();
-
-                output[line] = [
-                        [ prev + new for prev, new 
-                            in zip(output[line][led], rgb[led]) ]
-                        for led in xrange(5) ];
-
-            # after all elements of the line have been computed, convert to
-            # integer command form
-            num_pulses = len(self.pulses[line]);
-            if num_pulses:
-                multiplier = self.args.maxval/float(num_pulses);
-                for led in xrange(5):
-                    for comp in xrange(3):
-                        output[line][led][comp] = int(round(multiplier * output[line][led][comp]));
-
-        return output;
+    """
 
 
 
-class Pulse:
-    def __init__(self, hue, decay, speed, index=0., bound=5):
-        self.hue = hue;
-        self.decay = decay;
-        self.speed = speed;
-        self.index = index;
-        self.bound = 5;
+
+class LPVis:
+    def __init__(self, start_params=[4,4,4,4], start_index=0., bound=5):
+        self.p = {};
+
+        # visualization finished?
         self.done = False;
-        self.up = True;
 
-        if self.speed > self.bound:
+        # on_state = 1 when button is pushed down, 0 when up
+        self.on_state = True;
+
+        self.index = start_index;
+        self.bound = bound;
+
+        self.set_params(start_params);
+
+
+    def set_params(arr):
+        pass;
+
+    def switch_on(self):
+        self.on_state = True;
+    def switch_off(self):
+        self.on_state = False;
+
+    def step(self):
+        pass;
+
+    def rgb(self):
+        pass
+
+
+class Pulse(LPVis):
+    def __init__(self, params):
+        LPVis.__init__(self, params);
+
+        if self.p['speed'] > self.bound:
             self.vals = [1]*self.bound;
             self.index = self.bound
         else:
             self.vals = [0]*self.bound;
 
-    def switch_decay(self):
-        self.up = False;
+    def set_params(arr):
+        in_hue, in_decay, in_speed, in_shape = arr;
+
+        if in_hue   != None: self.p['hue']   = in_hue * 360/9.;
+        if in_decay != None: self.p['decay'] = (in_decay+1) * 1/8.;
+        if in_speed != None: self.p['speed'] = (in_speed+1) * 5/8.;
+        if in_shape != None: self.p['shape'] = (in_shape+1) * 1/8.;
 
     def step(self):
-        if self.up:
+        if self.on_state:
             if self.index < self.bound:
                 # building up
                 iidx = int(self.index);
@@ -253,59 +269,37 @@ class Pulse:
                 
                 fidx = self.index - iidx;
                 self.vals[iidx] = fidx;
-                self.index += self.speed;
+                self.index += self.p['speed'];
             else:
                 self.vals = [1.0]*self.bound;
                 self.index = self.bound;
         else:
             # decaying
-            self.vals = [ (1 - self.decay)*val for val in self.vals ];
+            self.vals = [ (1 - self.p['decay'])*val for val in self.vals ];
             if sum(self.vals) < .001:
                 self.done = True;
-
 
     def rgb(self):
         out = [];
         for val in self.vals:
-            rgb = utils.hsv2rgb(self.hue, 1.0, val);
+            rgb = utils.hsv2rgb(self.p['hue'], 1.0, val);
             out.append(rgb);
 
         return out;
 
+class Sine:
+    def __init__(self, params):
+        LPVis.__init__(self, params);
+
+        self.vals = [0]*self.bound;
+
+    def set_params(arr):
+        in_hue, in_decay, in_speed, in_offs = arr;
+
+        if in_hue   != None: self.p['hue']   = in_hue * 360/9.;
+        if in_decay != None: self.p['decay'] = (in_decay+1) * 1/8.;
+        if in_speed != None: self.p['speed'] = (in_speed+1) * 5/8.;
+        if in_offs  != None: self.p['offs']  = in_offs * 1/8.;
     
-
-    """
-    # old crazy code... fuck this noise
-    def reflect(self):
-        iidx = int(self.index);
-        fidx = self.index - iidx;
-
-        if self.index == 0 or self.index == self.bound-1:
-            cur = iidx;
-            nxt = None;
-        elif self.speed > 0:
-            cur = iidx;
-            nxt = iidx + 1;
-        elif self.speed < 0:
-            cur = iidx + 1;
-            nxt = iidx;
-            fidx = 1 - fidx;
-
-        new = [0]*self.bound;
-        new[cur] = self.newval * (1-fidx);
-        if nxt != None:
-            new[nxt] = self.newval * fidx;
-
-        self.index += self.speed;
-
-        if self.index >= self.bound-1:
-            self.index = self.bound-1;
-            self.speed = -1 * self.speed;
-            self.newval = (1 - self.decay) * self.newval;
-        elif self.index <= 0:
-            self.index = 0;
-            self.speed = -1 * self.speed;
-            self.newval = (1 - self.decay) * self.newval;
-
-        return new;
-    """
+    def step(self):
+       pass
