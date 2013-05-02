@@ -42,3 +42,10 @@ class Network:
             return chr(_+1);
         else:
             return chr(_);
+
+class DummyNetwork(Network):
+    def __init__(self):
+        pass;
+
+    def cmd(self, args, sendsync=True):
+        pass;
