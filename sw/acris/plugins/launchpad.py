@@ -116,6 +116,8 @@ class Plugin(backend.plugin.Plugin):
 
     def stop(self):
         backend.plugin.Plugin.stop(self);
+        self.zmq_ctx.destroy();
+
 
     def action_pulse(self):
         # update all pulse transmission lines
