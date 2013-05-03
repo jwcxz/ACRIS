@@ -260,6 +260,25 @@ class Sine(LPVis):
         if in_decay != None: self.p['decay'] = (in_decay+1) * 1/8.;
         if in_speed != None: self.p['speed'] = (in_speed+1) * 5/8.;
         if in_offs  != None: self.p['offs']  = in_offs * 1/8.;
+
+        self.offsets = [ n*self.p['offs'] for n in range(5) ];
     
     def step(self):
-       pass
+        if self.on_state:
+            freq = 2*math.pi*self.p['speed'];
+            newvals = [math.sin((self.index)*freq + o) for o in self.offsets];
+            self.vals = newvals;
+            self.index += 1;
+        else:
+            self.index = 0;
+            self.vals = [ (1 - self.p['decay'])*val for val in self.vals ];
+            if sum(self.vals) < .001:
+                self.done = True;
+
+    def rgb(self):
+        out = [];
+        for val in self.vals:
+            rgb = utils.hsv2rgb(self.p['hue'], 1.0, val);
+            out.append(rgb);
+
+        return out;
