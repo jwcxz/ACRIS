@@ -92,7 +92,7 @@ class Plugin(backend.plugin.Plugin):
 
                 elif command == CMDS['action_off']:
                     line, idx = params;
-                    for action in self.pulses[line][idx]:
+                    for action in self.lines[line][idx]:
                         action.switch_off();
 
                 elif command == CMDS['set']:
