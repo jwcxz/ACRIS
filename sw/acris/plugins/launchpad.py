@@ -218,7 +218,6 @@ class Pulse(LPVis):
 
     def step(self):
         if self.on_state:
-            print "up"
             if self.index < self.bound:
                 # building up
                 iidx = int(self.index);
@@ -234,7 +233,6 @@ class Pulse(LPVis):
                 self.index = self.bound;
         else:
             # decaying
-            print "down"
             self.vals = [ (1 - self.p['decay'])*val for val in self.vals ];
             if sum(self.vals) < .001:
                 self.done = True;
