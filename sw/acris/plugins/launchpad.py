@@ -38,13 +38,13 @@ class Plugin(backend.plugin.Plugin):
 
         # set up zmq context
         self.zmq_ctx = zmq.Context();
-        self.zmq_sub = self.zmq_ctx.socket(zmq.SUB);
+        self.zmq_pull = self.zmq_ctx.socket(zmq.PULL);
 
         # generate options
         p = argparse.ArgumentParser();
         
-        p.add_argument('-s', '--source', dest='source', type=str,
-                default='tcp://127.0.0.1:44444', help='zmq source');
+        p.add_argument('-a', '--address', dest='bindaddr', type=str,
+                default='tcp://*:44444', help='zmq bind address');
         
         p.add_argument('-v', '--max-val', dest='maxval', type=int,
                 default=128, help='maximum value');
@@ -69,14 +69,13 @@ class Plugin(backend.plugin.Plugin):
     def run(self):
         backend.plugin.Plugin.run(self);
 
-        self.zmq_sub.connect(self.args.source);
-        self.zmq_sub.setsockopt(zmq.SUBSCRIBE, "");
+        self.zmq_pull.bind(self.args.bindaddr);
 
         while self.enabled:
             # important note: I don't have time to actually properly use
             # threads right now.  This is nothing short of embarrassing.
             try:
-                data = self.zmq_sub.recv_pyobj(flags=zmq.NOBLOCK);
+                data = self.zmq_pull.recv_pyobj(flags=zmq.NOBLOCK);
             except zmq.ZMQError:
                 data = None;
 
@@ -88,7 +87,7 @@ class Plugin(backend.plugin.Plugin):
                     line, idx = params;
 
                     new_action = self.new_action_type();
-                    new_action.set_params([index] + self.params);
+                    new_action.set_params([idx] + self.params);
                     self.lines[line][idx].append(new_action);
 
                 elif command == CMDS['action_off']:
@@ -97,9 +96,9 @@ class Plugin(backend.plugin.Plugin):
                         action.switch_off();
 
                 elif command == CMDS['set']:
-                    index, val = params;
-                    if index < 3:
-                        self.params[index] = val;
+                    idx, val = params;
+                    if idx < 3:
+                        self.params[idx] = val;
 
                 elif command == CMDS['set_action']:
                     val = params[0];
@@ -130,11 +129,10 @@ class Plugin(backend.plugin.Plugin):
         # combine lines to produce RGB array
         output = self.combine_pulses();
 
-        #print output[0]
+        print output[0]
 
         # drive display
         for o, d in zip(output, self.devs):
-            #d.each(o[0] + o[1] + o[2] + o[3] + o[4]);
             d.each(o);
 
 
@@ -166,46 +164,6 @@ class Plugin(backend.plugin.Plugin):
     def stop(self):
         backend.plugin.Plugin.stop(self);
         self.zmq_ctx.destroy();
-
-
-
-    """
-    def action_strobe(self):
-        # use speed slider to set on timesteps and shape slider to set off timesteps
-        if not self.strobe_count[0]:
-            #offmax = int(8*self.params['shape']);
-            offmax = 1
-
-            # in off mdoe
-            self.strobe_count[1] += 1;
-            if self.strobe_count[1] >= offmax:
-                self.strobe_count = [1, 0];
-
-            for d in self.devs:
-                d.all([0]*3);
-        else:
-            # in on mode
-            #onmax = int(8*self.params['speed']);
-            onmax = 1
-
-            self.strobe_count[1] += 1;
-            if self.strobe_count[1] >= onmax:
-                self.strobe_count = [0, 0];
-
-            for d in self.devs:
-                d.all([self.args.maxval]*3);
-
-
-
-    def pulse_step(self):
-        for line in self.pulses:
-            for index in line.keys():
-                line[index].step();
-
-                if line[index].done:
-                    line.pop(index, None);
-    """
-
 
 
 
@@ -241,7 +199,7 @@ class LPVis:
 
 
 class Pulse(LPVis):
-    def __init__(self, params):
+    def __init__(self, params=[4,4,4,4]):
         LPVis.__init__(self, params);
 
         if self.p['speed'] > self.bound:
@@ -250,7 +208,7 @@ class Pulse(LPVis):
         else:
             self.vals = [0]*self.bound;
 
-    def set_params(arr):
+    def set_params(self, arr):
         in_hue, in_decay, in_speed, in_shape = arr;
 
         if in_hue   != None: self.p['hue']   = in_hue * 360/9.;
@@ -287,13 +245,13 @@ class Pulse(LPVis):
 
         return out;
 
-class Sine:
-    def __init__(self, params):
+class Sine(LPVis):
+    def __init__(self, params=[4,4,4,4]):
         LPVis.__init__(self, params);
 
         self.vals = [0]*self.bound;
 
-    def set_params(arr):
+    def set_params(self, arr):
         in_hue, in_decay, in_speed, in_offs = arr;
 
         if in_hue   != None: self.p['hue']   = in_hue * 360/9.;
