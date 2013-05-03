@@ -8,10 +8,11 @@ import controllers.five
 import numpy as np;
 
 CMDS = {
-        'action_on'  : 1,
-        'action_off' : 2,
-        'set'        : 3,
-        'set_action' : 4,
+        'clock_pulse' : 0,
+        'action_on'   : 1,
+        'action_off'  : 2,
+        'set'         : 3,
+        'set_action'  : 4,
         };
 
 
@@ -50,7 +51,7 @@ class Plugin(backend.plugin.Plugin):
                 default=128, help='maximum value');
         
         p.add_argument('-t', '--timestep', dest='timestep', type=float,
-                default=0.01, help='timestep');
+                default=0.01, help='timestep (or 0 for midi sync)');
 
         self.args = p.parse_args(args);
 
@@ -74,46 +75,56 @@ class Plugin(backend.plugin.Plugin):
         while self.enabled:
             # important note: I don't have time to actually properly use
             # threads right now.  This is nothing short of embarrassing.
-            try:
-                data = self.zmq_pull.recv_pyobj(flags=zmq.NOBLOCK);
-            except zmq.ZMQError:
-                data = None;
 
-            if data != None:
-                # unpack data
-                command, params = data;
+            if self.args.timestep == 0:
+                data = self.zmq_pull.recv_pyobj();
+                self.process_indata(data);
+            else:
+                try:
+                    data = self.zmq_pull.recv_pyobj(flags=zmq.NOBLOCK);
+                except zmq.ZMQError:
+                    data = None;
 
-                if command == CMDS['action_on']:
-                    line, idx = params;
+                if data != None:
+                    self.process_indata(data);
 
-                    new_action = self.new_action_type();
-                    new_action.set_params([idx] + self.params);
-                    self.lines[line][idx].append(new_action);
-
-                elif command == CMDS['action_off']:
-                    line, idx = params;
-                    for action in self.lines[line][idx]:
-                        action.switch_off();
-
-                elif command == CMDS['set']:
-                    idx, val = params;
-                    if idx < 3:
-                        self.params[idx] = val;
-
-                elif command == CMDS['set_action']:
-                    val = params[0];
-                    if val == 'pulse':
-                        self.new_action_type = Pulse;
-                    elif val == 'sine':
-                        self.new_action_type = Sine;
-
-                else:
-                    print "unrecognized command";
+                self.action();
+                time.sleep(self.args.timestep);
 
 
+    def process_indata(self, data):
+        # unpack data
+        command, params = data;
+
+        if command == CMDS['clock_pulse']:
             self.action();
 
-            time.sleep(self.args.timestep);
+        elif command == CMDS['action_on']:
+            line, idx = params;
+
+            new_action = self.new_action_type();
+            new_action.set_params([idx] + self.params);
+            self.lines[line][idx].append(new_action);
+
+        elif command == CMDS['action_off']:
+            line, idx = params;
+            for action in self.lines[line][idx]:
+                action.switch_off();
+
+        elif command == CMDS['set']:
+            idx, val = params;
+            if idx < 3:
+                self.params[idx] = val;
+
+        elif command == CMDS['set_action']:
+            val = params[0];
+            if val == 'pulse':
+                self.new_action_type = Pulse;
+            elif val == 'sine':
+                self.new_action_type = Sine;
+
+        else:
+            print "unrecognized command";
 
 
     def action(self):
