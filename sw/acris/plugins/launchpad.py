@@ -28,7 +28,7 @@ class Plugin(backend.plugin.Plugin):
         backend.plugin.Plugin.__init__(self, network, args);
 
         # set up instruments
-        inst_addrs = [ 0x70, 0x71, 0x72, 0x73, 0x74 ];
+        inst_addrs = [ 0x72, 0x73, 0x74, 0x70, 0x71 ];
 
         self.devs = [];
         
@@ -139,8 +139,6 @@ class Plugin(backend.plugin.Plugin):
 
         # combine lines to produce RGB array
         output = self.combine_pulses();
-
-        print output[0]
 
         # drive display
         for o, d in zip(output, self.devs):
@@ -267,15 +265,15 @@ class Sine(LPVis):
 
         if in_hue   != None: self.p['hue']   = in_hue * 360/9.;
         if in_decay != None: self.p['decay'] = (in_decay+1) * 1/8.;
-        if in_speed != None: self.p['speed'] = (in_speed+1) * 5/8.;
-        if in_offs  != None: self.p['offs']  = in_offs * 1/8.;
+        if in_speed != None: self.p['speed'] = (in_speed+1) * 1/8. * 2*math.pi*1/5.;
+        if in_offs  != None: self.p['offs']  = in_offs/7.;
 
-        self.offsets = [ n*self.p['offs'] for n in range(5) ];
+        self.offsets = [ o * self.p['offs'] * math.pi/4. for o in range(5) ]
     
     def step(self):
         if self.on_state:
-            freq = 2*math.pi*self.p['speed'];
-            newvals = [math.sin((self.index)*freq + o) for o in self.offsets];
+            freq = self.p['speed'];
+            newvals = [abs(math.sin((self.index)*freq + o) + 1)/2. for o in self.offsets];
             self.vals = newvals;
             self.index += 1;
         else:
