@@ -8,7 +8,10 @@ import plugins
 
 class Acris:
     def __init__(self, skthost='localhost', sktport=55555, serport='/dev/ttyUSB0', serbaud=38400, serparity=serial.PARITY_EVEN):
-        self.network = backend.network.Network(serport, serbaud, serparity);
+        if serport.lower() != "dummy":
+            self.network = backend.network.Network(serport, serbaud, serparity);
+        else:
+            self.network = backend.network.DummyNetwork();
 
         # build plugins list
         # name -> (obj, description)

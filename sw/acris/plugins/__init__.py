@@ -16,7 +16,8 @@ enabled = {
     'csftext':  'Display scrolling text on derptrix',
     'csfvumeter': 'VU-meter on derptrix',
     'electrohouse' : 'Electrohouse living room',
-    'futurenoir': 'Blade-runner like effect for Future Noir'
+    'futurenoir': 'Blade-runner like effect for Future Noir',
+    'launchpad': 'Launchpad controller interface'
     };
 
 __all__ = enabled.keys();
