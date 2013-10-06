@@ -1,24 +1,30 @@
+/*
+ * TLC5940 driver
+ * jwc :: jwcxz.com
+ */
+
+#include "config.h"
 #include "tlc.h"
 
-__inline__ void pulse_xlat(void) {
-    _ON(TLCTRL_PRT, XLAT_PIN);
-    _delay_us(XLATPD);
-    _OFF(TLCTRL_PRT, XLAT_PIN);
-    _delay_us(XLATPD);
+__inline__ void tlc_pulse_xlat(void) {
+    _ON(TLC_CTRL_PRT, TLC_XLAT_PIN);
+    _delay_us(TLC_XLATPD);
+    _OFF(TLC_CTRL_PRT, TLC_XLAT_PIN);
+    _delay_us(TLC_XLATPD);
 }
 
 void tlc_init(void) {
     uint8_t i;
 
-    TLCTRL_DDR |= _BV(XLAT_PIN) | _BV(BLANK_PIN);
-    _ON(TLCTRL_PRT, BLANK_PIN);
-    _OFF(TLCTRL_PRT, XLAT_PIN);
+    TLC_CTRL_DDR |= _BV(TLC_XLAT_PIN) | _BV(TLC_BLANK_PIN);
+    _ON(TLC_CTRL_PRT, TLC_BLANK_PIN);
+    _OFF(TLC_CTRL_PRT, TLC_XLAT_PIN);
     
-    GSCLK_DDR |= _BV(GSCLK_PIN);
+    TLC_GSCLK_DDR |= _BV(TLC_GSCLK_PIN);
 
     // SPI initialization
-    TLCDATA_DDR |= _BV(MOSI_PIN) | _BV(SCLK_PIN) | _BV(SDSS_PIN);
-    _OFF(TLCDATA_PRT, SCLK_PIN);
+    TLC_DATA_DDR |= _BV(TLC_MOSI_PIN) | _BV(TLC_SCLK_PIN) | _BV(TLC_SDSS_PIN);
+    _OFF(TLC_DATA_PRT, TLC_SCLK_PIN);
 
     //SPSR = _BV(SPI2X);            // double speed SPI
     SPCR = _BV(SPE) | _BV(MSTR);    // enable spi in master
@@ -31,7 +37,7 @@ void tlc_init(void) {
     }
 
     // pulse the latch
-    pulse_xlat();
+    tlc_pulse_xlat();
 
     // BLANK counter hits every 4096 GSCLK cycles
     // mode 8: PWM phase and frequency correct
@@ -51,9 +57,9 @@ void tlc_init(void) {
     
     // if we're on the new board revision, prepare the XERR pins
 #if (BRDREV == 2)
-    XERR_DDR &= ~(XERRS_MSK);
+    TLC_XERR_DDR &= ~(TLC_XERRS_MSK);
     // enable pull-up
-    XERR_PRT |= XERRS_MSK;
+    TLC_XERR_PRT |= TLC_XERRS_MSK;
 #endif
 }
 
@@ -70,7 +76,7 @@ void tlc_drive(void) {
     }
 
     // pulse the latch
-    pulse_xlat();
+    tlc_pulse_xlat();
 }
 
 // read error flags
@@ -80,10 +86,10 @@ uint8_t tlc_read_xerr(void) {
 
 #if (BRDREV == 2)
     // TODO: this is dumb and probably won't work
-    while (TLCTRL_PRT & _BV(BLANK_PIN));
+    while (TLC_CTRL_PRT & _BV(TLC_BLANK_PIN));
     
-    xerr = XERR_PIN;
-    xerr = (xerr & XERRS_MSK) >> XERR1_PIN;
+    xerr = TLC_XERR_PIN;
+    xerr = (xerr & TLC_XERRS_MSK) >> TLC_XERR1_PIN;
 #endif
 
     return xerr;
@@ -91,7 +97,7 @@ uint8_t tlc_read_xerr(void) {
 
 
 /* LED ARRAY PACKING FUNCTIONS */
-void set(volatile uint8_t driver[], uint8_t posn, uint16_t value) {
+void tlc_set(uint8_t volatile driver[], uint8_t posn, uint16_t value) {
     // store data to the packed driver byte array
     uint8_t idx;
 
@@ -109,7 +115,8 @@ void set(volatile uint8_t driver[], uint8_t posn, uint16_t value) {
     }
 }
 
-uint16_t get(volatile uint8_t driver[], uint8_t posn) {
+
+uint16_t tlc_get(uint8_t volatile driver[], uint8_t posn) {
     // get the value of a driver from the byte array
     uint8_t idx;
 

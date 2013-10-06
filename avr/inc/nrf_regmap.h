@@ -1,6 +1,7 @@
 #ifndef __NRF_REGHMAP_H
 #define __NRF_REGHMAP_H
 
+
 // commands
 #define NRF_CMD_REGRD   0x00
 #define NRF_CMD_REGWR   0x20
@@ -115,6 +116,29 @@
     #define NRF_BIT_EN_DPL      2
     #define NRF_BIT_EN_ACK_PAY  1
     #define NRF_BIT_EN_DYN_ACK  0
+
+
+// initial settings
+#define NRF_INI_CONFIG      ( _BV(NRF_BIT_MASK_TX_DS)  | \
+                              _BV(NRF_BIT_MASK_MAX_RT) | \
+                              _BV(NRF_BIT_EN_CRC)      | \
+                              _BV(NRF_BIT_PWR_UP)      | \
+                              _BV(NRF_BIT_PRIM_RX) )
+
+// TODO: probably want to disable ACKing at some point
+#define NRF_INI_EN_AA       ( _BV(NRF_BIT_ENAA_P0) )
+
+#define NRF_INI_EN_RXADDR   ( _BV(NRF_BIT_ERX_P0) )
+
+#define NRF_INI_SETUP_AW    ( 0x1 << NRF_BIT_AW10 )
+
+#define NRF_INI_SETUP_RETR  ( ( 0x0 << NRF_BIT_ARD74 ) | \
+                              ( 0x0 << NRF_BIT_ARC30 ) )
+
+#define NRF_INI_RF_SETUP    ( _BV(NRF_BIT_CONT_WAVE) | \
+                              ( COM_AD_SIZE << NRF_BIT_RF_PWR21 ) )
+
+#define NRF_INI_RX_PW_P0    ( COM_PL_SIZE << NRF_BIT_RX_PW_Px50 )
 
 
 #endif

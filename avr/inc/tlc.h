@@ -1,19 +1,20 @@
-#ifndef _TLC_H_
-#define _TLC_H_
+#ifndef __TLC_H_
+#define __TLC_H_
 
-#include "main.h"
 
-// latch pulse speed
-#define XLATPD 1
+// latch pulse speed in us
+#define TLC_XLATPD 1
 
-__inline__ void pulse_xlat(void);
+
+__inline__ void tlc_pulse_xlat(void);
 
 void tlc_init(void);
 void tlc_drive(void);
 
 uint8_t tlc_read_xerr(void);
 
-void     set(volatile uint8_t driver[], uint8_t posn, uint16_t value);
-uint16_t get(volatile uint8_t driver[], uint8_t posn);
+void tlc_set(uint8_t volatile *, uint8_t, uint16_t);
+uint16_t tlc_get(uint8_t volatile *, uint8_t);
+
 
 #endif

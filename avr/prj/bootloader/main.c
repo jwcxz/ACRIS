@@ -16,7 +16,7 @@ volatile uint8_t *uart_txbuf_optr = uart_txbuf;
 volatile uint8_t uart_txbuf_count = 0;
 
 // current command state
-static uint8_t curstate = CST_IDLE;
+static cst_type_t curstate = CST_IDLE;
 
 // page buffer
 static uint8_t page_buf[PAGESIZE];

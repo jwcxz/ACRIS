@@ -1,5 +1,5 @@
-#ifndef _DBGLED_H_
-#define _DBGLED_H_
+#ifndef __DBGLED_H_
+#define __DBGLED_H_
 
 #include "main.h"
 

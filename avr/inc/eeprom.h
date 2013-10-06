@@ -1,14 +1,14 @@
-#ifndef _EEPROM_H_
-#define _EEPROM_H_
+#ifndef __EEPROM_H_
+#define __EEPROM_H_
 
-#include "main.h"
 
-#define EEPROM_INST_ADDR (uint8_t*)  1
-#define EEPROM_BAUD_DBLE (uint8_t*)  2
-#define EEPROM_BAUD_RATE (uint16_t*) 3
+// non-generic: read instrument address
+void eeprom_get_addr(uint8_t *);
 
-uint8_t get_addr(void);
-uint16_t get_baud(void);
-uint8_t get_baud_dbl(void);
+
+// generic functions
+void eeprom_read(uint8_t *, uint8_t, uint8_t *);
+void eeprom_write(uint8_t *, uint8_t, uint8_t *);
+
 
 #endif

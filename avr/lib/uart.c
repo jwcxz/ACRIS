@@ -1,6 +1,12 @@
+/*
+ * Ring-buffer UART interface
+ * jwc :: jwcxz.com
+ */
+
+#include "config.h"
 #include "uart.h"
 #include "dbgled.h"
-#include "eeprom.h"
+
 
 __inline__ void uart_set_rx(void) {
     _OFF(TXEN_PRT, TXEN_PIN);
@@ -10,17 +16,15 @@ __inline__ void uart_set_tx(void) {
 }
 
 
-void uart_init(void) {
+void uart_init(uint16_t baud, uint8_t dbl) {
     // set rs485 tristate to "read"
     TXEN_DDR |= _BV(TXEN_PIN);
     uart_set_rx();
     
     
-    uint16_t baud = get_baud();
-	UBRR0H = (unsigned char) (baud>>8);
-	UBRR0L = (unsigned char) baud;
+	UBRR0H = (uint8_t) (baud>>8);
+	UBRR0L = (uint8_t) baud;
 
-    uint8_t dbl = get_baud_dbl();
     UCSR0A = ( dbl << U2X0 );
     // XXX: TXEN0 is disabled
 	UCSR0B = ( _BV(RXCIE0) | _BV(RXEN0) );
@@ -92,6 +96,7 @@ void uart_tx(uint8_t data) {
 
 	_ON(UCSR0B,UDRIE0);
 }
+
 
 /* INTERRUPT VECTORS */
 ISR(USART_RX_vect) {

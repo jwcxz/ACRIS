@@ -1,19 +1,26 @@
-More information:
-    http://jwcxz.com/projects/acris/bootloader.php
+Bootloader Firmware
+===================
 
+In order to provide OTA firmware updates, I wrote a bootloader.  For more
+information, see the [ACRIS bootloader page].
+
+
+## Features
 
 This bootloader provides the following features:
-    1. fast startup time (i.e. bootloader->application time)
-    2. downloading of program to device
-    3. set address of instrument
-    4. set the transmission baud rate (via the divisor)
-    5. set a mask (only operate on some devices)
-    6. view the instrument address on the debug LEDs
-    7. program verification (not ready)
+
+1.  Fast startup time (i.e. bootloader->application time)
+2.  Downloading of program to device
+3.  Set address of instrument
+4.  Set the transmission baud rate (via the divisor)
+5.  Set a mask (only operate on some devices)
+6.  View the instrument address on the debug LEDs
+7.  Program verification (not ready)
 
 
-Transmission is done through a serial protocol:
-    [SYNC][CMD][ARG0][ARG1]...[ARGn]
+## Protocol
+
+Transmission is done through a serial protocol, which looks like `[CMD][ARG0][ARG1]...[ARGn]`
 
     Fn  Args    Description
     ___ _______ ____________________________________________________
@@ -49,8 +56,12 @@ Transmission is done through a serial protocol:
     R   0       BOOT - boot the application
 
 
-TODO:
-    1.  Write the verification step
-    2.  Allow reading bytes from EEPROM to debug LEDs
-    3.  Decide whether to modify the bootloader to be able to write to and read
-        from any EEPROM address
+## TODOs:
+
+1.  Enable automatic retransmission
+2.  Allow reading bytes from EEPROM to debug LEDs
+3.  Add ability to write to and read from any EEPROM address
+
+
+
+[ACRIS bootloader page]:http://jwcxz.com/projects/acris/bootloader.php

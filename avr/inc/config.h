@@ -1,6 +1,7 @@
 #ifndef __CONFIG_H_
 #define __CONFIG_H_
 
+
 #include <inttypes.h>
 #include <util/delay.h>
 #include <avr/io.h>
@@ -23,5 +24,6 @@
 // number of bytes in a wireless packet
 #define COM_AD_SIZE  3
 #define COM_PL_SIZE 25
+
 
 #endif

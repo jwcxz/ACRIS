@@ -1,30 +1,43 @@
+/*
+ * EEPROM access functions
+ * jwc :: jwcxz.com
+ */
+
+#include "config.h"
 #include "eeprom.h"
-#include "uart.h"
-#include <avr/eeprom.h>
 
-uint8_t get_addr(void) {
-    uint8_t tmp;
+void eeprom_get_addr(uint8_t *buf) {
+    uint8_t i;
+
     eeprom_busy_wait();
-    tmp = eeprom_read_byte(EEPROM_INST_ADDR);
-    return tmp;
+
+    for ( i=0 ; i<COM_AD_SIZE ; i++ ) {
+        buf[i] = eeprom_read_byte(EEPROM_INST_ADDR);
+    }
 }
 
-uint16_t get_baud(void) {
-    uint16_t tmp;
-    eeprom_busy_wait();
-    tmp = eeprom_read_word(EEPROM_BAUD_RATE);
 
-                        // v return default prescale if not set
-    if ( tmp == 0xFFFF ) return DEF_BAUD_PRESCALE;
-    else return tmp;
+void eeprom_read(uint8_t *offset, uint8_t len, uint8_t *buf) {
+    uint8_t i = 0;
+
+    while (len--) {
+        eeprom_busy_wait();
+
+        buf[i] = eeprom_read_byte(offset);
+        offset = &(offset[1]);
+        i++;
+    }
 }
 
-uint8_t get_baud_dbl(void) {
-    uint8_t tmp;
-    eeprom_busy_wait();
-    tmp = eeprom_read_byte(EEPROM_BAUD_DBLE);
 
-                        // v return default double if not set
-    if ( tmp == 0xFF ) return DEF_BAUD_DOUBLE;
-    else return tmp&1;
+void eeprom_write(uint8_t *offset, uint8_t len, uint8_t *buf) {
+    uint8_t i = 0;
+
+    while (len--) {
+        eeprom_busy_wait();
+
+        buf[i] = eeprom_write_byte(offset);
+        offset = &(offset[1]);
+        i++;
+    }
 }

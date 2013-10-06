@@ -1,7 +1,10 @@
 /* A C R I S   P R O J E C T
+ * LED Controller Firmware
  * http://jwcxz.com/projects/acris
- * JWC
+ * jwc :: jwcxz.com
  */
+
+#include "config.h"
 
 #include "main.h"
 
@@ -11,18 +14,7 @@
 #include "tlc.h"
 #include "uart.h"
 
-volatile uint8_t uart_rxbuf[UART_RX_BUFSZ];
-volatile uint8_t *uart_rxbuf_iptr = uart_rxbuf;
-volatile uint8_t *uart_rxbuf_optr = uart_rxbuf;
-volatile uint8_t uart_rxbuf_count = 0;
-volatile uint8_t rxen = 0;
-
-volatile uint8_t uart_txbuf[UART_TX_BUFSZ];
-volatile uint8_t *uart_txbuf_iptr = uart_txbuf;
-volatile uint8_t *uart_txbuf_optr = uart_txbuf;
-volatile uint8_t uart_txbuf_count = 0;
-
-uint8_t my_addr = 0;
+uint8_t *my_addr[3];
 
 uint8_t tlc[3][24];
 

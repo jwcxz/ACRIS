@@ -1,6 +1,7 @@
 #ifndef __CONFIG_H_
 #define __CONFIG_H_
 
+
 #include <inttypes.h>
 #include <util/delay.h>
 #include <avr/io.h>
@@ -12,16 +13,26 @@
 #include "pins.h"
 #include "macros.h"
 
+#include "nrf.h"
+
+
 // system clock
 #define SYSCLK 20000000UL
 #define F_CPU  SYSCLK
+
+
+// number of bytes in instrument address and payload packet
+#define COM_AD_SIZE  3
+#define COM_PL_SIZE 25
+
 
 // USART-as-SPI baud rate
 #define NRF_BAUD_RATE 5000000UL
 #define NRF_PRESCALER SYSCLK/(2*NRF_BAUD_RATE) - 1
 
-// number of bytes in a wireless packet
-#define COM_AD_SIZE  3
-#define COM_PL_SIZE 25
+
+// this project is run in receiver mode
+#define NRF_FN  NRF_FN_RX
+
 
 #endif
