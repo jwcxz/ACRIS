@@ -22,7 +22,7 @@ This bootloader provides the following features:
 
 Transmission is done through a serial protocol, which looks like `[CMD][ARG0][ARG1]...[ARGn]`
 
-    Fn  Args    Description
+    FN  ARGS    DESCRIPTION
     ___ _______ ____________________________________________________
     170 0       SYNC -- start of a packet
 

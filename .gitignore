@@ -1,12 +1,32 @@
+# order information
 orders/*
-*.pyc
+
+
+# firmware
 *.ee.hex
 *.hex
 *.out
 *.out.map
 *.lst
 *.o
-tags
+
+
+# python
+*.pyc
+
+
+# kicad
+*.bak
 $savepcb*
+
+
+# temporary
 *.swp
-upload.sh
+
+
+# ctags
+tags
+
+
+# don't add reports yet
+docs/reports
