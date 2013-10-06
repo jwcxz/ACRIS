@@ -31,12 +31,12 @@
 #define NRF_PRESCALER SYSCLK/(2*NRF_BAUD_RATE) - 1
 
 
-// this project is run in receiver mode
-#define NRF_FN  NRF_FN_RX
+// this project is run in transmitter mode
+#define NRF_FN  NRF_FN_TX
 
 
 // instrument address
-#define INST_ADDR   {0xAA, 0xAA, 0x01}
+#define INST_ADDR   {0x55, 0xAA, 0x01}
 
 
 #endif

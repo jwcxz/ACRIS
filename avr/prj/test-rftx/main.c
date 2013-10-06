@@ -1,5 +1,5 @@
 /*
- * Wireless RX Test
+ * Wireless TX Test
  * jwc :: jwcxz.com
  */
 
@@ -8,6 +8,8 @@
 #include "nrf.h"
 
 uint8_t instrument_addr[COM_ADSIZE] = INST_ADDR;
+
+uint8_t target_addr[COM_ADSIZE] = {0xAA, 0xAA, 0x01};
 
 uint8_t volatile txbuf[COM_PL_SIZE];
 uint8_t volatile rxbuf[COM_PL_SIZE];
@@ -20,14 +22,20 @@ int main(void) {
     dbg_set(0x9);
 
     nrf_init(0x05, instrument_addr, txbuf, rxbuf);
-    nrf_enable_irq();
+    //nrf_enable_irq();
 
-    nrf_start_receiver();
+    for ( i=0 ; i<COM_PL_SIZE ; i++ ) {
+        txbuf[i] = i & 0xF;
+    }
 
     while(1) {
-        nrf_wait_for_rxpacket();
+        nrf_transmit_packet(target_addr, txbuf);
+
+        for ( i=0 ; i<COM_PL_SIZE ; i++ ) {
+            txbuf[i] = (txbuf[i] + 1) & 0xF;
+        }
+
         for ( i=0 ; i<10 ; i++ ) {
-            dbg_set(rxbuf[i]);
             delay_ms(200);
         }
     }
