@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPcb (2012-03-17 BZR 3466)-stable date = Mon 12 Nov 2012 04:35:17 PM EST
+Cmp-Mod V01 Created by CvPcb (2013-10-05 BZR 4375)-stable date = Sat 05 Oct 2013 08:44:42 PM PDT
 
 BeginCmp
 TimeStamp = /4DDBFE8A;
@@ -50,6 +50,13 @@ IdModule  = SM0805;
 EndCmp
 
 BeginCmp
+TimeStamp = /5250F025;
+Reference = C8;
+ValeurCmp = 1uF;
+IdModule  = SM0805;
+EndCmp
+
+BeginCmp
 TimeStamp = /4DDC03FC;
 Reference = D1;
 ValeurCmp = LED;
@@ -92,24 +99,10 @@ IdModule  = DIP-28__300;
 EndCmp
 
 BeginCmp
-TimeStamp = /4D1A428B;
-Reference = IC2;
-ValeurCmp = SN75176B;
-IdModule  = SOIC8;
-EndCmp
-
-BeginCmp
-TimeStamp = /4D1A4291;
-Reference = J1;
-ValeurCmp = RJ45;
-IdModule  = RJ45_8;
-EndCmp
-
-BeginCmp
-TimeStamp = /4D1A428F;
-Reference = J2;
-ValeurCmp = RJ45;
-IdModule  = RJ45_8;
+TimeStamp = /5250D812;
+Reference = IC3;
+ValeurCmp = NRF24L01+MOD;
+IdModule  = NRF24LO1+MOD_GRN;
 EndCmp
 
 BeginCmp
@@ -225,29 +218,8 @@ IdModule  = PAD;
 EndCmp
 
 BeginCmp
-TimeStamp = /4DDC28A6;
-Reference = PX1;
-ValeurCmp = CONN_1;
-IdModule  = PAD;
-EndCmp
-
-BeginCmp
-TimeStamp = /50984858;
-Reference = PX2;
-ValeurCmp = CONN_1;
-IdModule  = PAD;
-EndCmp
-
-BeginCmp
 TimeStamp = /4DDC2871;
 Reference = PX3;
-ValeurCmp = CONN_1;
-IdModule  = PAD;
-EndCmp
-
-BeginCmp
-TimeStamp = /4DDC2840;
-Reference = PX4;
 ValeurCmp = CONN_1;
 IdModule  = PAD;
 EndCmp
@@ -323,20 +295,6 @@ IdModule  = SM0805;
 EndCmp
 
 BeginCmp
-TimeStamp = /4DDC2CAC;
-Reference = R10;
-ValeurCmp = 120;
-IdModule  = SM0805;
-EndCmp
-
-BeginCmp
-TimeStamp = /4ECD27FD;
-Reference = R11;
-ValeurCmp = 10K;
-IdModule  = SM0805;
-EndCmp
-
-BeginCmp
 TimeStamp = /508C4A05;
 Reference = R12;
 ValeurCmp = 10K;
@@ -376,6 +334,13 @@ TimeStamp = /4DDBFCAC;
 Reference = U1;
 ValeurCmp = LM7805;
 IdModule  = LM78XXV-3D;
+EndCmp
+
+BeginCmp
+TimeStamp = /5250E80A;
+Reference = U2;
+ValeurCmp = AP7313;
+IdModule  = SOT23;
 EndCmp
 
 BeginCmp
