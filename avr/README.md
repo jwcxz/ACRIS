@@ -47,7 +47,7 @@ driven by the USART or the SPI module on the AVR.
     lib/ - library modules
 
     fn prefix   files       description
-    -----------------------------------
+    __________  __________  __________________________________________________
     dbg_        dbg.h       control of board debug LEDs
                 dbg.c
 
