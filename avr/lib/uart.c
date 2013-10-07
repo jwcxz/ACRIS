@@ -1,148 +1,61 @@
 /*
- * Ring-buffer UART interface
+ * super simple interface for setting up interrupt-based UART interactions
  * jwc :: jwcxz.com
  */
 
 #include "config.h"
 #include "uart.h"
-#include "dbgled.h"
 
 
-__inline__ void uart_set_rx(void) {
-    _OFF(TXEN_PRT, TXEN_PIN);
-}
-__inline__ void uart_set_tx(void) {
-    _ON(TXEN_PRT, TXEN_PIN);
-}
+void (*tx_handler)(void) = NULL;
+void (*rx_handler)(uint8_t) = NULL;
 
 
-void uart_init(uint16_t baud, uint8_t dbl) {
-    // set rs485 tristate to "read"
-    TXEN_DDR |= _BV(TXEN_PIN);
-    uart_set_rx();
-    
-    
-	UBRR0H = (uint8_t) (baud>>8);
-	UBRR0L = (uint8_t) baud;
+void uart_init(void (*txh)(void), void (*rxh)(uint8_t)) {
+	UBRR0 = UART_PRESCALER;
 
-    UCSR0A = ( dbl << U2X0 );
-    // XXX: TXEN0 is disabled
-	UCSR0B = ( _BV(RXCIE0) | _BV(RXEN0) );
+    UCSR0A = ( UART_DBL << U2X0 );
 	UCSR0C = ( _BV(UCSZ01) | _BV(UCSZ00) );
 
-    // enable even parity
-    UCSR0C |= _BV(UPM01);
+    UCSR0C |= UART_PARITY;
 
-    // reset the pointers and buffer count
-	uart_rxbuf_iptr = uart_rxbuf;
-	uart_rxbuf_optr = uart_rxbuf;
-    uart_rxbuf_count = 0;
+    UCSR0B = 0;
 
-	uart_txbuf_iptr = uart_txbuf;
-	uart_txbuf_optr = uart_txbuf;
-    uart_txbuf_count = 0;
+    tx_handler = txh;
+    rx_handler = rxh;
 }
 
-uint8_t uart_rx(void) {
-	unsigned char tmp;
-    cli();
-    
-    // check for framing errors, overrun errors, and parity errors
-    // reset the uart if necessary
-    if ( UCSR0A & (_BV(FE0) | _BV(DOR0) | _BV(UPE0)) ) {
-        UCSR0B = 0;
-        UCSR0B = _BV(RXCIE0) | _BV(RXEN0);
+
+void uart_enable(void) {
+    if (tx_handler) {
+        UCSR0B |= ( _BV(TXCIE0) | _BV(TXEN0) );
     }
 
-    // blocking call -- wait until we receive data
-	while ( uart_rxbuf_count == 0 );
-
-	tmp = *uart_rxbuf_optr;
-	uart_rxbuf_count--;
-
-    // increment pointer
-	uart_rxbuf_optr++;
-	if ( uart_rxbuf_optr >= uart_rxbuf + UART_RX_BUFSZ )
-		uart_rxbuf_optr = uart_rxbuf;
-
-    if ( rxen ) {
-        // receive is enabled, so enable interrupts
-        sei();
-    } else if ( uart_rxbuf_count < UART_RX_BUFSZ/2 ) {
-        // receive interrupt was disabled, but the buffer has been partially
-        // depleted, so we can start accepting data again
-        dbg_off(DBG_OVFLWERR);
-        rxen = 1;
-        sei();
+    if (rx_handler) {
+        UCSR0B |= ( _BV(RXCIE0) | _BV(RXEN0) );
     }
-    
-	return tmp;
-}
-
-uint8_t uart_data_rdy(void) {
-	return ( uart_rxbuf_count );
-}
-
-void uart_tx(uint8_t data) {
-    // blocking call -- prevent return until we've cleared some of the buffer
-	while ( uart_txbuf_count >= UART_TX_BUFSZ );
-
-	*uart_txbuf_iptr = data;
-	uart_txbuf_count++;
-
-	uart_txbuf_iptr++;
-	if ( uart_txbuf_iptr >= uart_txbuf + UART_TX_BUFSZ )
-		uart_txbuf_iptr = uart_txbuf;
-
-	_ON(UCSR0B,UDRIE0);
 }
 
 
-/* INTERRUPT VECTORS */
+void uart_disable(void) {
+    UCSR0B &= ~( _BV(TXCIE0) | _BV(TXEN0) | _BV(RXCIE0) | _BV(RXEN0) );
+}
+
+
 ISR(USART_RX_vect) {
-	unsigned char data;
+	uint8_t byte;
 
     // check for framing errors, overrun errors, and parity errors
     // reset the uart if necessary
     if ( UCSR0A & (_BV(FE0) | _BV(DOR0) | _BV(UPE0)) ) {
-        UCSR0B = 0;
-        UCSR0B = _BV(RXCIE0) | _BV(RXEN0);
+        uart_disable();
+        uart_enable();
     } else {
-        data = UDR0;
-
-        if ( uart_rxbuf_count <= UART_RX_BUFSZ ) {
-            *uart_rxbuf_iptr = data;
-            uart_rxbuf_count++;
-
-            uart_rxbuf_iptr++;
-            if ( uart_rxbuf_iptr >= uart_rxbuf + UART_RX_BUFSZ )
-                uart_rxbuf_iptr = uart_rxbuf;
-        } else {
-            // buffer overflow!
-            // shut interrupts off until we can deplete the buffer a bit
-            cli();
-            rxen = 0;
-
-            dbg_on(DBG_OVFLWERR);
-        }
+        byte = UDR0;
+        rx_handler(byte);
     }
 }
 
 ISR(USART_TX_vect) {
-	if ( uart_txbuf_count > 0 ) {
-        // set rs485 tristate to "write"
-        uart_set_tx();
-
-		UDR0 = *uart_txbuf_optr;
-		uart_txbuf_count--;
-
-		uart_txbuf_optr++;
-		if ( uart_txbuf_optr >= uart_txbuf + UART_TX_BUFSZ )
-			uart_txbuf_optr = uart_txbuf;
-        
-        // back to read
-        uart_set_rx();
-	} else {
-		_OFF(UCSR0B, UDRIE0);
-	}
+    tx_handler();
 }

@@ -32,7 +32,7 @@
 
 // USART-as-SPI baud rate
 #define NRF_BAUD_RATE 5000000UL
-#define NRF_PRESCALER SYSCLK/(2*NRF_BAUD_RATE) - 1
+#define NRF_PRESCALER ((uint16_t) SYSCLK/(2*NRF_BAUD_RATE) - 1)
 
 
 // this project is run in receiver mode

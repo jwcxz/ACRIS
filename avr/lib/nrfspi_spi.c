@@ -32,7 +32,8 @@ void nrfspi_disable(void) {
 
 
 uint8_t nrfspi_txrx(uint8_t len, uint8_t *txbuf, uint8_t *rxbuf) {
-    uint8_t count, tmp;
+    uint8_t count = 0;
+    uint8_t tmp;
 
     if (rxbuf) {
         // transmit and read
@@ -54,6 +55,7 @@ uint8_t nrfspi_txrx(uint8_t len, uint8_t *txbuf, uint8_t *rxbuf) {
 
             count++;
         }
+        tmp=tmp;
     }
 
     return count;
