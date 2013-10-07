@@ -163,9 +163,8 @@ $(O_OUT): $(D_OUT) $(F_OBJDEPS)
 $(O_ASM): $(O_OUT)
 	$(C_OBJDUMP) -S $< > $@
 
-$(O_TAG):
+$(O_TAG): FORCE
 	$(C_TAGS) -R $(subst :, ,$(D_INC)) $(subst :, ,$(D_SRC))
-
 
 # intermediate outputs
 $(D_OUT)/%.o: %.c
@@ -200,3 +199,5 @@ $(O_GDBINIT): $(O_OUT)
 	@echo "continue"    >> $(O_GDB)
 
 	@echo "Use '$(C_GDB) -x $(O_GDB)'"
+
+FORCE:
