@@ -2,6 +2,11 @@
 #define __CONFIG_H_
 
 
+// system clock
+#define SYSCLK 20000000UL
+#define F_CPU  SYSCLK
+
+
 #include <inttypes.h>
 #include <util/delay.h>
 #include <avr/io.h>
@@ -13,30 +18,30 @@
 #include "pins.h"
 #include "macros.h"
 
-#include "nrf.h"
-
-
-// system clock
-#define SYSCLK 20000000UL
-#define F_CPU  SYSCLK
-
 
 // number of bytes in instrument address and payload packet
 #define COM_AD_SIZE  3
 #define COM_PL_SIZE 25
 
 
+// EEPROM addresses
+#define EEPROM_ADDR_INST    ((uint8_t *) 0)
+
+
 // USART-as-SPI baud rate
-#define NRF_BAUD_RATE 5000000UL
-#define NRF_PRESCALER SYSCLK/(2*NRF_BAUD_RATE) - 1
+#define NRF_BAUD_RATE   5000000UL
+#define NRF_PRESCALER   (SYSCLK/(2*NRF_BAUD_RATE) - 1)
 
 
 // this project is run in receiver mode
-#define NRF_FN  NRF_FN_RX
+#if ( !defined(NRF_FN_RX) && !defined(NRF_FN_TX) )
+#define NRF_FN_RX
+#endif
 
 
-// instrument address
-#define INST_ADDR   {0xAA, 0xAA, 0x01}
+// instrument addresses
+#define TX_ADDR {0x01, 0x55, 0x55}
+#define RX_ADDR {0x01, 0xAA, 0xAA}
 
 
 #endif

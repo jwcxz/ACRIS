@@ -7,10 +7,10 @@ ATmega168.  The ATmega88 won't work because the bootloader is too big.
 
 ## Structure
 
+    bld/        - configuration files for build
     inc/        - include files
     lib/        - library modules
     prj/        - projects
-    tools/      - development tools
     README.md   - well, what are you reading?
 
 
@@ -22,8 +22,7 @@ Projects are located in the `prj` dir.
     ledctrlr    - main LED controller firmware
     rftxer      - wireless transmitter module
 
-    test-rfrx   - first attempt at wireless reception with an NRF24L01+
-    test-rftx   - first attempt at wireless transmission with an NRF24L01+
+    test-nrf    - first attempt at wireless communication with an NRF24L01+
 
 
 ### Project structure
@@ -34,7 +33,7 @@ Each project includes:
     config.h    - master configuration file with project-specific rules
     pins.h      - project pinout
     main.c/h    - main project source
-    README      - exactly what you would expect
+    README.md   - exactly what you would expect
 
 
 ## Libraries
@@ -74,11 +73,9 @@ driven by the USART or the SPI module on the AVR.
                 uart.c
 
 
-## Tools
+## Build
 
-Finally, there are some tools for fimrware development in the `tools` dir:
-
-    mktags  - invoke exhuberant ctags with fw dir and AVR toolchain dir
+The `bld` directory contains the master rules for building projects.
 
 
 ## TODOs:

@@ -33,8 +33,8 @@ void nrfspi_enable(void) {
 
     UCSR0B |= ( _BV(RXEN0) | _BV(TXEN0) );
 
-    UBRR0H = (NRF_PRESCALER >> 8);
-    UBRR0L = (NRF_PRESCALER & 0xFF);
+    UBRR0H = NRF_PRESCALER >> 8;
+    UBRR0L = NRF_PRESCALER & 0xFF;
 }
 
 
@@ -45,7 +45,8 @@ void nrfspi_disable(void) {
 
 uint8_t nrfspi_txrx(uint8_t len, uint8_t *txbuf, uint8_t *rxbuf) {
     // UDR must be read for each byte transmitted
-    uint8_t count, tmp;
+    uint8_t count = 0;
+    uint8_t tmp;
 
     // wait for any existing transmissions to complete (just in case)
     while ( UCSR0A & _BV(TXC0) );
@@ -72,6 +73,7 @@ uint8_t nrfspi_txrx(uint8_t len, uint8_t *txbuf, uint8_t *rxbuf) {
 
             count++;
         }
+        tmp = tmp;
     }
 
     _ON(NRF_CSN_PRT, NRF_CSN_PIN);

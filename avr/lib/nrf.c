@@ -1,5 +1,5 @@
 /*
- * SPI Mode USART i/f for NRF24L01+
+ * NRF24L01+ driver targeted at single-transmitter operations
  * jwc :: jwcxz.com
  */
 
@@ -7,13 +7,13 @@
 #include "nrfspi.h"
 #include "nrf.h"
 
-uint8_t volatile *tx_packet_buffer;
-uint8_t volatile *rx_packet_buffer;
+uint8_t *tx_packet_buffer;
+uint8_t *rx_packet_buffer;
 
 uint8_t volatile packet_ready = 0;
 
 // initialization
-void nrf_init(uint8_t channel, uint8_t *addr, uint8_t volatile *txpbuf, uint8_t volatile *rxpbuf) {
+void nrf_init(uint8_t channel, uint8_t *rx_addr, uint8_t *txpbuf, uint8_t *rxpbuf) {
     // initialize SPI layer
     nrfspi_init();
 
@@ -40,10 +40,14 @@ void nrf_init(uint8_t channel, uint8_t *addr, uint8_t volatile *txpbuf, uint8_t 
     nrf_regwr(NRF_REG_SETUP_RETR, NRF_INI_SETUP_RETR);
     nrf_regwr(NRF_REG_RF_SETUP, NRF_INI_RF_SETUP);
     nrf_regwr(NRF_REG_RX_PW_P0, NRF_INI_RX_PW_P0);
+    nrf_regwr(NRF_REG_RX_PW_P1, NRF_INI_RX_PW_P1);
 
     nrf_regwr(NRF_REG_RF_CH, ( channel << NRF_BIT_RF_CH60 ) );
-    nrf_regwr_long(NRF_REG_RX_ADDR_P0, 5, addr);
-    nrf_regwr_long(NRF_REG_TX_ADDR, 5, addr);
+
+    // if our primary function is receiver mode, set up pipe addresses
+#ifdef NRF_FN_RX
+    nrf_regwr_long(NRF_REG_RX_ADDR_P1, COM_AD_SIZE, rx_addr);
+#endif
 }
 
 
@@ -67,23 +71,26 @@ uint8_t nrf_transmit_packet(uint8_t *addr, uint8_t *buf) {
     nrf_setmode(NRF_MODE_TX);
 
     // set transmit address
-    nrf_regwr_long(NRF_REG_RX_ADDR_P0, 5, addr);
-    nrf_regwr_long(NRF_REG_TX_ADDR, 5, addr);
+    nrf_regwr_long(NRF_REG_RX_ADDR_P0, COM_AD_SIZE, addr);
+    nrf_regwr_long(NRF_REG_TX_ADDR, COM_AD_SIZE, addr);
 
     // load up the FIFO
     nrf_txpayload(buf);
 
     // pulse CE to perform transmit
     nrf_ce_on();
-    delay_us(15);
+    _delay_us(15);
     nrf_ce_off();
 
     // wait until transmit complete
     while (!( nrf_status() & _BV(NRF_BIT_TX_DS) ));
+    ack = 1;
 
     // switch back to receive mode
     nrf_setmode(NRF_MODE_RX);
-    nrf_cs_on();
+    nrf_ce_on();
+    
+    return ack;
 }
 
 
@@ -106,7 +113,11 @@ void nrf_stop_receiver(void) {
 
 void nrf_wait_for_rxpacket(void) {
     while (!packet_ready);
-    return;
+}
+
+
+void nrf_accept_packet(void) {
+    packet_ready = 0;
 }
 
 
@@ -122,6 +133,8 @@ ISR(INT0_vect) {
     // shut off receiver
     nrf_ce_off();
     
+    while (packet_ready);
+
     // read out data into buffer
     status = nrf_rxpayload(rx_packet_buffer);
 
@@ -242,7 +255,7 @@ uint8_t nrf_ackpl(uint8_t pipe, uint8_t len, uint8_t *buf) {
 }
 
 
-uint8_t nrf_txnoack(uint8_t len, uint8_t *buf) {
+uint8_t nrf_txnoack(uint8_t pipe, uint8_t len, uint8_t *buf) {
     uint8_t status;
 
     status = nrfspi_txrx_byte(NRF_CMD_NOACK | pipe);
@@ -252,5 +265,5 @@ uint8_t nrf_txnoack(uint8_t len, uint8_t *buf) {
 
 
 uint8_t nrf_status(void) {
-    return nrfspi_txrx_byte(NRF_CMD_XXNOP | pipe);
+    return nrfspi_txrx_byte(NRF_CMD_XXNOP);
 }

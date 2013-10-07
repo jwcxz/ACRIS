@@ -1,11 +1,10 @@
-#include "dbgled.h"
+/*
+ * Debug LED Driver
+ * jwc :: jwcxz.com
+ */
 
-void show_addr(void) {
-    dbg_set(my_addr >> 4);
-    _delay_ms(500);
-    dbg_set(my_addr & 0x0F);
-    _delay_ms(500);
-}
+#include "config.h"
+#include "dbgled.h"
 
 void dbg_set(uint8_t val) {
     uint8_t tmp = val & 0xF;

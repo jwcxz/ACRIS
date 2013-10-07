@@ -36,7 +36,7 @@ void eeprom_write(uint8_t *offset, uint8_t len, uint8_t *buf) {
     while (len--) {
         eeprom_busy_wait();
 
-        buf[i] = eeprom_write_byte(offset);
+        eeprom_write_byte(offset, buf[i]);
         offset = &(offset[1]);
         i++;
     }

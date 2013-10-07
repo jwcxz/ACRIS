@@ -1,5 +1,10 @@
-#ifndef __NRF_REGHMAP_H
-#define __NRF_REGHMAP_H
+#ifndef __NRF_REGMAP_H
+#define __NRF_REGMAP_H
+
+
+// maximum buffer sizes
+#define NRF_AD_SIZE_MX   5
+#define NRF_PL_SIZE_MX  32
 
 
 // commands
@@ -94,15 +99,14 @@
 #define NRF_REG_RX_PW_P3        0x14
 #define NRF_REG_RX_PW_P4        0x15
 #define NRF_REG_RX_PW_P5        0x16
-    #define NRF_REG_RX_PW_Px50  0
+    #define NRF_BIT_RX_PW_Px50  0
 
 #define NRF_REG_FIFO_STATUS     0x17
-    #define NRF_BIT_TX_REUSE    6
-    #define NRF_BIT_TX_FULL     5
-    #define NRF_BIT_TX_EMPTY    4
-    #define NRF_BIT_RX_FULL     1
-    #define NRF_BIT_RX_EMPTY    0
-
+    #define NRF_BIT_FS_TX_REUSE 6
+    #define NRF_BIT_FS_TX_FULL  5
+    #define NRF_BIT_FS_TX_EMPTY 4
+    #define NRF_BIT_FS_RX_FULL  1
+    #define NRF_BIT_FS_RX_EMPTY 0
 
 #define NRF_REG_DYNPD           0x1C
     #define NRF_BIT_DPL5        5
@@ -140,5 +144,6 @@
 
 #define NRF_INI_RX_PW_P0    ( COM_PL_SIZE << NRF_BIT_RX_PW_Px50 )
 
+#define NRF_INI_RX_PW_P1    ( COM_PL_SIZE << NRF_BIT_RX_PW_Px50 )
 
 #endif
