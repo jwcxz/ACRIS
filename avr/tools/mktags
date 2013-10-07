@@ -1,0 +1,8 @@
+#!/bin/sh
+
+fwdir="$(dirname `realpath $0`)/.."
+fwdir="`realpath $fwdir`"
+
+cd $fwdir
+
+ctags -R $fwdir /usr/avr/
