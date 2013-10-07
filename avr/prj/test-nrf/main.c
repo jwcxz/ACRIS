@@ -17,13 +17,12 @@ uint8_t my_addr[COM_AD_SIZE] = RX_ADDR;
 uint8_t txbuf[COM_PL_SIZE];
 uint8_t rxbuf[COM_PL_SIZE];
 
-/* Main Loop */
 int main(void) {
     uint8_t i;
 
     dbg_init();
-    dbg_set(0x9);
 
+    dbg_set( 0x4 );
     nrf_init(0x05, my_addr, txbuf, rxbuf);
 
 #ifdef NRF_FN_TX
@@ -39,6 +38,7 @@ int main(void) {
         }
 
         for ( i=0 ; i<10 ; i++ ) {
+            dbg_set(txbuf[i]);
             _delay_ms(200);
         }
     }
@@ -50,7 +50,7 @@ int main(void) {
 
         for ( i=0 ; i<10 ; i++ ) {
             dbg_set(rxbuf[i]);
-            _delay_ms(100);
+            _delay_ms(50);
         }
 
         nrf_accept_packet();

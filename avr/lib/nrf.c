@@ -4,8 +4,8 @@
  */
 
 #include "config.h"
-#include "nrfspi.h"
 #include "nrf.h"
+#include "nrfspi.h"
 
 uint8_t *tx_packet_buffer;
 uint8_t *rx_packet_buffer;
@@ -16,6 +16,7 @@ uint8_t volatile packet_ready = 0;
 void nrf_init(uint8_t channel, uint8_t *rx_addr, uint8_t *txpbuf, uint8_t *rxpbuf) {
     // initialize SPI layer
     nrfspi_init();
+    nrfspi_enable();
 
     // register buffer addresses
     tx_packet_buffer = txpbuf;
@@ -86,6 +87,9 @@ uint8_t nrf_transmit_packet(uint8_t *addr, uint8_t *buf) {
     while (!( nrf_status() & _BV(NRF_BIT_TX_DS) ));
     ack = 1;
 
+    // clear bits
+    nrf_regwr(NRF_REG_STATUS, nrf_status() | _BV(NRF_BIT_TX_DS) | _BV(NRF_BIT_MAX_RT));
+
     // switch back to receive mode
     nrf_setmode(NRF_MODE_RX);
     nrf_ce_on();
@@ -98,8 +102,8 @@ void nrf_start_receiver(void) {
     packet_ready = 0;
 
     nrf_setmode(NRF_MODE_RX);
-    nrf_flushrx();
     nrf_enable_irq();
+    sei();
     nrf_ce_on();
 }
 
@@ -125,21 +129,21 @@ void nrf_accept_packet(void) {
 ISR(INT0_vect) {
     uint8_t status;
 
+    dbg_set(0xF);
+
     // when configured as a receiver, indicates that a packet was received by
     // the device and we must read it out
 
-    // TODO: do we have to wait for autoack before disabling the chip?
-
     // shut off receiver
     nrf_ce_off();
-    
+
     while (packet_ready);
 
     // read out data into buffer
     status = nrf_rxpayload(rx_packet_buffer);
 
     // clear RX flag
-    nrf_regwr(NRF_REG_STATUS, status & ~(_BV(NRF_BIT_RX_DR)));
+    nrf_regwr(NRF_REG_STATUS, status | _BV(NRF_BIT_RX_DR));
 
     // report that the packet is ready
     packet_ready = 1;
@@ -172,8 +176,11 @@ void nrf_setmode(nrf_mode_t mode) {
 uint8_t nrf_txpayload(uint8_t *buf) {
     uint8_t status;
 
+    nrfspi_cs_en();
     status = nrfspi_txrx_byte(NRF_CMD_TXPLW);
     nrfspi_txrx(COM_PL_SIZE, buf, 0);
+    nrfspi_cs_ds();
+
     return status;
 }
 
@@ -181,8 +188,11 @@ uint8_t nrf_txpayload(uint8_t *buf) {
 uint8_t nrf_rxpayload(uint8_t *buf) {
     uint8_t status;
 
+    nrfspi_cs_en();
     status = nrfspi_txrx_byte(NRF_CMD_RXPLR);
-    nrfspi_txrx(COM_PL_SIZE, buf, 0);
+    nrfspi_txrx(COM_PL_SIZE, buf, buf);
+    nrfspi_cs_ds();
+
     return status;
 }
 
@@ -190,8 +200,11 @@ uint8_t nrf_rxpayload(uint8_t *buf) {
 uint8_t nrf_regwr_long(uint8_t reg, uint8_t len, uint8_t *buf) {
     uint8_t status;
 
+    nrfspi_cs_en();
     status = nrfspi_txrx_byte(reg);
     nrfspi_txrx(len, buf, 0);
+    nrfspi_cs_ds();
+
     return status;
 }
 
@@ -199,58 +212,94 @@ uint8_t nrf_regwr_long(uint8_t reg, uint8_t len, uint8_t *buf) {
 uint8_t nrf_regrd_long(uint8_t reg, uint8_t len, uint8_t *buf) {
     uint8_t status;
 
+    nrfspi_cs_en();
     status = nrfspi_txrx_byte(reg);
     nrfspi_txrx(len, buf, buf);
+    nrfspi_cs_ds();
+
     return status;
 }
 
 
 uint8_t nrf_regwr(uint8_t reg, uint8_t data) {
     uint8_t status;
-
     reg = NRF_CMD_REGWR | reg;
 
+    nrfspi_cs_en();
     status = nrfspi_txrx_byte(reg);
     nrfspi_txrx_byte(data);
+    nrfspi_cs_ds();
 
     return status;
 }
 
 
 uint8_t nrf_regrd(uint8_t reg) {
+    uint8_t data;
     reg = NRF_CMD_REGRD | reg;
 
+    nrfspi_cs_en();
     nrfspi_txrx_byte(reg);
-    return nrfspi_txrx_byte(0);
+    data = nrfspi_txrx_byte(0);
+    nrfspi_cs_ds();
+
+    return data;
 }
 
 
 uint8_t nrf_flushtx(void) {
-    return nrfspi_txrx_byte(NRF_CMD_FLSHT);
+    uint8_t status;
+
+    nrfspi_cs_en();
+    status = nrfspi_txrx_byte(NRF_CMD_FLSHT);
+    nrfspi_cs_ds();
+
+    return status;
 }
 
 
 uint8_t nrf_flushrx(void) {
-    return nrfspi_txrx_byte(NRF_CMD_FLSHR);
+    uint8_t status;
+
+    nrfspi_cs_en();
+    status = nrfspi_txrx_byte(NRF_CMD_FLSHR);
+    nrfspi_cs_ds();
+
+    return status;
 }
 
 
 uint8_t nrf_reusetx(void) {
-    return nrfspi_txrx_byte(NRF_CMD_REUSE);
+    uint8_t status;
+
+    nrfspi_cs_en();
+    status = nrfspi_txrx_byte(NRF_CMD_REUSE);
+    nrfspi_cs_ds();
+
+    return status;
 }
 
 
 uint8_t nrf_rxplwidth(void) {
+    uint8_t ret;
+
+    nrfspi_cs_en();
     nrfspi_txrx_byte(NRF_CMD_RXPLW);
-    return nrfspi_txrx_byte(0);
+    ret = nrfspi_txrx_byte(0);
+    nrfspi_cs_ds();
+
+    return ret;
 }
 
 
 uint8_t nrf_ackpl(uint8_t pipe, uint8_t len, uint8_t *buf) {
     uint8_t status;
     
+    nrfspi_cs_en();
     status = nrfspi_txrx_byte(NRF_CMD_RXPLW | pipe);
     nrfspi_txrx(len, buf, 0);
+    nrfspi_cs_ds();
+
     return status;
 }
 
@@ -258,12 +307,21 @@ uint8_t nrf_ackpl(uint8_t pipe, uint8_t len, uint8_t *buf) {
 uint8_t nrf_txnoack(uint8_t pipe, uint8_t len, uint8_t *buf) {
     uint8_t status;
 
+    nrfspi_cs_en();
     status = nrfspi_txrx_byte(NRF_CMD_NOACK | pipe);
     nrfspi_txrx(len, buf, 0);
+    nrfspi_cs_ds();
+
     return status;
 }
 
 
 uint8_t nrf_status(void) {
-    return nrfspi_txrx_byte(NRF_CMD_XXNOP);
+    uint8_t status;
+
+    nrfspi_cs_en();
+    status = nrfspi_txrx_byte(NRF_CMD_XXNOP);
+    nrfspi_cs_ds();
+
+    return status;
 }

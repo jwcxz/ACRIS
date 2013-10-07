@@ -34,8 +34,6 @@ void nrfspi_disable(void) {
 uint8_t nrfspi_txrx(uint8_t len, uint8_t *txbuf, uint8_t *rxbuf) {
     uint8_t count, tmp;
 
-    _OFF(NRF_CSN_PRT, NRF_CSN_PIN);
-
     if (rxbuf) {
         // transmit and read
         while (len--) {
@@ -58,8 +56,6 @@ uint8_t nrfspi_txrx(uint8_t len, uint8_t *txbuf, uint8_t *rxbuf) {
         }
     }
 
-    _ON(NRF_CSN_PRT, NRF_CSN_PIN);
-
     return count;
 }
 
@@ -67,13 +63,18 @@ uint8_t nrfspi_txrx(uint8_t len, uint8_t *txbuf, uint8_t *rxbuf) {
 uint8_t nrfspi_txrx_byte(uint8_t data) {
     uint8_t ret;
 
-    _OFF(NRF_CSN_PRT, NRF_CSN_PIN);
-
     SPDR = data;
     while (SPSR & _BV(SPIF));
     ret = SPDR;
 
-    _ON(NRF_CSN_PRT, NRF_CSN_PIN);
-
     return ret;
+}
+
+
+__inline void nrfspi_cs_en(void) {
+    _OFF(NRF_CSN_PRT, NRF_CSN_PIN);
+}
+
+__inline void nrfspi_cs_ds(void) {
+    _ON(NRF_CSN_PRT, NRF_CSN_PIN);
 }

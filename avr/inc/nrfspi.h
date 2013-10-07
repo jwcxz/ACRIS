@@ -9,5 +9,7 @@ void nrfspi_disable(void);
 uint8_t nrfspi_txrx(uint8_t, uint8_t *, uint8_t *);
 uint8_t nrfspi_txrx_byte(uint8_t);
 
+__inline void nrfspi_cs_en(void);
+__inline void nrfspi_cs_ds(void);
 
 #endif

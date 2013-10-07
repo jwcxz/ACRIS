@@ -28,13 +28,12 @@ void nrfspi_init(void) {
 
 void nrfspi_enable(void) {
     // baud rate must be set after transmitter is enabled, but before transmitting
-    UBRR0H = 0;
-    UBRR0L = 0;
+    UBRR0 = 0;
 
     UCSR0B |= ( _BV(RXEN0) | _BV(TXEN0) );
+    _ON(NRF_SCLK_DDR, NRF_SCLK_PIN);
 
-    UBRR0H = NRF_PRESCALER >> 8;
-    UBRR0L = NRF_PRESCALER & 0xFF;
+    UBRR0 = NRF_PRESCALER;
 }
 
 
@@ -48,17 +47,13 @@ uint8_t nrfspi_txrx(uint8_t len, uint8_t *txbuf, uint8_t *rxbuf) {
     uint8_t count = 0;
     uint8_t tmp;
 
-    // wait for any existing transmissions to complete (just in case)
-    while ( UCSR0A & _BV(TXC0) );
-    _OFF(NRF_CSN_PRT, NRF_CSN_PIN);
-
     if (rxbuf) {
         // transmit and read
         while (len--) {
-            while ( UCSR0A & _BV(TXC0) );
+            while ( !(UCSR0A & _BV(UDRE0)) );
             UDR0 = *(txbuf++);
 
-            while ( UCSR0A & _BV(RXC0) );
+            while ( !(UCSR0A & _BV(RXC0)) );
             *(rxbuf++) = UDR0;
 
             count++;
@@ -66,7 +61,7 @@ uint8_t nrfspi_txrx(uint8_t len, uint8_t *txbuf, uint8_t *rxbuf) {
     } else {
         // just transmit
         while (len--) {
-            while ( UCSR0A & _BV(TXC0) );
+            while ( !(UCSR0A & _BV(UDRE0)) );
 
             UDR0 = *(txbuf++);
             tmp = UDR0;
@@ -76,8 +71,6 @@ uint8_t nrfspi_txrx(uint8_t len, uint8_t *txbuf, uint8_t *rxbuf) {
         tmp = tmp;
     }
 
-    _ON(NRF_CSN_PRT, NRF_CSN_PIN);
-
     return count;
 }
 
@@ -85,14 +78,20 @@ uint8_t nrfspi_txrx(uint8_t len, uint8_t *txbuf, uint8_t *rxbuf) {
 uint8_t nrfspi_txrx_byte(uint8_t data) {
     uint8_t ret;
 
-
-    while ( UCSR0A & _BV(TXC0) );
-    _OFF(NRF_CSN_PRT, NRF_CSN_PIN);
+    while ( !(UCSR0A & _BV(UDRE0)) );
     UDR0 = data;
 
-    while ( UCSR0A & _BV(RXC0) );
+    while ( !(UCSR0A & _BV(RXC0)) );
     ret = UDR0;
-    _ON(NRF_CSN_PRT, NRF_CSN_PIN);
 
     return ret;
+}
+
+
+__inline void nrfspi_cs_en(void) {
+    _OFF(NRF_CSN_PRT, NRF_CSN_PIN);
+}
+
+__inline void nrfspi_cs_ds(void) {
+    _ON(NRF_CSN_PRT, NRF_CSN_PIN);
 }
