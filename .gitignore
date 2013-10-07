@@ -21,7 +21,7 @@ $savepcb*
 
 
 # temporary
-*.swp
+*.sw[op]
 
 
 # ctags
