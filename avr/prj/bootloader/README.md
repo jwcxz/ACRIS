@@ -5,6 +5,14 @@ In order to provide OTA firmware updates, I wrote a bootloader.  For more
 information, see the [ACRIS bootloader page].
 
 
+## Development Note
+
+This project will require extensive modifications to support wireless
+communication.  The existing wireless driver needs to support automatic
+retransmission and have error modes that inform the master firmware updater
+application of failures.
+
+
 ## Features
 
 This bootloader provides the following features:
