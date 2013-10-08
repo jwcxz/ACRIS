@@ -24,7 +24,7 @@ S_SRC=main.c
 S_SRC+=dbgled.c nrf.c nrfspi_usart.c
 
 # program the chip with the bootloader?
-PGM_WITH_BOOTLOADER=0
+PGM_WITH_BOOTLOADER=1
 
 # AVR part hardware options
 AVR_LFUSE=0xce

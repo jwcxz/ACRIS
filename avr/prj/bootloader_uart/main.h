@@ -1,15 +1,6 @@
-#include "config.h"
+#ifndef __MAIN_H
+#define __MAIN_H
 
-#include <inttypes.h>
-#include <util/delay.h>
-#include <avr/io.h>
-#include <avr/interrupt.h>
-#include <avr/pgmspace.h>
-#include <avr/boot.h>
-#include <avr/eeprom.h>
-
-
-#define PAGESIZE 128
 #define AM_ALL 255
 
 typedef enum {
@@ -45,7 +36,7 @@ void receive_data(void);
 void process_rx(void);
 void give_up(uint8_t);
 void addr_set(uint8_t);
-void baud_set(uint8_t);
-void write_page(void);
-void verify_flash(uint8_t);
+uint8_t addr_get(void);
 uint8_t applies_to_me(void);
+
+#endif

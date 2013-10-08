@@ -1,19 +1,20 @@
+#include "config.h"
+
+#include <inttypes.h>
+#include <util/delay.h>
+#include <avr/io.h>
+#include <avr/interrupt.h>
+#include <avr/pgmspace.h>
+#include <avr/boot.h>
+#include <avr/eeprom.h>
+
 #include "main.h"
+#include "flash.h"
 #include "eeprom.h"
 #include "dbgled.h"
 #include "uart.h"
 
-// uart buffer
-volatile uint8_t uart_rxbuf[UART_RX_BUFSZ];
-volatile uint8_t *uart_rxbuf_iptr = uart_rxbuf;
-volatile uint8_t *uart_rxbuf_optr = uart_rxbuf;
-volatile uint8_t uart_rxbuf_count = 0;
-volatile uint8_t rxen = 1;
-
-volatile uint8_t uart_txbuf[UART_TX_BUFSZ];
-volatile uint8_t *uart_txbuf_iptr = uart_txbuf;
-volatile uint8_t *uart_txbuf_optr = uart_txbuf;
-volatile uint8_t uart_txbuf_count = 0;
+#include "uart_rb.h"
 
 // current command state
 static cst_type_t curstate = CST_IDLE;
@@ -25,9 +26,6 @@ static uint16_t page_addr;
 
 // instrument address
 uint8_t my_addr;
-
-// baud rate divisor
-static uint16_t baud;
 
 // device address mask
 static uint8_t mask = AM_ALL;
@@ -43,22 +41,9 @@ int main(void) {
     dbg_init();
     dbg_set(0x9);
 
-    my_addr = get_addr();
+    my_addr = addr_get();
 
-    // set rs485 tristate to "read"
-    TXEN_DDR |= _BV(TXEN_PIN);
-    _OFF(TXEN_PRT, TXEN_PIN);
-    // set up uart for 9600 baud communication with no parity
-	UBRR0H = (uint8_t) (DEF_BAUD_PRESCALE_SLOW>>8);
-	UBRR0L = (uint8_t) DEF_BAUD_PRESCALE_SLOW;
-    UCSR0A = ( DEF_BAUD_DOUBLE_SLOW<<U2X0 );
-	UCSR0B = ( _BV(RXCIE0) | _BV(RXEN0) );
-	UCSR0C = ( _BV(UCSZ01) | _BV(UCSZ00) );
-
-    // reset the pointers and buffer count
-	uart_rxbuf_iptr = uart_rxbuf;
-	uart_rxbuf_optr = uart_rxbuf;
-    uart_rxbuf_count = 0;
+    uart_rb_init();
 
     sei();
 
@@ -66,12 +51,12 @@ int main(void) {
     _delay_ms(500);
 
     // switch to application mode if there's no data on the UART
-    if ( !uart_data_rdy() ) {
+    if ( !uart_rb_data_rdy() ) {
         cli();
         MCUCR = (1<<IVCE);
         MCUCR = 0;
         app_start();
-    } else if ( uart_rx() != CMD_NOP ) {
+    } else if ( uart_rb_rx() != CMD_NOP ) {
         cli();
         MCUCR = (1<<IVCE);
         MCUCR = 0;
@@ -87,7 +72,7 @@ int main(void) {
 /* Loop, waiting for data */
 void receive_data(void) {
     while (1) {
-        if ( uart_data_rdy() ) process_rx();
+        if ( uart_rb_data_rdy() ) process_rx();
     }
 }
 
@@ -95,7 +80,7 @@ void receive_data(void) {
 void process_rx(void) {
     uint8_t data, i;
     uint8_t csum = 0;
-    data = uart_rx();
+    data = uart_rb_rx();
 
     switch (curstate) {
         case CST_IDLE:
@@ -162,20 +147,17 @@ void process_rx(void) {
         case CST_ADDR:
             addr_set(data);
             curstate = CST_IDLE;
-            my_addr = get_addr();
+            my_addr = addr_get();
             break;
 
         case CST_BAUD_H:
-            baud = (data << 8);   // high byte of baud rate
             curstate = CST_BAUD_L;
             break;
         case CST_BAUD_L:
-            baud |= data;         // low byte of baud rate
             curstate = CST_BAUD_D;
             break;
         case CST_BAUD_D:
             // TODO: save some space by always setting double to 1
-            baud_set(data);
             curstate = CST_IDLE;
             break;
 
@@ -211,7 +193,7 @@ void process_rx(void) {
 
             if ( csum == data ) {
                 // checksum verifies, so write the page
-                write_page();
+                flash_write_page(page_addr, page_buf);
             } else {
                 // damnit...
                 // TODO: we can be slightly smarter (if it's the first address,
@@ -258,53 +240,15 @@ void give_up(uint8_t corrupted) {
     receive_data();
 }
 
-/* Set the instrument address */
+/* Get and set the single-byte instrument address */
+uint8_t addr_get(void) {
+    eeprom_busy_wait();
+    return eeprom_read_byte(EEPROM_INST_ADDR);
+
+}
 void addr_set(uint8_t address) {
-    // TODO: maybe move this to the generic eeprom.h file?  I didn't because
-    // the main code doesn't use it (yet?), so it's just wasted space (or does
-    // it get optimized out?).
-
-    // wait for eeprom to become ready
     eeprom_busy_wait();
-
-    // write address to the address byte
     eeprom_write_byte(EEPROM_INST_ADDR, address);
-}
-
-/* Set the application communication baud rate */
-void baud_set(uint8_t dbl) {
-    eeprom_busy_wait();
-    eeprom_write_word(EEPROM_BAUD_RATE, baud);
-    eeprom_busy_wait();
-    eeprom_write_byte(EEPROM_BAUD_DBLE, dbl);
-}
-
-/* Write a page of data from the page buffer */
-void write_page(void) {
-    uint16_t i,w;
-    uint8_t sreg;
-
-    // disable interrupts
-    sreg = SREG;
-    cli();
-
-    boot_page_erase_safe(page_addr);
-    boot_spm_busy_wait();
-
-    page_buf_ptr = page_buf;
-    for ( i=0 ; i<PAGESIZE ; i+=2 ) {
-        // make word
-        w = *page_buf_ptr++;
-        w |= (*page_buf_ptr++)<<8;
-
-        boot_page_fill_safe(page_addr+i, w);
-    }
-
-    boot_page_write_safe(page_addr);
-    boot_spm_busy_wait();
-
-    // re-enable interrupts
-    SREG = sreg;
 }
 
 /* Check to see if the mask applies to this instrument */

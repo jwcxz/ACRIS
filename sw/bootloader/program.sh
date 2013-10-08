@@ -3,10 +3,7 @@
 cd `dirname $0`
 
 echo "Press ^C to stop"
-./bootloader.py -P /dev/ttyUSB1 -n
+./bootloader.py -P /dev/ttyUSB0 -n
 
 echo "Programming..."
-./bootloader.py -P /dev/ttyUSB1 -p $1
-
-echo "Setting address..."
-./bootloader.py -P /dev/ttyUSB1 -a $2
+./bootloader.py -P /dev/ttyUSB0 -p $1

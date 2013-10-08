@@ -150,7 +150,7 @@ write_flash: hex
 		-U flash:w:$(O_HEX)
 
 write_bootloader: hex
-	$(C_BOOTLOADER) $(O_HEX)
+	$(C_BOOTLOADER) `realpath $(O_HEX)`
 
 
 # build outputs
