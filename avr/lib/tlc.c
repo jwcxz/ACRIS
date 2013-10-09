@@ -4,6 +4,7 @@
  */
 
 #include "config.h"
+#include "main.h"
 #include "tlc.h"
 
 __inline__ void tlc_pulse_xlat(void) {

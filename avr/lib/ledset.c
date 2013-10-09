@@ -1,9 +1,16 @@
+/*
+ * TLC LED setup functions
+ * jwc :: jwcxz.com
+ */
+
+#include "config.h"
+#include "main.h"
 #include "ledset.h"
 #include "tlc.h"
 
 // set a single RGB LED by setting the appropriate bank of outputs
 // ledno is 0-4, channel is 0-2 (R,G,B)
-void set_led(uint8_t ledno, uint8_t channel, uint16_t value) {
+void ledset_set(uint8_t ledno, uint8_t channel, uint16_t value) {
     uint8_t i;
 
 #if (BRDREV == 1)
@@ -26,7 +33,7 @@ void set_led(uint8_t ledno, uint8_t channel, uint16_t value) {
     switch (ledno) {
         case 0:
             for (i=1 ; i<=3 ; i++) {
-                set(tlc[0], 3*channel+i, value);
+                tlc_set(tlc[0], 3*channel+i, value);
             }
 
             break;
@@ -35,13 +42,13 @@ void set_led(uint8_t ledno, uint8_t channel, uint16_t value) {
             if (channel <= 1) {
                 // R, G
                 for (i=1 ; i<=3 ; i++) {
-                    set(tlc[0], 3*3+3*channel+i, value);
+                    tlc_set(tlc[0], 3*3+3*channel+i, value);
                 }
             } else {
                 // B
 
                 for (i=1 ; i<=3 ; i++) {
-                    set(tlc[1], i, value);
+                    tlc_set(tlc[1], i, value);
                 }
             }
             
@@ -49,7 +56,7 @@ void set_led(uint8_t ledno, uint8_t channel, uint16_t value) {
 
         case 2:
             for (i=1 ; i<=3 ; i++) {
-                set(tlc[1], 3*1+3*channel+i, value);
+                tlc_set(tlc[1], 3*1+3*channel+i, value);
             }
 
             break;
@@ -58,12 +65,12 @@ void set_led(uint8_t ledno, uint8_t channel, uint16_t value) {
             if ( channel == 0 ) {
                 // R
                 for (i=1 ; i<=3 ; i++) {
-                    set(tlc[1], 3*4+i, value);
+                    tlc_set(tlc[1], 3*4+i, value);
                 }
             } else {
                 // G, B
                 for (i=1 ; i<=3 ; i++) {
-                    set(tlc[2], 3*(channel-1)+i, value);
+                    tlc_set(tlc[2], 3*(channel-1)+i, value);
                 }
             }
             
@@ -71,7 +78,7 @@ void set_led(uint8_t ledno, uint8_t channel, uint16_t value) {
 
         case 4:
             for (i=1 ; i<=3 ; i++) {
-                set(tlc[2], 3*2+3*channel+i, value);
+                tlc_set(tlc[2], 3*2+3*channel+i, value);
             }
 
             break;

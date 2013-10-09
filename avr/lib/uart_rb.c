@@ -4,6 +4,7 @@
  */
 
 #include "config.h"
+#include "dbgled.h"
 #include "uart.h"
 #include "uart_rb.h"
 
@@ -22,6 +23,7 @@ volatile uint8_t uart_txbuf_count = 0;
 
 void uart_rb_init(void) {
     uart_init(&uart_rb_txh, &uart_rb_rxh);
+    uart_enable();
 
 	uart_rxbuf_iptr = uart_rxbuf;
 	uart_rxbuf_optr = uart_rxbuf;
@@ -77,25 +79,18 @@ void uart_rb_tx(void) {
 
 
 void uart_rb_rxh(uint8_t data) {
-    // check for framing errors, overrun errors, and parity errors
-    // reset the uart if necessary
-    if ( UCSR0A & (_BV(FE0) | _BV(DOR0) | _BV(UPE0)) ) {
-        UCSR0B = 0;
-        UCSR0B = _BV(RXCIE0) | _BV(RXEN0);
-    } else {
-        if ( uart_rxbuf_count <= UART_RX_BUFSZ ) {
-            *uart_rxbuf_iptr = data;
-            uart_rxbuf_count++;
+    if ( uart_rxbuf_count <= UART_RX_BUFSZ ) {
+        *uart_rxbuf_iptr = data;
+        uart_rxbuf_count++;
 
-            uart_rxbuf_iptr++;
-            if ( uart_rxbuf_iptr >= uart_rxbuf + UART_RX_BUFSZ )
-                uart_rxbuf_iptr = uart_rxbuf;
-        } else {
-            // buffer overflow!
-            // shut interrupts off until we can deplete the buffer a bit
-            cli();
-            uart_rxen = 0;
-        }
+        uart_rxbuf_iptr++;
+        if ( uart_rxbuf_iptr >= uart_rxbuf + UART_RX_BUFSZ )
+            uart_rxbuf_iptr = uart_rxbuf;
+    } else {
+        // buffer overflow!
+        // shut interrupts off until we can deplete the buffer a bit
+        cli();
+        uart_rxen = 0;
     }
 }
 
