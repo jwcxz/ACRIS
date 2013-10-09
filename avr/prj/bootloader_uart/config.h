@@ -1,1 +1,1 @@
-../ledctrlr/config.h
+../ledctrlr_uart/config.h

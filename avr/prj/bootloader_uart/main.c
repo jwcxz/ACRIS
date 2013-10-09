@@ -11,7 +11,7 @@
 #include "main.h"
 #include "flash.h"
 #include "eeprom.h"
-#include "dbgled.h"
+#include "dbg.h"
 #include "uart.h"
 
 #include "uart_rb.h"

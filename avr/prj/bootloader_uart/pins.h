@@ -1,1 +1,1 @@
-../ledctrlr/pins.h
+../ledctrlr_uart/pins.h

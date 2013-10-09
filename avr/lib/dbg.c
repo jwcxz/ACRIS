@@ -4,7 +4,7 @@
  */
 
 #include "config.h"
-#include "dbgled.h"
+#include "dbg.h"
 
 void dbg_set(uint8_t val) {
     uint8_t tmp = val & 0xF;

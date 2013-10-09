@@ -16,7 +16,7 @@
 
 #include "main.h"
 
-#include "dbgled.h"
+#include "dbg.h"
 #include "eeprom.h"
 #include "led.h"
 #include "tlc.h"

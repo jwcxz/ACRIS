@@ -4,7 +4,7 @@
  */
 
 #include "config.h"
-#include "dbgled.h"
+#include "dbg.h"
 #include "nrf.h"
 
 #ifdef NRF_FN_TX

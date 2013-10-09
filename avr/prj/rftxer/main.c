@@ -7,7 +7,7 @@
 
 #include "main.h"
 
-#include "dbgled.h"
+#include "dbg.h"
 #include "nrf.h"
 #include "uart.h"
 

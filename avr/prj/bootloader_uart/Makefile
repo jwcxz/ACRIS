@@ -15,7 +15,7 @@ BLD_OLVL=2
 S_SRC=main.c
 
 # module source files
-S_SRC+=dbgled.c eeprom.c flash.c uart.c uart_rb.c
+S_SRC+=dbg.c eeprom.c flash.c uart.c uart_rb.c
 
 # program the chip with the bootloader?
 PGM_WITH_BOOTLOADER=0
