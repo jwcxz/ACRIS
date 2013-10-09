@@ -72,6 +72,9 @@ driven by the USART or the SPI module on the AVR.
     uart_       uart.h      UART communication layer
                 uart.c
 
+    uart_rb_    uart_rb.h   ring-buffer com layer to make receiving streaming
+                uart_rb.c   data easier
+
 
 ## Build
 
