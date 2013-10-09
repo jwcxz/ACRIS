@@ -9,7 +9,7 @@ D_PROJ=.
 
 BRDREV?=2
 
-PROJECT_NAME=ledctrlr
+PROJECT_NAME=ledctrlruart
 
 BLD_OLVL=2
 
@@ -17,7 +17,7 @@ BLD_OLVL=2
 S_SRC=main.c
 
 # module source files
-S_SRC+=dbgled.c eeprom.c nrf.c nrfspi_usart.c ledset.c led.c tlc.c 
+S_SRC+=dbgled.c eeprom.c ledset.c led.c tlc.c uart.c uart_rb.c
 
 # program the chip with the bootloader?
 PGM_WITH_BOOTLOADER=1

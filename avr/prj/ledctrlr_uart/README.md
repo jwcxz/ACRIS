@@ -2,6 +2,7 @@ LED Controller Application
 ==========================
 
 This is the main project of ACRIS: the firmware that runs on the LED drivers.
+This version receives command packets via the UART.
 
 
 ## Protocol
@@ -30,8 +31,11 @@ The application-layer protocol format is: `[CMD][ARG0][ARG1]...[ARGn]`
 
 Addressing is handled in the communication layer.  It is `COM_AD_SIZE` bytes
 long.  LED controllers are designed to be receivers.  Their addresses are set
-in the bootloader by the EEPROM.
+in the bootloader by the EEPROM.  In the UART version, only the least
+significant byte is minded.
+
 
 ## TODOs:
 
-1.  Make this work again
+1.  Merge this into mainline wireless controller firmware and allow
+    compile-time selection of the underlying communication system.

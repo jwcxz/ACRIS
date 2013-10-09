@@ -7,6 +7,8 @@
 #include <avr/interrupt.h>
 #include <avr/pgmspace.h>
 
+extern uint8_t tlc[3][24];
+
 int main(void);
 void receive_data(void);
 

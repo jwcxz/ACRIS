@@ -6,6 +6,14 @@
 
 #include "config.h"
 
+#include <inttypes.h>
+#include <util/delay.h>
+#include <avr/io.h>
+#include <avr/interrupt.h>
+#include <avr/pgmspace.h>
+#include <avr/boot.h>
+#include <avr/eeprom.h>
+
 #include "main.h"
 
 #include "dbgled.h"
@@ -13,9 +21,12 @@
 #include "led.h"
 #include "tlc.h"
 #include "uart.h"
+#include "uart_rb.h"
 
-uint8_t *my_addr[3];
+uint8_t my_addr_full[3];
+uint8_t my_addr;
 
+// TODO: un-extern this
 uint8_t tlc[3][24];
 
 uint8_t action;         // current action
@@ -36,17 +47,17 @@ int main(void) {
     //tlc_drive();
 
     // get the address of the device
-    my_addr = get_addr();
+    eeprom_get_addr(my_addr_full);
+    my_addr = my_addr_full[0];
 
     // initialize UART
-    uart_init();
+    uart_rb_init();
     
     // enable interrupts
     sei();
-    rxen = 1;
 
     while (1) {
-        if ( uart_data_rdy() ) {
+        if ( uart_rb_data_rdy() ) {
             receive_data();
         }
     }
@@ -57,7 +68,7 @@ int main(void) {
 void receive_data(void) {
     unsigned char inbyte;
 
-    inbyte = uart_rx();
+    inbyte = uart_rb_rx();
 
     if ( inbyte == CMD_SYNC )  {
         // the sync byte is always treated as a trigger to reset the state
@@ -123,6 +134,9 @@ void receive_data(void) {
                     // all arguments collected
                     // perform appropriate action
                     
+#if 1
+                    led_action(action, args);
+#else
                     if (action == CMD_STATS) {
                         // send back system status
                         if (my_addr == args[0]) {
@@ -131,6 +145,7 @@ void receive_data(void) {
                     } else {
                         led_action(action, args);
                     }
+#endif
 
                     cmdstate = CST_IDLE;
                 } else {
