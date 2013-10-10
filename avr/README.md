@@ -18,11 +18,14 @@ ATmega168.  The ATmega88 won't work because the bootloader is too big.
 
 Projects are located in the `prj` dir.
 
-    bootloader  - ACRIS bootloader 
-    ledctrlr    - main LED controller firmware
-    rftxer      - wireless transmitter module
+    bootloader  - ACRIS bootloader (not available yet)
+    ledctrlr    - main LED controller firmware (not available yet)
+    rftxer      - wireless transmitter module (not available yet)
 
     test-nrf    - first attempt at wireless communication with an NRF24L01+
+
+    bootloader_uart - modified legacy bootloader that communicates over wifi
+    ledctrlr_uart   - modified legacy LED controller firmware
 
 
 ### Project structure
