@@ -23,12 +23,16 @@ void uart_init(void (*txh)(void), void (*rxh)(uint8_t)) {
 
     tx_handler = txh;
     rx_handler = rxh;
+
+    if (tx_handler) {
+        UART_TX_DDR |= 1<<UART_TX_PIN;
+    }
 }
 
 
 void uart_enable(void) {
     if (tx_handler) {
-        UCSR0B |= ( _BV(TXCIE0) | _BV(TXEN0) );
+        UCSR0B |= ( _BV(UDRIE0) | _BV(TXEN0) );
     }
 
     if (rx_handler) {
@@ -38,7 +42,7 @@ void uart_enable(void) {
 
 
 void uart_disable(void) {
-    UCSR0B &= ~( _BV(TXCIE0) | _BV(TXEN0) | _BV(RXCIE0) | _BV(RXEN0) );
+    UCSR0B &= ~( _BV(UDRIE0) | _BV(TXEN0) | _BV(RXCIE0) | _BV(RXEN0) );
 }
 
 
@@ -48,14 +52,14 @@ ISR(USART_RX_vect) {
     // check for framing errors, overrun errors, and parity errors
     // reset the uart if necessary
     if ( UCSR0A & (_BV(FE0) | _BV(DOR0) | _BV(UPE0)) ) {
-        uart_disable();
-        uart_enable();
+        UCSR0B &= ~(_BV(RXCIE0) | _BV(RXEN0));
+        UCSR0B |=  (_BV(RXCIE0) | _BV(RXEN0));
     } else {
         byte = UDR0;
         rx_handler(byte);
     }
 }
 
-ISR(USART_TX_vect) {
+ISR(USART_UDRE_vect) {
     tx_handler();
 }

@@ -164,7 +164,7 @@ $(O_ASM): $(O_OUT)
 	$(C_OBJDUMP) -S $< > $@
 
 $(O_TAG): FORCE
-	$(C_TAGS) -o $(O_TAG) -R $(subst :, ,$(D_INC)) $(subst :, ,$(D_SRC))
+	$(C_TAGS) -o $(abspath $(O_TAG)) -R $(abspath $(subst :, ,$(D_INC)) $(subst :, ,$(D_SRC)))
 
 # intermediate outputs
 $(D_OUT)/%.o: %.c

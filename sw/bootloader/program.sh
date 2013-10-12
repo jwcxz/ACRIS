@@ -7,3 +7,6 @@ echo "Press ^C to stop"
 
 echo "Programming..."
 ./bootloader.py -P /dev/ttyUSB0 -p $1
+
+echo "Running..."
+./bootloader.py -P /dev/ttyUSB0 -r

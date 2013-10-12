@@ -4,6 +4,7 @@
  */
 
 #include "config.h"
+#include "dbg.h"
 #include "nrf.h"
 #include "nrfspi.h"
 

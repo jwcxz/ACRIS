@@ -7,6 +7,9 @@
 #include "dbg.h"
 #include "nrf.h"
 
+#include "uart.h"
+#include "uart_rb.h"
+
 #ifdef NRF_FN_TX
 uint8_t my_addr[COM_AD_SIZE] = TX_ADDR;
 uint8_t tx_addr[COM_AD_SIZE] = RX_ADDR;
@@ -21,6 +24,16 @@ int main(void) {
     uint8_t i;
 
     dbg_init();
+    dbg_set(0x6);
+
+    uart_rb_init();
+
+    sei();
+
+    while(1) {
+        uart_rb_tx(uart_rb_rx());
+        dbg_set(i++);
+    }
 
     dbg_set( 0x4 );
     nrf_init(0x05, my_addr, txbuf, rxbuf);

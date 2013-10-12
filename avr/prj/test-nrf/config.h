@@ -28,6 +28,15 @@
 #define EEPROM_ADDR_INST    ((uint8_t *) 0)
 
 
+// UART config
+#define UART_PRESCALER  21
+#define UART_DBL        1
+#define UART_PARITY     0
+
+#define UART_RX_BUFSZ   64
+#define UART_TX_BUFSZ   64
+
+
 // USART-as-SPI baud rate
 #define NRF_BAUD_RATE   1000000UL
 #define NRF_PRESCALER   ( (uint16_t) (SYSCLK/(2*NRF_BAUD_RATE) - 1) )
