@@ -8,6 +8,8 @@
 #include "nrf.h"
 #include "nrfspi.h"
 
+#include "uart_rb.h"
+
 uint8_t *tx_packet_buffer;
 uint8_t *rx_packet_buffer;
 
@@ -15,6 +17,11 @@ uint8_t volatile packet_ready = 0;
 
 // initialization
 void nrf_init(uint8_t channel, uint8_t *rx_addr, uint8_t *txpbuf, uint8_t *rxpbuf) {
+    // turn off wireless communication
+    nrf_ce_off();
+    // set up nrf chip enable
+    _ON(NRF_CE_DDR, NRF_CE_PIN);
+
     // initialize SPI layer
     nrfspi_init();
     nrfspi_enable();
@@ -22,12 +29,6 @@ void nrf_init(uint8_t channel, uint8_t *rx_addr, uint8_t *txpbuf, uint8_t *rxpbu
     // register buffer addresses
     tx_packet_buffer = txpbuf;
     rx_packet_buffer = rxpbuf;
-
-    // turn off wireless communication
-    nrf_ce_off();
-
-    // set up chip enable
-    _ON(NRF_CE_DDR, NRF_CE_PIN);
 
     // set up interrupt with pull-up for falling edge
     _OFF(NRF_IRQ_DDR, NRF_IRQ_PIN);
@@ -76,17 +77,23 @@ uint8_t nrf_transmit_packet(uint8_t *addr, uint8_t *buf) {
     nrf_regwr_long(NRF_REG_RX_ADDR_P0, COM_AD_SIZE, addr);
     nrf_regwr_long(NRF_REG_TX_ADDR, COM_AD_SIZE, addr);
 
+
     // load up the FIFO
     nrf_txpayload(buf);
 
     // pulse CE to perform transmit
     nrf_ce_on();
-    _delay_us(15);
+    _delay_us(NRF_TX_PULSE_MIN_US);
     nrf_ce_off();
 
     // wait until transmit complete
-    while (!( nrf_status() & _BV(NRF_BIT_TX_DS) ));
-    ack = 1;
+    while ( !(nrf_status() & (_BV(NRF_BIT_TX_DS)|_BV(NRF_BIT_MAX_RT))) );
+
+    if ( nrf_status() & _BV(NRF_BIT_TX_DS) ) {
+        ack = 1;
+    } else {
+        ack = 0;
+    }
 
     // clear bits
     nrf_regwr(NRF_REG_STATUS, nrf_status() | _BV(NRF_BIT_TX_DS) | _BV(NRF_BIT_MAX_RT));
@@ -130,8 +137,6 @@ void nrf_accept_packet(void) {
 ISR(INT0_vect) {
     uint8_t status;
 
-    dbg_set(0xF);
-
     // when configured as a receiver, indicates that a packet was received by
     // the device and we must read it out
 
@@ -167,9 +172,24 @@ void nrf_ce_off(void) {
 
 void nrf_setmode(nrf_mode_t mode) {
     if (mode == NRF_MODE_TX) {
-        nrf_regwr(NRF_REG_CONFIG, NRF_INI_CONFIG & ~(_BV(NRF_BIT_PRIM_RX)));
+        nrf_flushtx();
+
+        nrf_regwr(NRF_REG_STATUS, _BV(NRF_BIT_RX_DR) | _BV(NRF_BIT_TX_DS) |
+                                  _BV(NRF_BIT_MAX_RT));
+
+        nrf_regwr(NRF_REG_CONFIG, (NRF_INI_CONFIG & ~(_BV(NRF_BIT_PRIM_RX))) |
+                                  _BV(NRF_BIT_PWR_UP));
+    } else if (mode == NRF_MODE_RX ) {
+        nrf_flushrx();
+
+        nrf_regwr(NRF_REG_STATUS, _BV(NRF_BIT_RX_DR) | _BV(NRF_BIT_TX_DS)
+                                  | _BV(NRF_BIT_MAX_RT));
+
+        nrf_regwr(NRF_REG_CONFIG, NRF_INI_CONFIG | _BV(NRF_BIT_PWR_UP) |
+                                  _BV(NRF_BIT_PRIM_RX));
     } else {
-        nrf_regwr(NRF_REG_CONFIG, NRF_INI_CONFIG | _BV(NRF_BIT_PRIM_RX));
+        nrf_ce_off();
+        nrf_regwr(NRF_REG_CONFIG, NRF_INI_CONFIG & ~(_BV(NRF_BIT_PWR_UP)));
     }
 }
 

@@ -9,6 +9,10 @@
 
 #include "uart.h"
 #include "uart_rb.h"
+#include "uart_printf.h"
+
+#include "stdio.h"
+
 
 #ifdef NRF_FN_TX
 uint8_t my_addr[COM_AD_SIZE] = TX_ADDR;
@@ -27,16 +31,25 @@ int main(void) {
     dbg_set(0x6);
 
     uart_rb_init();
+    uart_printf_init();
+
+    printf("\n\n");
+
+    nrf_init(0x05, my_addr, txbuf, rxbuf);
+
+    dbg_set( 0x1 );
 
     sei();
 
-    while(1) {
-        uart_rb_tx(uart_rb_rx());
+#if 0
+    while (1) {
+        data = uart_rb_rx();
+        uart_rb_tx( nrf_regrd(data) );
         dbg_set(i++);
+        i = i&0xF;
     }
-
-    dbg_set( 0x4 );
-    nrf_init(0x05, my_addr, txbuf, rxbuf);
+#endif
+    
 
 #ifdef NRF_FN_TX
     for ( i=0 ; i<COM_PL_SIZE ; i++ ) {
@@ -50,9 +63,9 @@ int main(void) {
             txbuf[i] = (txbuf[i] + 1) & 0xF;
         }
 
-        for ( i=0 ; i<10 ; i++ ) {
+        for ( i=0 ; i<COM_PL_SIZE ; i++ ) {
             dbg_set(txbuf[i]);
-            _delay_ms(200);
+            _delay_ms(50);
         }
     }
 #else
@@ -61,10 +74,12 @@ int main(void) {
     while(1) {
         nrf_wait_for_rxpacket();
 
-        for ( i=0 ; i<10 ; i++ ) {
+        for ( i=0 ; i<COM_PL_SIZE ; i++ ) {
             dbg_set(rxbuf[i]);
+            printf("%x ", rxbuf[i]);
             _delay_ms(50);
         }
+        printf("\n", rxbuf[i]);
 
         nrf_accept_packet();
     }

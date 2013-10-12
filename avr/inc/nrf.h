@@ -6,7 +6,8 @@
 
 
 typedef enum {
-    NRF_MODE_TX = 0,
+    NRF_MODE_OFF = 0,
+    NRF_MODE_TX,
     NRF_MODE_RX
 } nrf_mode_t;
 

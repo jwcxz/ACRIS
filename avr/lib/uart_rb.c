@@ -78,7 +78,6 @@ void uart_rb_tx(uint8_t data) {
 
 
 void uart_rb_rxh(uint8_t data) {
-    dbg_set(0xF);
     if ( uart_rxbuf_count <= UART_RX_BUFSZ ) {
         *uart_rxbuf_iptr = data;
         uart_rxbuf_count++;
