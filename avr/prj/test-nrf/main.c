@@ -25,7 +25,7 @@ uint8_t txbuf[COM_PL_SIZE];
 uint8_t rxbuf[COM_PL_SIZE];
 
 int main(void) {
-    uint8_t i;
+    uint8_t i, j;
 
     dbg_init();
     dbg_set(0x6);
@@ -63,10 +63,8 @@ int main(void) {
             txbuf[i] = (txbuf[i] + 1) & 0xF;
         }
 
-        for ( i=0 ; i<COM_PL_SIZE ; i++ ) {
-            dbg_set(txbuf[i]);
-            _delay_ms(50);
-        }
+        dbg_set(j++);
+        _delay_ms(20);
     }
 #else
     nrf_start_receiver();
@@ -75,13 +73,13 @@ int main(void) {
         nrf_wait_for_rxpacket();
 
         for ( i=0 ; i<COM_PL_SIZE ; i++ ) {
-            dbg_set(rxbuf[i]);
             printf("%x ", rxbuf[i]);
-            _delay_ms(50);
         }
-        printf("\n", rxbuf[i]);
+
+        printf("\n");
 
         nrf_accept_packet();
+        dbg_set(j++);
     }
 #endif
 }

@@ -27,9 +27,6 @@ static uint16_t page_addr;
 // instrument address
 uint8_t my_addr;
 
-// device address mask
-static uint8_t mask = AM_ALL;
-
 // application start function
 void (*app_start)(void) = 0x0000;
 
@@ -90,9 +87,7 @@ void process_rx(void) {
         case CST_SYNC:
             if ( data == CMD_NOP ) curstate = CST_IDLE;
             else if ( data == CMD_SYNC ) curstate = CST_SYNC;
-                // if we get a mask request, then always honor it
-            else if ( data == CMD_MASK ) curstate = CST_MASK;
-            else if ( applies_to_me() ) {
+            else {
                 switch (data) {
                     case CMD_BOOT:
                         cli();
@@ -134,14 +129,6 @@ void process_rx(void) {
                         break;
                 }
             } 
-            // otherwise, no action applied to me, so wait for the next
-            // packet (maybe it'll be a new mask)
-            else curstate = CST_IDLE;
-            break;
-
-        case CST_MASK:
-            mask = data;
-            curstate = CST_IDLE;
             break;
 
         case CST_ADDR:
@@ -249,24 +236,4 @@ uint8_t addr_get(void) {
 void addr_set(uint8_t address) {
     eeprom_busy_wait();
     eeprom_write_byte(EEPROM_INST_ADDR, address);
-}
-
-/* Check to see if the mask applies to this instrument */
-uint8_t applies_to_me(void) {
-    if ( my_addr == 0xFF ) {
-        // eeprom address hasn't been set yet, so listen to everything
-        return 1;
-    } else if ( mask == AM_ALL ) {
-        // 0xFF = all addresses
-        return 1;
-    } else if ( my_addr == mask ) {
-        // we specifically targeted this device
-        return 1;
-    } else if ( mask >= 0xF0 && ( my_addr >= (mask&0x0F)*16 && 
-                my_addr <= (mask&0x0F)*16+15 ) ) {
-        // the devices matches in block mode
-        return 1;
-    } else {
-        return 0;
-    }
 }

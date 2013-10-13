@@ -4,11 +4,8 @@
  */
 
 #include "config.h"
-#include "dbg.h"
 #include "nrf.h"
 #include "nrfspi.h"
-
-#include "uart_rb.h"
 
 uint8_t *tx_packet_buffer;
 uint8_t *rx_packet_buffer;
@@ -111,7 +108,6 @@ void nrf_start_receiver(void) {
 
     nrf_setmode(NRF_MODE_RX);
     nrf_enable_irq();
-    sei();
     nrf_ce_on();
 }
 

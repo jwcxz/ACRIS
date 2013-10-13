@@ -145,7 +145,7 @@
 #define NRF_INI_SETUP_RETR  ( ( 0x0 << NRF_BIT_ARD74 ) | \
                               ( 0x0 << NRF_BIT_ARC30 ) )
 
-//#define NRF_INI_RF_SETUP    ( _BV(NRF_BIT_CONT_WAVE) | \
+//#define NRF_INI_RF_SETUP    ( _BV(NRF_BIT_CONT_WAVE) |
 
 #define NRF_INI_RF_SETUP    ( ( 0x3 << NRF_BIT_RF_PWR21 ) )
 
