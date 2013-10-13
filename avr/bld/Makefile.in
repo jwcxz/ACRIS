@@ -103,7 +103,8 @@ endif
 
 stats: $(O_OUT)
 	$(C_OBJDUMP) -h $(O_OUT)
-	$(C_SIZE) $(O_OUT) 
+	$(C_SIZE) --mcu=$(BLD_PART) $(O_OUT) 
+	$(C_SIZE) --mcu=$(BLD_PART) -C $(O_OUT) 
 
 
 # clean targets

@@ -8,8 +8,6 @@
 #include "led.h"
 #include "ledset.h"
 #include "tlc.h"
-// TODO: find a better home for command info
-#include "main.h"
 
 
 void led_action(uint8_t action, uint8_t args[]) {

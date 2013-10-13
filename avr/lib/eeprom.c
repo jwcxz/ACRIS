@@ -9,11 +9,16 @@
 void eeprom_get_addr(uint8_t *buf) {
     uint8_t i;
 
-    eeprom_busy_wait();
-
     for ( i=0 ; i<COM_AD_SIZE ; i++ ) {
+        eeprom_busy_wait();
         buf[i] = eeprom_read_byte(EEPROM_INST_ADDR);
     }
+}
+
+
+void eeprom_get_chan(uint8_t *buf) {
+    eeprom_busy_wait();
+    buf[0] = eeprom_read_byte(EEPROM_INST_CHAN);
 }
 
 

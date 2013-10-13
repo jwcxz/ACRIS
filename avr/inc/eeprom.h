@@ -4,6 +4,7 @@
 
 // non-generic: read instrument address
 void eeprom_get_addr(uint8_t *);
+void eeprom_get_chan(uint8_t *);
 
 
 // generic functions

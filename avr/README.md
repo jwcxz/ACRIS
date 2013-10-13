@@ -56,6 +56,9 @@ driven by the USART or the SPI module on the AVR.
     eeprom_     eeprom.h    reading and writing settings in the EEPROM
                 eeprom.c
 
+    flash_      flash.h     flash memory access functions
+                flash.c
+
     led_        led.h       action translator for LED array output
                 led.c
 
@@ -75,6 +78,9 @@ driven by the USART or the SPI module on the AVR.
     uart_       uart.h      UART communication layer
                 uart.c
 
+    uart_printf_    uart_printf.h   retargeting printf for uart output
+                    uart_printf.c
+
     uart_rb_    uart_rb.h   ring-buffer com layer to make receiving streaming
                 uart_rb.c   data easier
 
@@ -86,14 +92,14 @@ The `bld` directory contains the master rules for building projects.
 
 ## TODOs:
 
-    1.  Decouple address matching in LED functions and move everything to a
-        communication layer
+1.  Decouple address matching in LED functions and move everything to a
+    communication layer
 
-    2.  Install a shim between `nrf_` and the application layer to allow
-        switching between wireless communication over NRF24L01+ and wired
-        communication over RS-485.
+2.  Install a shim between `nrf_` and the application layer to allow
+    switching between wireless communication over NRF24L01+ and wired
+    communication over RS-485.
 
-    3.  Add optional automatic retransmission support to the NRF driver.
+3.  Add optional automatic retransmission support to the NRF driver.
 
-    4.  Update the bootloader to support wireless communication, with automatic
-        retransmission to guarantee a good firmware load.
+4.  Update the bootloader to support wireless communication, with automatic
+    retransmission to guarantee a good firmware load.

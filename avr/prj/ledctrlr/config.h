@@ -24,18 +24,28 @@
 #define COM_PL_SIZE 25
 
 
+// commands
+#define CMD_LDSET_LEGACY 0xAA
+#define CMD_LDSET 0x00
+#define CMD_HDSET 0x01
+#define CMD_LDALL 0x10
+#define CMD_HDALL 0x11
+
+#define CMD_STATS 0x20
+
+
 // EEPROM addresses
 #define EEPROM_INST_ADDR    ((uint8_t*) 0)
 #define EEPROM_INST_CHAN    ((uint8_t*) 4)
 
 
-// UART config
-#define UART_PRESCALER  259
-#define UART_DBL        1
-#define UART_PARITY     0
+// USART-as-SPI baud rate
+#define NRF_BAUD_RATE   5000000UL
+#define NRF_PRESCALER   ( (uint16_t) (SYSCLK/(2*NRF_BAUD_RATE) - 1) )
 
-#define UART_RX_BUFSZ   64
-#define UART_TX_BUFSZ   1
+
+// this project is run in receiver mode
+#define NRF_FN_RX
 
 
 #endif
