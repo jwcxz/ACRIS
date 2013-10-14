@@ -6,7 +6,7 @@
 
 D_BLD=$(D_ROOT)/bld
 
-include $(D_BLD)/Makefile.def_cfg
+include $(D_BLD)/Makefile.defs
 
 # AVR toolchain dir
 D_AVRTC=/usr/avr
