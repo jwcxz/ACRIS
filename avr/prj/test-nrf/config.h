@@ -29,7 +29,7 @@
 
 
 // UART config
-#define UART_PRESCALER  64
+#define UART_PRESCALER  21
 #define UART_DBL        1
 #define UART_PARITY     0
 

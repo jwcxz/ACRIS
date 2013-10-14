@@ -1,5 +1,5 @@
 /*
- * Wireless RX Test
+ * Wireless TX/RX Test
  * jwc :: jwcxz.com
  */
 
@@ -33,34 +33,23 @@ int main(void) {
     uart_rb_init();
     uart_printf_init();
 
-    printf("\n\n");
-
+    // wait more than the maximum startup time before trying to start the
+    // NRF interface up
+    _delay_ms(120);
     nrf_init(0x05, my_addr, txbuf, rxbuf);
-
-    dbg_set( 0x1 );
 
     sei();
 
-#if 0
-    while (1) {
-        data = uart_rb_rx();
-        uart_rb_tx( nrf_regrd(data) );
-        dbg_set(i++);
-        i = i&0xF;
-    }
-#endif
-    
-
 #ifdef NRF_FN_TX
     for ( i=0 ; i<COM_PL_SIZE ; i++ ) {
-        txbuf[i] = i & 0xF;
+        txbuf[i] = i;
     }
 
     while(1) {
         nrf_transmit_packet(tx_addr, txbuf);
 
         for ( i=0 ; i<COM_PL_SIZE ; i++ ) {
-            txbuf[i] = (txbuf[i] + 1) & 0xF;
+            txbuf[i] = txbuf[i] + 1;
         }
 
         dbg_set(j++);
