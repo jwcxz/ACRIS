@@ -32,6 +32,23 @@ void nrf_init(uint8_t channel, uint8_t *rx_addr, uint8_t *txpbuf, uint8_t *rxpbu
     _ON(NRF_IRQ_PRT, NRF_IRQ_PIN);
     EICRA = _BV(ISC01);
 
+    // wait for NRF_REG_CONFIG register to have some of its initial bits set
+    // XXX: the datasheet notes that the NRF_BIT_CRC_EN bit is set at power-up
+    // and because it's also set in NRF_INI_CONFIG, this will work for both the
+    // case when the entire system is powered up from off and when just the
+    // microcontroller is reset.
+    // 
+    // This is a stupid and cheap hack, but AFAICT there's no way to get
+    // surefire information when the chip is ready for initialization.  I wish
+    // it would bring MISO low or something when it's ready.  Reading preset
+    // addresses doesn't work since they might be changed, the status register
+    // can be different depending on whether the system is powering up or the
+    // micro is reset, and most of the others are initialized to all 0 or
+    // change a lot from the default settings.  The other candidate for this is
+    // NRF_REG_RF_SETUP, whose default is 0x7 and initialization is 0x3
+    // (diference is NRF_BIT_RF_DR_HIGH)
+    while ( !(nrf_regrd(NRF_REG_CONFIG) & _BV(NRF_BIT_EN_CRC)) );
+
     // perform system configuration
     nrf_regwr(NRF_REG_CONFIG, NRF_INI_CONFIG);
     nrf_regwr(NRF_REG_EN_AA, NRF_INI_EN_AA);

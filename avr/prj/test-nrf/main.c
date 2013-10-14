@@ -26,6 +26,7 @@ uint8_t rxbuf[COM_PL_SIZE];
 
 int main(void) {
     uint8_t i, j;
+    j = 0;
 
     dbg_init();
     dbg_set(0x6);
@@ -33,9 +34,6 @@ int main(void) {
     uart_rb_init();
     uart_printf_init();
 
-    // wait more than the maximum startup time before trying to start the
-    // NRF interface up
-    _delay_ms(120);
     nrf_init(0x05, my_addr, txbuf, rxbuf);
 
     sei();
