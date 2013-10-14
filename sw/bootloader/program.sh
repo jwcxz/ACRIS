@@ -2,11 +2,5 @@
 
 cd `dirname $0`
 
-echo "Press ^C to stop"
-./bootloader.py -P /dev/ttyUSB0 -n
-
-echo "Programming..."
-./bootloader.py -P /dev/ttyUSB0 -p $1
-
-echo "Running..."
-./bootloader.py -P /dev/ttyUSB0 -r
+echo "Press enter to start programming..."
+./bootloader.py -P /dev/ttyUSB0 -n -p $1 -r
