@@ -1,5 +1,7 @@
 #include "config.h"
 
+#include "string.h"
+
 #include "main.h"
 #include "flash.h"
 #include "eeprom.h"
@@ -46,7 +48,7 @@ int main(void) {
 
     // check if a packet has been received.  if not, start the app
     // if the packet is not the bootloader hold sequence, go to the app as well
-    if ( !nrf_isready_packet() ) {
+    if ( !(nrf_isready_packet()) ) {
         cli();
         MCUCR = (1<<IVCE);
         MCUCR = 0;
@@ -78,9 +80,9 @@ void receive_data(void) {
 }
 
 /* Processed a received byte */
-void process_rx(void) {
+void process_packet(void) {
     uint8_t i;
-    uint8_t csum = 0;
+    //uint8_t csum = 0;
     uint16_t page_buf_len = 0;
 
     uint8_t cmd = rxbuf[0];
@@ -105,14 +107,14 @@ void process_rx(void) {
                     }
 
                     eeprom_write(EEPROM_INST_ADDR, 3, addr);
-                    // reset the receiver to handle new address
-                    nrf_set_rxaddr(addr);
+                    // TODO: reset the receiver to handle new address
+                    //nrf_set_rxaddr(addr);
                     
                 case CMD_ADDR_DISP:
                     if (args[0] == 1) {
-                        dbg_set(my_addr>>4);
+                        dbg_set(addr[args[0]]>>4);
                     } else {
-                        dbg_set(my_addr&0xF);
+                        dbg_set(addr[args[0]]&0xF);
                     }
                     curstate = CST_IDLE;
                     break;

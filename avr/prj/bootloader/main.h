@@ -9,7 +9,8 @@ typedef enum {
 
     CMD_BOOT      = 'R',
 
-    CMD_DISP_ADDR = 'D',
+    CMD_ADDR_SET  = 'D',
+    CMD_ADDR_DISP = 'd',
 
     CMD_PROG_STRT = 'P',
     CMD_PROG_CONT = 'p',
@@ -26,7 +27,7 @@ typedef enum {
 
 int main(void);
 void receive_data(void);
-void process_rx(void);
+void process_packet(void);
 void give_up(uint8_t);
 
 #endif
