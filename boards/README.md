@@ -6,6 +6,8 @@ These schematics and boards were made with [KiCad].
 
 ## Boards
 
+Board projects are in `prj/`.
+
     commbrd   - First attempt at a USB->RS485 converter
     commdngl  - USB-dongle that connects directly to a computer and delivers
                 RS-485
@@ -17,13 +19,13 @@ These schematics and boards were made with [KiCad].
 
 ## Libraries
 
-Parts libraries (schematic symbols and footprints) are in the `libs` dir.  Most
-of them are homemade, some of them are sourced from the internet.
+Parts libraries (schematic symbols and footprints) are in the `libs/` dir.
+Most of them are homemade, some of them are sourced from the internet.
 
 
 ## Tools
 
-There are some scripts in the `tools` dir.
+There are some scripts in the `tools/` dir.
 
     exportbom.sh  - Clean up exported BOM files
     package.sh    - Packager
