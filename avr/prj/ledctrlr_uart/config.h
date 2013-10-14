@@ -4,7 +4,7 @@
 
 #include "config_top.h"
 #include "pins.h"
-#include "macros.h"
+
 
 // UART config
 #define UART_PRESCALER  259
