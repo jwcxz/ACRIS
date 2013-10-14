@@ -49,7 +49,5 @@
 #define TX_ADDR {0x01, 0x55, 0x55}
 #define RX_ADDR {0x01, 0xAA, 0xAA}
 
-// minimum time to pulse CE to initiate a transmit
-#define NRF_TX_PULSE_MIN_US 10
 
 #endif
