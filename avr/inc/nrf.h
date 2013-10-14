@@ -27,6 +27,7 @@ void nrf_start_receiver(void);
 void nrf_stop_receiver(void);
 
 void nrf_wait_for_rxpacket(void);
+void nrf_isready_packet(void);
 void nrf_accept_packet(void);
 
 
