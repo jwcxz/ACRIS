@@ -20,6 +20,7 @@ avr/prj/*/out
 # kicad
 *.bak
 $savepcb*
+boards/export
 
 
 # temporary
