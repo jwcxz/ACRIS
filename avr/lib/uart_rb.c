@@ -4,7 +4,6 @@
  */
 
 #include "config.h"
-#include "dbg.h"
 #include "uart.h"
 #include "uart_rb.h"
 
