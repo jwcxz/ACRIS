@@ -15,6 +15,7 @@
 #include <avr/boot.h>
 #include <avr/eeprom.h>
 
+#include "eeprom_map.h"
 #include "pins.h"
 #include "macros.h"
 
@@ -22,10 +23,6 @@
 // number of bytes in instrument address and payload packet
 #define COM_AD_SIZE  3
 #define COM_PL_SIZE 25
-
-
-// EEPROM addresses
-#define EEPROM_ADDR_INST    ((uint8_t *) 0)
 
 
 // UART config

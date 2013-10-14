@@ -15,6 +15,7 @@
 #include <avr/boot.h>
 #include <avr/eeprom.h>
 
+#include "eeprom_map.h"
 #include "pins.h"
 #include "macros.h"
 

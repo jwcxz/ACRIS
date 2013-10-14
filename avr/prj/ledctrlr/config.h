@@ -15,6 +15,7 @@
 #include <avr/boot.h>
 #include <avr/eeprom.h>
 
+#include "eeprom_map.h"
 #include "pins.h"
 #include "macros.h"
 
@@ -32,11 +33,6 @@
 #define CMD_HDALL 0x11
 
 #define CMD_STATS 0x20
-
-
-// EEPROM addresses
-#define EEPROM_INST_ADDR    ((uint8_t*) 0)
-#define EEPROM_INST_CHAN    ((uint8_t*) 4)
 
 
 // USART-as-SPI baud rate
