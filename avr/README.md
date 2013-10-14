@@ -11,6 +11,7 @@ ATmega168.  The ATmega88 won't work because the bootloader is too big.
     inc/        - include files
     lib/        - library modules
     prj/        - projects
+    Makefile    - rules for making projects from the fw dir
     README.md   - well, what are you reading?
 
 
