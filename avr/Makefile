@@ -9,7 +9,7 @@ all: $(PROJECTS)
 list:
 	@echo $(PROJECTS)
 
-tags:
+tags: FORCE
 	./tools/mktags
 
 $(PROJECTS):
@@ -19,3 +19,4 @@ $(filter-out $(PROJECTS) all list tags, $(MAKECMDGOALS)):
 	@echo -n "" > /dev/null
 
 .PHONY = all list tags $(PROJECTS)
+FORCE:
