@@ -95,7 +95,7 @@ TxtLar=120
 MSegLar=150
 LastNetListRead=
 [pcbnew/libraries]
-LibDir=../libs
+LibDir=../../libs
 LibName1=sockets
 LibName2=connect
 LibName3=discret

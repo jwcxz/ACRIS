@@ -32,7 +32,7 @@ LibName10=pga_sockets
 LibName11=valves
 LibName12=SparkFun
 LibName13=soic8
-LibDir=../libs
+LibDir=../../libs
 [general]
 version=1
 [cvpcb]
@@ -42,7 +42,7 @@ NetIExt=net
 EquName1=devcms
 [eeschema]
 version=1
-LibDir=../libs
+LibDir=../../libs
 NetFmtName=Pcbnew
 HPGLSpd=20
 HPGLDm=15

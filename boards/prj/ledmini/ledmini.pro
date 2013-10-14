@@ -15,7 +15,7 @@ EquName1=devcms
 version=1
 [eeschema]
 version=1
-LibDir=../libs
+LibDir=../../libs
 NetFmt=1
 HPGLSpd=20
 HPGLDm=15
@@ -97,7 +97,7 @@ TxtLar=120
 MSegLar=150
 LastNetListRead=ledmini.net
 [pcbnew/libraries]
-LibDir=../libs
+LibDir=../../libs
 LibName1=sockets
 LibName2=connect
 LibName3=discret
