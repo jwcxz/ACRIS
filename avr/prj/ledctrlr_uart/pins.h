@@ -51,7 +51,6 @@
 
 
 // TLC data
-// TODO: rename to TLC_MOSI_PIN
 #define TLC_MOSI_PIN    PB3
 #define TLC_SCLK_PIN    PB5
 #define TLC_SDSS_PIN    PB2
