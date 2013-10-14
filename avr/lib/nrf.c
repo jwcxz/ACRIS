@@ -140,7 +140,7 @@ void nrf_wait_for_rxpacket(void) {
     while (!packet_ready);
 }
 
-void nrf_isready_packet(void) {
+uint8_t nrf_isready_packet(void) {
     return packet_ready;
 }
 
