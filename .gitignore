@@ -9,6 +9,8 @@ orders/*
 *.out.map
 *.lst
 *.o
+*.s
+avr/prj/*/out
 
 
 # python
