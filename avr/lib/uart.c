@@ -7,8 +7,8 @@
 #include "uart.h"
 
 
-void (*tx_handler)(void) = NULL;
-void (*rx_handler)(uint8_t) = NULL;
+void (*tx_handler)(void) = 0;
+void (*rx_handler)(uint8_t) = 0;
 
 
 void uart_init(void (*txh)(void), void (*rxh)(uint8_t)) {

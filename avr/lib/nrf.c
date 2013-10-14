@@ -62,9 +62,7 @@ void nrf_init(uint8_t channel, uint8_t *rx_addr, uint8_t *txpbuf, uint8_t *rxpbu
     nrf_regwr(NRF_REG_RF_CH, ( channel << NRF_BIT_RF_CH60 ) );
 
     // if our primary function is receiver mode, set up pipe addresses
-#ifdef NRF_FN_RX
     nrf_regwr_long(NRF_REG_RX_ADDR_P1, COM_AD_SIZE, rx_addr);
-#endif
 }
 
 

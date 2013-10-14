@@ -3,6 +3,8 @@
  * jwc :: jwcxz.com
  */
 
+#include <avr/eeprom.h>
+
 #include "config.h"
 #include "eeprom.h"
 

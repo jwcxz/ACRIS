@@ -1,6 +1,7 @@
 #ifndef __LED_H_
 #define __LED_H_
 
+#include "led_cmds.h"
 
 void led_action(uint8_t, uint8_t *);
 

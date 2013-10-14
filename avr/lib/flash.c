@@ -3,6 +3,8 @@
  * jwc :: jwcxz.com
  */
 
+#include <avr/boot.h>
+
 #include "config.h"
 #include "flash.h"
 

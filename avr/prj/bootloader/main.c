@@ -1,6 +1,7 @@
 #include "config.h"
 
-#include "string.h"
+#include <avr/boot.h>
+#include <string.h>
 
 #include "main.h"
 #include "flash.h"
