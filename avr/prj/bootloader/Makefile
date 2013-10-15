@@ -9,7 +9,7 @@ D_PROJ=.
 
 PROJECT_NAME=ledbtldr
 
-BLD_OLVL=2
+BLD_OLVL=s
 
 # project source files
 S_SRC=main.c
@@ -25,6 +25,7 @@ AVR_LFUSE=0xce
 AVR_HFUSE=0xd4
 AVR_EFUSE=0xf8
 
-LDFLAGS+=-Wl,--section-start=.text=0x3800
+CFLAGS+=-ffunction-sections -fdata-sections
+LDFLAGS+=-Wl,--section-start=.text=0x3800,--gc-sections
 
 include $(D_ROOT)/bld/Makefile.in

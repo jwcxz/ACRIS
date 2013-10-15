@@ -21,7 +21,7 @@ static uint16_t page_addr;
 uint8_t addr[COM_AD_SIZE];
 uint8_t chan[1];
 
-uint8_t txbuf[COM_PL_SIZE];
+//uint8_t txbuf[COM_PL_SIZE];
 uint8_t rxbuf[COM_PL_SIZE];
 
 // application start function
@@ -38,7 +38,7 @@ int main(void) {
     eeprom_get_addr(addr);
     eeprom_get_chan(chan);
 
-    nrf_init(*chan, addr, txbuf, rxbuf);
+    nrf_init(*chan, addr, 0, rxbuf);
 
     sei();
 
@@ -49,21 +49,14 @@ int main(void) {
 
     // check if a packet has been received.  if not, start the app
     // if the packet is not the bootloader hold sequence, go to the app as well
-    if ( !(nrf_isready_packet()) ) {
+    if ( rxbuf[0] != CMD_HOLD_SEQ0 ) {
         cli();
         MCUCR = (1<<IVCE);
         MCUCR = 0;
         app_start();
-    } else if ( rxbuf[0] == CMD_HOLD_SEQ0 && rxbuf[1] == CMD_HOLD_SEQ1 ) {
+    } else {
         // otherwise, go into receive data loop
         receive_data();
-    } else {
-        // didn't receive the hold sequence -- go to app
-        cli();
-        nrf_accept_packet();
-        MCUCR = (1<<IVCE);
-        MCUCR = 0;
-        app_start();
     }
 
     return 0;
@@ -142,29 +135,31 @@ void process_packet(void) {
         case CST_PROG_RECV:
             if (cmd != CMD_PROG_CONT) {
                 // received a wrong command... probably meaning corrupted firmware
-                give_up(1);
-            }
-
-            page_buf_len = page_buf_ptr - page_buf;
-
-            if ( page_buf_len + (COM_PL_SIZE-1) <= PAGESIZE ) {
-                // buffer is full of programming info
-                memcpy(page_buf_ptr, args, COM_PL_SIZE-1);
-                // increment the pointer
-                page_buf_ptr = &(page_buf_ptr[COM_PL_SIZE-1]);
-                page_buf_len += COM_PL_SIZE-1;
+                boot_page_erase(0);
+                //boot_spm_busy_wait();
+                curstate = CST_IDLE;    // reset state machine
             } else {
-                // received the rest of the packet
-                memcpy(page_buf_ptr, rxbuf, PAGESIZE - page_buf_len);
-                page_buf_ptr = &(page_buf_ptr[PAGESIZE - page_buf_len]);
-                page_buf_len += PAGESIZE - page_buf_len;
-            }
+                page_buf_len = page_buf_ptr - page_buf;
 
-            if ( page_buf_len == PAGESIZE ) {
-                // proceed to read checksum
-                curstate = CST_PROG_VRFY;
-            } else {
-                curstate = CST_PROG_RECV;
+                if ( page_buf_len + (COM_PL_SIZE-1) <= PAGESIZE ) {
+                    // buffer is full of programming info
+                    memcpy(page_buf_ptr, args, COM_PL_SIZE-1);
+                    // increment the pointer
+                    page_buf_ptr = &(page_buf_ptr[COM_PL_SIZE-1]);
+                    page_buf_len += COM_PL_SIZE-1;
+                } else {
+                    // received the rest of the packet
+                    memcpy(page_buf_ptr, rxbuf, PAGESIZE - page_buf_len);
+                    page_buf_ptr = &(page_buf_ptr[PAGESIZE - page_buf_len]);
+                    page_buf_len += PAGESIZE - page_buf_len;
+                }
+
+                if ( page_buf_len == PAGESIZE ) {
+                    // proceed to read checksum
+                    curstate = CST_PROG_VRFY;
+                } else {
+                    curstate = CST_PROG_RECV;
+                }
             }
 
             break;
@@ -178,7 +173,8 @@ void process_packet(void) {
                 // damnit...
                 // TODO: we can be slightly smarter (if it's the first address,
                 // we technically haven't corrupted anything yet)
-                give_up(1);
+                boot_page_erase(0);
+                //boot_spm_busy_wait();
             }
 
             curstate = CST_IDLE;
@@ -188,35 +184,4 @@ void process_packet(void) {
             curstate = CST_IDLE;
             break;
     }
-}
-
-/* Reached an unrecoverable error, so:
- *  - Light up the LEDs indicating an error
- *  - If corrupted, then write 0xFF to the first page in order to prevent the
- *    bootloader from trying to run the application at the beginning.
- *  - Go back and wait for new data.
- */
-void give_up(uint8_t corrupted) {
-    uint16_t i;
-    if (corrupted) {
-        // set LEDs to "shit really hit the fan"
-        dbg_set(0xA);
-
-        // fill the first page with 0xFF
-        for ( i=0 ; i<PAGESIZE ; i+=2 ) {
-            boot_page_fill_safe(i, 0xFFFF);
-        }
-        boot_page_write_safe(0);
-        boot_spm_busy_wait();
-
-        // halt
-        while(1);
-    } else {
-        // set LEDs to "shit slightly hit the fan"
-        dbg_set(0x9);
-    }
-
-    // return to waiting for data
-    curstate = CST_IDLE;    // reset state machine
-    receive_data();
 }
