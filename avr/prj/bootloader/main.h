@@ -28,6 +28,5 @@ typedef enum {
 int main(void);
 void receive_data(void);
 void process_packet(void);
-void give_up(uint8_t);
 
 #endif
