@@ -11,6 +11,7 @@ void nrfspi_init(void) {
     // NRF24L01+ accepts a maximum baud rate of 10mbps and is mode '00' with MSB first
 
     // set up the pins
+    _ON(NRF_CSN_PRT, NRF_CSN_PIN);
     _ON(NRF_CSN_DDR, NRF_CSN_PIN);
     _ON(NRF_SCLK_DDR, NRF_SCLK_PIN);
     _ON(NRF_MOSI_DDR, NRF_MOSI_PIN);
@@ -64,6 +65,8 @@ uint8_t nrfspi_txrx(uint8_t len, uint8_t *txbuf, uint8_t *rxbuf) {
             while ( !(UCSR0A & _BV(UDRE0)) );
 
             UDR0 = *(txbuf++);
+
+            while ( !(UCSR0A & _BV(RXC0)) );
             tmp = UDR0;
 
             count++;
