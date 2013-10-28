@@ -60,7 +60,7 @@ uint8_t uart_rb_rx(void) {
 void uart_rb_tx(uint8_t data) {
     UCSR0B &= ~(_BV(UDRIE0));
     
-    // blocking call -- wait until we receive data
+    // blocking call -- wait until transmit buffer is no longer full
 	while ( uart_txbuf_count == UART_TX_BUFSZ );
 
 	*uart_txbuf_iptr = data;
