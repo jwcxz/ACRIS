@@ -5,7 +5,7 @@
 #include "nrf_regmap.h"
 
 // minimum time to pulse CE to initiate a transmit
-#define NRF_TX_PULSE_MIN_US 10
+#define NRF_TX_PULSE_MIN_US 15
 
 typedef enum {
     NRF_MODE_OFF = 0,
