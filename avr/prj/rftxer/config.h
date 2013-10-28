@@ -13,7 +13,7 @@
 #define UART_DBL        1
 #define UART_PARITY     0
 
-#define UART_RX_BUFSZ   64
+#define UART_RX_BUFSZ   128
 #define UART_TX_BUFSZ   64
 
 
