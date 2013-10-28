@@ -7,23 +7,16 @@
 
 
 // UART configuration
-#define UART_BAUD_RATE  115200
-#define UART_PRESCALER  ( (uint16_t) (SYSCLK/(2*UART_BAUD_RATE) - 1) )
-#define UART_DBL        0
+#define UART_PRESCALER  21
+#define UART_DBL        1
 #define UART_PARITY     0
 
-
-// USART-as-SPI baud rate
-#define NRF_BAUD_RATE   1000000UL
-#define NRF_PRESCALER   ( (uint16_t) (SYSCLK/(2*NRF_BAUD_RATE) - 1) )
-
-
-// this is a transmitter
-#define NRF_FN_TX
+#define UART_RX_BUFSZ   64
+#define UART_TX_BUFSZ   64
 
 
 // this device's address
-#define TX_ADDR {0x01, 0x55, 0x55}
+#define MY_ADDR {0x01, 0x55, 0x55}
 
 // mask for receive devices
 #define RX_MASK1 0xAA

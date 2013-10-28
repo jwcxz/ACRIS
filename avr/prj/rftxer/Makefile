@@ -13,7 +13,7 @@ PROJECT_NAME=rftxer
 S_SRC=main.c
 
 # module source files
-S_SRC+=dbg.c nrf.c nrfspi_spi.c uart.c
+S_SRC+=dbg.c nrf.c nrfspi_spi.c uart_printf.c uart_rb.c uart.c
 
 # program the chip with the bootloader?
 PGM_WITH_BOOTLOADER=0
@@ -21,6 +21,6 @@ PGM_WITH_BOOTLOADER=0
 # AVR part hardware options
 AVR_LFUSE=0xce
 AVR_HFUSE=0xdf
-AVR_EFUSE=0xf8
+AVR_EFUSE=0xf9
 
 include $(D_ROOT)/bld/Makefile.in
