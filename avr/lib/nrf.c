@@ -68,6 +68,7 @@ void nrf_init(uint8_t channel, uint8_t *rx_addr, uint8_t *txpbuf, uint8_t *rxpbu
 
 // application-level commands
 void nrf_enable_irq(void) {
+    _ON(EIFR, INTF0);
     _ON(EIMSK, INT0);
 }
 
@@ -144,6 +145,7 @@ uint8_t nrf_isready_packet(void) {
 
 void nrf_accept_packet(void) {
     packet_ready = 0;
+    nrf_enable_irq();
 }
 
 
@@ -157,7 +159,8 @@ ISR(INT0_vect) {
     // shut off receiver
     nrf_ce_off();
 
-    while (packet_ready);
+    // shut off interrupt
+    nrf_disable_irq();
 
     // read out data into buffer
     status = nrf_rxpayload(rx_packet_buffer);
