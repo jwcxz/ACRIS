@@ -23,7 +23,7 @@
 #include "led.h"
 #include "tlc.h"
 
-uint8_t addr[3];
+uint8_t addr[COM_AD_SIZE];
 uint8_t chan[1];
 
 // TODO: un-extern this
