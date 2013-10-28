@@ -100,7 +100,8 @@ void process_packet(void) {
                         addr[i] = args[i];
                     }
 
-                    eeprom_write(EEPROM_INST_ADDR, 3, addr);
+                    eeprom_write(EEPROM_INST_ADDR, COM_AD_SIZE, addr);
+                    eeprom_validate(EEPROM_INST_ADDR_V, EEPROM_INST_ADDR_B);
                     // TODO: reset the receiver to handle new address
                     //nrf_set_rxaddr(addr);
                     
