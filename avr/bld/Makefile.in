@@ -11,6 +11,9 @@ include $(D_BLD)/Makefile.defs
 # AVR toolchain dir
 D_AVRTC=/usr/avr
 
+# tools
+D_TOOLS=$(D_ROOT)/tools
+
 # ouput dir
 D_OUT=$(D_PROJ)/out
 
@@ -30,6 +33,8 @@ vpath %.c $(D_SRC)
 vpath %.S $(D_SRC)
 vpath %.h $(D_INC)
 
+# hex output of bootloader project
+I_HEX_BTL=$(D_BTL)/out/$(BOOTLOADER_NAME).hex
 
 # output files
 O_OUT=$(D_OUT)/$(PROJECT_NAME).out
@@ -38,6 +43,8 @@ O_ASM=$(D_OUT)/$(PROJECT_NAME).s
 O_HEX=$(D_OUT)/$(PROJECT_NAME).hex 
 O_EHX=$(D_OUT)/$(PROJECT_NAME).ee.hex
 O_GDB=$(D_OUT)/gdbinit-$(PROJECT_NAME)
+
+O_MRG=$(D_OUT)/$(PROJECT_NAME).merged.hex
 
 O_TAG=$(D_ROOT)/tags
 
@@ -48,6 +55,8 @@ C_GDB=avr-gdb
 C_OBJCOPY=avr-objcopy
 C_OBJDUMP=avr-objdump
 C_SIZE=avr-size
+
+C_MERGE=$(D_TOOLS)/merge-hex
 
 C_PROGRAMMER=avrdude -F
 C_BOOTLOADER=$(D_ROOT)/../sw/bootloader/program.sh
@@ -89,6 +98,8 @@ all: $(O_OUT)
 disasm: $(O_ASM) stats
 
 hex: $(O_HEX) $(O_EHX)
+
+merged: $(O_MRG)
 
 gdbinit: $(O_GDB)
 
@@ -153,6 +164,11 @@ write_flash: hex
 write_bootloader: hex
 	$(C_BOOTLOADER) `realpath $(O_HEX)`
 
+write_merged: merged
+	$(C_PROGRAMMER) -c $(PGM_PROG) \
+		-p $(PGM_PART) -P $(PGM_PORT) -e \
+		-U flash:w:$(O_MRG)
+
 
 # build outputs
 $(D_OUT):
@@ -189,6 +205,14 @@ $(O_HEX): $(O_OUT)
 
 ${O_EHX}: $(O_OUT)
 	$(C_OBJCOPY) -j .eeprom --change-section-lma .eeprom=0 -O $(BLD_HFMT) $< $@
+
+
+# merged app and bootloader
+$(I_HEX_BTL): FORCE
+	make -C $(D_BTL) hex
+
+$(O_MRG): $(O_HEX) $(I_HEX_BTL)
+	$(C_MERGE) $(O_HEX) $(I_HEX_BTL) > $(O_MRG)
 
 
 # gdb debug outputs

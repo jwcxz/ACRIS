@@ -14,3 +14,6 @@ BLD_HFMT?=ihex
 PGM_PART?=m168
 PGM_PROG?=ponyser
 PGM_PORT?=/dev/ttyS0
+
+D_BTL?=$(D_ROOT)/prj/bootloader
+BOOTLOADER_NAME?=ledbtldr
