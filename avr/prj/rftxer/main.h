@@ -5,8 +5,6 @@ typedef enum {
     CMD_SYNC = 0xAA,
 } cmd_t;
 
-#define NUM_SYNCS 3
-
 
 int main(void);
 

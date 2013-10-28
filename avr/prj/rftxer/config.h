@@ -5,9 +5,11 @@
 #include "config_top.h"
 #include "pins.h"
 
+// number of sync bytes to expect
+#define NUM_SYNCS 3
 
 // UART configuration
-#define UART_PRESCALER  21
+#define UART_PRESCALER  64
 #define UART_DBL        1
 #define UART_PARITY     0
 
