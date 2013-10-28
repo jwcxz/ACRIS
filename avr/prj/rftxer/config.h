@@ -18,10 +18,9 @@
 
 
 // this device's address
-#define MY_ADDR {0x01, 0x55, 0x55}
+#define MY_ADDR {0x55, 0x55, 0x01}
 
 // mask for receive devices
-#define RX_MASK1 0xAA
-#define RX_MASK2 0xAA
+#define RX_MASK {0xAA, 0xAA, 0xFF}
 
 #endif

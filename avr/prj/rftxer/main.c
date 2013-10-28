@@ -20,7 +20,7 @@
 uint8_t my_addr[COM_AD_SIZE] = MY_ADDR;
 
 // buffer for address to transmit to
-uint8_t tx_addr[COM_AD_SIZE] = {0, RX_MASK1, RX_MASK2};
+uint8_t tx_addr[COM_AD_SIZE] = RX_MASK;
 
 // payload buffers
 uint8_t txbuf[COM_PL_SIZE];
@@ -61,7 +61,7 @@ void transmitter_loop(void) {
 
 
     // get target address
-    tx_addr[0] = uart_rb_rx();
+    tx_addr[2] = uart_rb_rx();
 
     printf("%c%c%c", tx_addr[0], tx_addr[1], tx_addr[2]);
 
