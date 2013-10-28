@@ -115,6 +115,7 @@ uint8_t nrf_transmit_packet(uint8_t *addr, uint8_t *buf) {
     nrf_setmode(NRF_MODE_RX);
     nrf_ce_on();
     
+    // return 1 for successful transmission, 0 otherwise
     return ack;
 }
 
