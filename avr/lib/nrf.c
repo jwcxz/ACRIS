@@ -72,7 +72,6 @@ void nrf_enable_irq(void) {
     _ON(EIMSK, INT0);
 }
 
-
 void nrf_disable_irq(void) {
     _OFF(EIMSK, INT0);
     packet_ready = 0;
