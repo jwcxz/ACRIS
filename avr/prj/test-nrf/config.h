@@ -15,11 +15,15 @@
 #define UART_TX_BUFSZ   64
 
 
-// this project is run in receiver mode
+// this project is run in receiver mode by default
 #if ( !defined(NRF_FN_RX) && !defined(NRF_FN_TX) )
 #define NRF_FN_RX
 #endif
 
+// target the breadboard by default
+#if ( !defined(NRF_FN_BB) && !defined(NRF_FN_LC) )
+#define NRF_FN_BB
+#endif
 
 // instrument addresses
 #define TX_ADDR {0x01, 0x55, 0x55}

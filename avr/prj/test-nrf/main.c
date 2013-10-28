@@ -7,9 +7,11 @@
 #include "dbg.h"
 #include "nrf.h"
 
+#ifdef NRF_TG_BB
 #include "uart.h"
 #include "uart_rb.h"
 #include "uart_printf.h"
+#endif
 
 #include "stdio.h"
 
@@ -31,8 +33,10 @@ int main(void) {
     dbg_init();
     dbg_set(0x6);
 
+#ifdef NRF_TG_BB
     uart_rb_init();
     uart_printf_init();
+#endif
 
     nrf_init(0x05, my_addr, txbuf, rxbuf);
 
@@ -51,7 +55,7 @@ int main(void) {
         }
 
         dbg_set(j++);
-        _delay_ms(20);
+        _delay_ms(50);
     }
 #else
     nrf_start_receiver();
@@ -59,11 +63,13 @@ int main(void) {
     while(1) {
         nrf_wait_for_rxpacket();
 
+#ifdef NRF_TG_BB
         for ( i=0 ; i<COM_PL_SIZE ; i++ ) {
             printf("%x ", rxbuf[i]);
         }
 
         printf("\n");
+#endif
 
         nrf_accept_packet();
         dbg_set(j++);

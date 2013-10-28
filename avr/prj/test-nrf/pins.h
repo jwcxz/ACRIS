@@ -2,6 +2,7 @@
 #define __PINS_H_
 
 
+#ifdef NRF_TG_BB
 // UART communication
 #define UART_TX_PIN    PD1
 #define UART_TX_PRT    PORTD
@@ -10,6 +11,7 @@
 #define UART_RX_PIN    PD0
 #define UART_RX_PRT    PORTD
 #define UART_RX_DDR    DDRD
+#endif
 
 
 // NRF24L01+ control and data
@@ -28,6 +30,8 @@
 #define NRF_CSN_PRT  PORTC
 #define NRF_CSN_DDR  DDRC
 
+#ifdef NRF_TG_BB
+
 // MISO
 #define NRF_MISO_PIN PB4
 #define NRF_MISO_PRT PORTB
@@ -42,6 +46,25 @@
 #define NRF_SCLK_PIN PD5
 #define NRF_SCLK_PRT PORTB
 #define NRF_SCLK_DDR DDRB
+
+#elif defined(NRF_TG_LC)
+
+// MISO
+#define NRF_MISO_PIN PD0
+#define NRF_MISO_PRT PORTD
+#define NRF_MISO_DDR DDRD
+
+// MOSI
+#define NRF_MOSI_PIN PD1
+#define NRF_MOSI_PRT PORTD
+#define NRF_MOSI_DDR DDRD
+
+// SCLK
+#define NRF_SCLK_PIN PD4
+#define NRF_SCLK_PRT PORTD
+#define NRF_SCLK_DDR DDRD
+
+#endif
 
 // SS
 #define NRF_CSEL_PIN PB2
