@@ -38,7 +38,14 @@ int main(void) {
     uart_printf_init();
 #endif
 
-    nrf_init(0x05, my_addr, txbuf, rxbuf);
+    nrf_init(rxbuf);
+    nrf_set_channel(115);
+#ifdef NRF_FN_TX
+    nrf_enable_pipe(0, tx_addr);
+#else
+    //nrf_enable_pipe(0, my_addr);
+    nrf_enable_pipe(1, my_addr);
+#endif
 
     sei();
 

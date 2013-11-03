@@ -46,7 +46,9 @@ int main(void) {
     eeprom_get_chan(chan);
 
     // NRF24L01+ driver
-    nrf_init(*chan, addr, txbuf, rxbuf);
+    nrf_init(rxbuf);
+    nrf_set_channel(*chan);
+    nrf_enable_pipe(1, addr);
     
     // enable interrupts
     sei();

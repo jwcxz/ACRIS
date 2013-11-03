@@ -34,7 +34,10 @@ int main(void) {
     uart_rb_init();
     uart_printf_init();
 
-    nrf_init(0x05, my_addr, txbuf, rxbuf);
+    nrf_init(rxbuf);
+    nrf_set_channel(115);
+    nrf_set_power(NRF_CFG_RF_GAIN_M12);
+    nrf_enable_pipe(0, tx_addr);
 
     sei();
 
@@ -57,16 +60,17 @@ void transmitter_loop(void) {
         idx++;
     }
 
-    idx = 0;
-
 
     // get target address
+    tx_addr[0] = uart_rb_rx();
+    tx_addr[1] = uart_rb_rx();
     tx_addr[2] = uart_rb_rx();
 
     printf("%c%c%c", tx_addr[0], tx_addr[1], tx_addr[2]);
 
 
     // get a full payload's worth of characters
+    idx = 0;
     while (idx < COM_PL_SIZE) {
         txbuf[idx] = uart_rb_rx();
         idx++;
