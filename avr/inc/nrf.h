@@ -15,11 +15,18 @@ typedef enum {
 
 
 // initialization
-void nrf_init(uint8_t, uint8_t *, uint8_t *, uint8_t *);
+void nrf_init(uint8_t *);
 
 // application-level commands
 void nrf_enable_irq(void);
 void nrf_disable_irq(void);
+
+void nrf_set_channel(uint8_t);
+
+void nrf_set_power(uint8_t);
+
+void nrf_enable_pipe(uint8_t, uint8_t *);
+void nrf_disable_pipe(uint8_t);
 
 uint8_t nrf_transmit_packet(uint8_t *, uint8_t *);
 

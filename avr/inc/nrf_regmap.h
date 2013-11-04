@@ -70,6 +70,12 @@
     #define NRF_BIT_RF_DR_HIGH  3
     #define NRF_BIT_RF_PWR21    1
 
+    #define NRF_CFG_RF_GAIN_M18 (0x0 << NRF_BIT_RF_PWR21)
+    #define NRF_CFG_RF_GAIN_M12 (0x1 << NRF_BIT_RF_PWR21)
+    #define NRF_CFG_RF_GAIN_M6  (0x2 << NRF_BIT_RF_PWR21)
+    #define NRF_CFG_RF_GAIN_0   (0x3 << NRF_BIT_RF_PWR21)
+
+
 #define NRF_REG_STATUS          0x07
     #define NRF_BIT_RX_DR       6
     #define NRF_BIT_TX_DS       5
@@ -123,34 +129,18 @@
 
 
 // initial settings
-#ifdef NRF_FN_TX
 #define NRF_INI_CONFIG      ( _BV(NRF_BIT_MASK_TX_DS)  | \
                               _BV(NRF_BIT_MASK_MAX_RT) | \
                               _BV(NRF_BIT_EN_CRC)      | \
                               _BV(NRF_BIT_PWR_UP) )
-#else
-#define NRF_INI_CONFIG      ( _BV(NRF_BIT_MASK_TX_DS)  | \
-                              _BV(NRF_BIT_MASK_MAX_RT) | \
-                              _BV(NRF_BIT_EN_CRC)      | \
-                              _BV(NRF_BIT_PWR_UP)      | \
-                              _BV(NRF_BIT_PRIM_RX) )
-#endif
-
-// TODO: probably want to disable ACKing at some point
-#define NRF_INI_EN_AA       ( _BV(NRF_BIT_ENAA_P1) | _BV(NRF_BIT_ENAA_P0) )
-#define NRF_INI_EN_RXADDR   ( _BV(NRF_BIT_ERX_P1) | _BV(NRF_BIT_ERX_P0) )
 
 #define NRF_INI_SETUP_AW    ( 0x1 << NRF_BIT_AW10 )
 
-#define NRF_INI_SETUP_RETR  ( ( 0x0 << NRF_BIT_ARD74 ) | \
+#define NRF_INI_SETUP_RETR  ( ( 0xF << NRF_BIT_ARD74 ) | \
                               ( 0x0 << NRF_BIT_ARC30 ) )
 
 //#define NRF_INI_RF_SETUP    ( _BV(NRF_BIT_CONT_WAVE) |
 
-#define NRF_INI_RF_SETUP    ( ( 0x3 << NRF_BIT_RF_PWR21 ) )
-
-#define NRF_INI_RX_PW_P0    ( COM_PL_SIZE << NRF_BIT_RX_PW_Px50 )
-
-#define NRF_INI_RX_PW_P1    ( COM_PL_SIZE << NRF_BIT_RX_PW_Px50 )
+#define NRF_INI_RF_SETUP    ( NRF_CFG_RF_GAIN_0 )
 
 #endif

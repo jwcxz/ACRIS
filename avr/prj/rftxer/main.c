@@ -48,18 +48,29 @@ int main(void) {
 
 
 void transmitter_loop(void) {
-    uint8_t data;
-    uint8_t idx = 0;
+    uint8_t data, idx;
 
-    // get sync header, fail if necessary
-    while (idx < NUM_SYNCS) {
-        data = uart_rb_rx();
-        if (data != CMD_SYNC) {
-            return;
+    data = uart_rb_rx();
+
+    if ( data == CMD_PSYNC || data == CMD_CSYNC ) {
+        idx = 0;
+        while ( idx++ < NUM_SYNCS-1 ) {
+            if (uart_rb_rx() != data) {
+                return;
+            }
         }
-        idx++;
     }
 
+    if ( data == CMD_PSYNC ) {
+        recv_payload();
+    } else {
+        recv_config();
+    }
+}
+
+
+void recv_payload(void) {
+    uint8_t idx = 0;
 
     // get target address
     tx_addr[0] = uart_rb_rx();
@@ -72,8 +83,7 @@ void transmitter_loop(void) {
     // get a full payload's worth of characters
     idx = 0;
     while (idx < COM_PL_SIZE) {
-        txbuf[idx] = uart_rb_rx();
-        idx++;
+        txbuf[idx++] = uart_rb_rx();
     }
 
 
@@ -90,4 +100,29 @@ void transmitter_loop(void) {
 
     // happy blinky lights
     dbg_set(txbuf[0]);
+
+    return;
+}
+
+void recv_config(void) {
+    uint8_t cmd, data;
+
+    cmd = uart_rb_rx();
+
+    switch (cmd) {
+        case CMD_CCHAN:
+            nrf_set_channel(uart_rb_rx());
+            printf("%02x", nrf_regrd(NRF_REG_RF_CH));
+            break;
+
+        case CMD_CPWR:
+            nrf_set_power(uart_rb_rx() << NRF_BIT_RF_PWR21);
+            printf("%02x", (nrf_regrd(NRF_REG_RF_SETUP) >> NRF_BIT_RF_PWR21) & 0x3);
+            break;
+
+        default:
+            break;
+    }
+    
+    return;
 }

@@ -10,8 +10,8 @@ def mkpld(arr):
 if __name__ == "__main__":
     p = argparse.ArgumentParser(description='tester for communicating with the NRF24L01+');
    
-    p.add_argument('-a', '--addr', dest='addr', type=int,
-            default=1, help='target address to send payload to');
+    p.add_argument('-a', '--addr', dest='addr', type=str, nargs=3,
+            default=['0xC2', '0xC2', '0xC2'], help='target address to send payload to');
    
     p.add_argument('-s', '--size', dest='size', type=int,
             default=25, help='payload size');
@@ -30,17 +30,15 @@ if __name__ == "__main__":
     cxn = serial.Serial(args.port, args.baud, parity=serial.PARITY_NONE, timeout=0.5);
     cxn.flush();
 
-    idx = 0;
-    pld = [ 0 ] * args.size;
-
+    pld = range(args.size);
 
     try:
         while True:
-            pld = [ idx ] * args.size;
-            idx = (idx + 1) % 256;
+            for i in xrange(len(pld)):
+                pld[i] = (pld[i] + 1) % 256;
 
             pkt  = chr(0xAA)*args.sync;
-            pkt += chr(args.addr);
+            pkt += "".join([ chr(int(_, 0)) for _ in args.addr ]);
 
             pkt += mkpld(pld);
 
@@ -58,7 +56,7 @@ if __name__ == "__main__":
             else:
                 ack = "ERR!";
             
-            print "%s -> %s: %r" % (ack, addr, [ord(_) for _ in pkt]);
+            print "%s -> %s: %s" % (ack, addr, " ".join(["%02X" % ord(_) for _ in pkt]));
 
             time.sleep(0.05);
 

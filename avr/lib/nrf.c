@@ -13,7 +13,7 @@ uint8_t *rx_packet_buffer;
 uint8_t volatile packet_ready = 0;
 
 // initialization
-void nrf_init(uint8_t channel, uint8_t *rx_addr, uint8_t *txpbuf, uint8_t *rxpbuf) {
+void nrf_init(uint8_t *rxpbuf) {
     // turn off wireless communication
     nrf_ce_off();
     // set up nrf chip enable
@@ -24,7 +24,6 @@ void nrf_init(uint8_t channel, uint8_t *rx_addr, uint8_t *txpbuf, uint8_t *rxpbu
     nrfspi_enable();
 
     // register buffer addresses
-    tx_packet_buffer = txpbuf;
     rx_packet_buffer = rxpbuf;
 
     // set up interrupt with pull-up for falling edge
@@ -51,18 +50,16 @@ void nrf_init(uint8_t channel, uint8_t *rx_addr, uint8_t *txpbuf, uint8_t *rxpbu
 
     // perform system configuration
     nrf_regwr(NRF_REG_CONFIG, NRF_INI_CONFIG);
-    nrf_regwr(NRF_REG_EN_AA, NRF_INI_EN_AA);
-    nrf_regwr(NRF_REG_EN_RXADDR, NRF_INI_EN_RXADDR);
     nrf_regwr(NRF_REG_SETUP_AW, NRF_INI_SETUP_AW);
     nrf_regwr(NRF_REG_SETUP_RETR, NRF_INI_SETUP_RETR);
     nrf_regwr(NRF_REG_RF_SETUP, NRF_INI_RF_SETUP);
-    nrf_regwr(NRF_REG_RX_PW_P0, NRF_INI_RX_PW_P0);
-    nrf_regwr(NRF_REG_RX_PW_P1, NRF_INI_RX_PW_P1);
 
-    nrf_regwr(NRF_REG_RF_CH, ( (channel & 0x7F) << NRF_BIT_RF_CH60 ) );
-
-    // if our primary function is receiver mode, set up pipe addresses
-    nrf_regwr_long(NRF_REG_RX_ADDR_P1, COM_AD_SIZE, rx_addr);
+    //nrf_regwr(NRF_REG_RX_PW_P0, NRF_INI_RX_PW_P0);
+    //nrf_regwr(NRF_REG_RX_PW_P1, NRF_INI_RX_PW_P1);
+    //nrf_regwr(NRF_REG_RX_PW_P2, NRF_INI_RX_PW_P2);
+    //nrf_regwr(NRF_REG_RX_PW_P3, NRF_INI_RX_PW_P3);
+    //nrf_regwr(NRF_REG_RX_PW_P4, NRF_INI_RX_PW_P4);
+    //nrf_regwr(NRF_REG_RX_PW_P5, NRF_INI_RX_PW_P5);
 }
 
 
@@ -75,6 +72,47 @@ void nrf_enable_irq(void) {
 void nrf_disable_irq(void) {
     _OFF(EIMSK, INT0);
     packet_ready = 0;
+}
+
+
+void nrf_set_channel(uint8_t channel) {
+    nrf_regwr(NRF_REG_RF_CH, ( (channel & 0x7F) << NRF_BIT_RF_CH60 ) );
+}
+
+void nrf_set_power(uint8_t pwr) {
+    uint8_t v = nrf_regrd(NRF_REG_RF_SETUP);
+    v &= ~(0x3 << NRF_BIT_RF_PWR21);
+    v |= pwr & (0x3 << NRF_BIT_RF_PWR21);
+    nrf_regwr(NRF_REG_RF_SETUP, v);
+}
+
+void nrf_enable_pipe(uint8_t pipe, uint8_t *addr) {
+    uint8_t v;
+
+    // set payload width for that pipe
+    nrf_regwr(NRF_REG_RX_PW_P0 + pipe, COM_PL_SIZE);
+
+    // enable auto-ack on pipe
+    v = nrf_regrd(NRF_REG_EN_AA);
+    nrf_regwr(NRF_REG_EN_AA, v | _BV(pipe));
+
+    // enable reception on the selected pipe
+    v = nrf_regrd(NRF_REG_EN_RXADDR);
+    nrf_regwr(NRF_REG_EN_RXADDR, v | _BV(pipe));
+
+    // set address
+    if (pipe <= 1) {
+        // use full pipe address
+        nrf_regwr_long(NRF_REG_RX_ADDR_P0 + pipe, COM_AD_SIZE, addr);
+    } else {
+        // use short pipe address
+        nrf_regwr(NRF_REG_RX_ADDR_P0 + pipe, addr[0]);
+    }
+}
+
+void nrf_disable_pipe(uint8_t pipe) {
+    uint8_t v = nrf_regrd(NRF_REG_EN_RXADDR);
+    nrf_regwr(NRF_REG_EN_RXADDR, v & ~_BV(pipe));
 }
 
 
@@ -164,6 +202,7 @@ ISR(INT0_vect) {
 
     // read out data into buffer
     status = nrf_rxpayload(rx_packet_buffer);
+    dbg_set(status & 0xF);
 
     // clear RX flag
     nrf_regwr(NRF_REG_STATUS, status | _BV(NRF_BIT_RX_DR));
