@@ -17,7 +17,9 @@ enabled = {
     'csfvumeter': 'VU-meter on derptrix',
     'electrohouse' : 'Electrohouse living room',
     'futurenoir': 'Blade-runner like effect for Future Noir',
-    'launchpad': 'Launchpad controller interface'
+    'launchpad': 'Launchpad controller interface',
+    'fadoglow': 'Glowing FADO light',
+    'fadohsv': 'Singly-set FADO light'
     };
 
 __all__ = enabled.keys();
