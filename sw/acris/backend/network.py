@@ -7,7 +7,7 @@ class Commands:
     HDALL = 0x11;
 
 class Network:
-    SYNC = chr(0x55);
+    SYNC = 0x55.to_bytes(1, 'little');
 
     def __init__(self, port='/dev/ttyS0', baud=38400, parity=serial.PARITY_EVEN):
         # the default baud rate is 38400, but it will vary based on user
@@ -16,7 +16,7 @@ class Network:
 
     def cmd(self, args, sendsync=True):
         # send a command string
-        s = "";
+        s = b"";
         if sendsync: s += self.SYNC;
         for a in args: s += self.c(a);
 
@@ -30,7 +30,7 @@ class Network:
     def group(self, group, args):
         # send a command to a group of lights
         self.cmd([command, 250+self.c(group)] + args);
-        
+
     def stopall(self):
         self.cmd([Commands.LDSET, 0xFF] + [0]*15);
 
@@ -39,9 +39,9 @@ class Network:
         # convert to a value acceptable for input (don't allow sync)
         _ = min(255, max(0, int(v)));
         if _ == ord(self.SYNC):
-            return chr(_+1);
+            return (_+1).to_bytes(1, 'little');
         else:
-            return chr(_);
+            return _.to_bytes(1, 'little');
 
 class DummyNetwork(Network):
     def __init__(self):
