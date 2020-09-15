@@ -52,12 +52,12 @@ class Plugin(backend.plugin.Plugin):
         else:                   huestep = 0.5;
 
 
-        #couch_hsvs = [ [_*(10),1.0,1.0] for _ in xrange(5*2) ];
+        #couch_hsvs = [ [_*(10),1.0,1.0] for _ in range(5*2) ];
         couch_hsvs = [ [_*(10),1.0,1.0] for _ in [0,2,4,6,8,8,6,4,2,0] ];
-        couch_rgbs = [ [0,0,0] for _ in xrange(5*2) ];
+        couch_rgbs = [ [0,0,0] for _ in range(5*2) ];
 
         while self.enabled:
-            for led in xrange(len(couch_hsvs)):
+            for led in range(len(couch_hsvs)):
                 rgb = backend.utils.hsv2rgb(couch_hsvs[led][0], couch_hsvs[led][1], couch_hsvs[led][2]);
                 couch_rgbs[led] = [ int(max(0,min(4095,maxv*_))) for _ in rgb ];
                 if style == "linear":

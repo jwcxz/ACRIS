@@ -1,4 +1,8 @@
 enabled = {
+    'fadohsv': 'Singly-set FADO light'
+    };
+
+disabled = {
     'fire': 'Torch-like effect for wall sconce',
     'huecycle': 'Cycle through hues on wall sconce', 
     'sendcmd':  'Send raw command to network',
@@ -19,7 +23,6 @@ enabled = {
     'futurenoir': 'Blade-runner like effect for Future Noir',
     'launchpad': 'Launchpad controller interface',
     'fadoglow': 'Glowing FADO light',
-    'fadohsv': 'Singly-set FADO light'
     };
 
 __all__ = enabled.keys();

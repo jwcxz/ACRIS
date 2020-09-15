@@ -10,7 +10,7 @@ class Plugin(backend.plugin.Plugin):
     def __init__(self, network, args):
         backend.plugin.Plugin.__init__(self, network, args);
 
-        self.hkns = [ controllers.hknboard.HKNBoard(network, 0x40 + i) for i in xrange(4) ];
+        self.hkns = [ controllers.hknboard.HKNBoard(network, 0x40 + i) for i in range(4) ];
         self.addresses.extend([_.address for _ in self.hkns]);
 
         self.numleds = 4*5;
@@ -40,12 +40,12 @@ class Plugin(backend.plugin.Plugin):
 
         while self.enabled:
             # determine rgbs for all lights
-            rgbs = [ [ int(maxv * col) for col in backend.utils.hsv2rgb(hue, sat, vals[i]) ] for i in xrange(self.numleds) ];
+            rgbs = [ [ int(maxv * col) for col in backend.utils.hsv2rgb(hue, sat, vals[i]) ] for i in range(self.numleds) ];
             
             # set outputs
             # first, set the two wall sconces at each side
             # now the hkn boards
-            for i in xrange(0, self.numleds, 5):
+            for i in range(0, self.numleds, 5):
                 self.hkns[i/5].each(rgbs[i:i+5]);
 
             # prepare to apply new step
@@ -55,7 +55,7 @@ class Plugin(backend.plugin.Plugin):
             hue = (hue + huestep) % 360;
 
             # update vals
-            for i in xrange(len(vals)):
+            for i in range(len(vals)):
                 if i == valstep:
                     vals[i] = 1.0;
                 else:

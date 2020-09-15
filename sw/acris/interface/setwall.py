@@ -14,6 +14,6 @@ color = color.strip("#");
 
 rgb = str(int(color[0:2], 16)) + " " + str(int(color[2:4], 16)) + " " + str(int(color[4:6], 16));
 
-print rgb;
+print(rgb);
 
 os.system("echo plugin wallset %s | nc localhost 55555" % rgb);

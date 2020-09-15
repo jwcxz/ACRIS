@@ -7,5 +7,5 @@ class HKNBoard(backend.controller.Controller):
         self.set(lights);
 
     def all(self, color):
-        _ = [ color for i in xrange(5) ];
+        _ = [ color for i in range(5) ];
         self.set(_);

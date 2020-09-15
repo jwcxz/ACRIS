@@ -18,7 +18,7 @@ class Plugin(backend.plugin.Plugin):
         self.right = controllers.wallsconce.WallSconce(network, 0);
         self.addresses.append(self.right.address);
 
-        self.hkns = [ controllers.hknboard.HKNBoard(network, 0x30 + i) for i in xrange(4) ];
+        self.hkns = [ controllers.hknboard.HKNBoard(network, 0x30 + i) for i in range(4) ];
         self.addresses.extend([_.address for _ in self.hkns]);
 
     def run(self):
@@ -41,15 +41,15 @@ class Plugin(backend.plugin.Plugin):
 
         
         lights = [];
-        for col in xrange(4):
+        for col in range(4):
             _ = [];
-            for row in xrange(5):
+            for row in range(5):
                 _.append([0,0,0]);
             lights.append(_);
         
         target = [0]*len(lights);
         vals = [];
-        for col in xrange(len(lights)):
+        for col in range(len(lights)):
             vals.append([0,0,0,0,0]);
             
         hues = [90, 75, 60, 30, 0];
@@ -58,28 +58,28 @@ class Plugin(backend.plugin.Plugin):
         while self.enabled:
             if changect == 0:
                 # get new target values
-                for col in xrange(len(target)):
+                for col in range(len(target)):
                     target[col] = random.random()*len(lights[0]);
                 changect = 0;
             else:
                 changect = (changect+1)%int(chgdelay/timestep);
 
             # adjust the current values to get to the target value
-            for col in xrange(len(vals)):
-                for row in xrange(len(vals[0])):
+            for col in range(len(vals)):
+                for row in range(len(vals[0])):
                     vals[col][row] = max(0.0, min(1.0,
                         alpha*(target[col] - row) +
                         (1-alpha)*vals[col][row]));
 
             # convert hsv2rgb for all pixels
-            for col in xrange(len(lights)):
-                for row in xrange(len(lights[0])):
+            for col in range(len(lights)):
+                for row in range(len(lights[0])):
                     _ = backend.utils.hsv2rgb(hues[row], 1.0, vals[col][row]);
-                    lights[col][row] = [ int(maxv*_[i]) for i in xrange(3) ];
+                    lights[col][row] = [ int(maxv*_[i]) for i in range(3) ];
         
-            print lights;
+            print(lights);
             # update all lights
-            for i in xrange(4):
+            for i in range(4):
                 self.hkns[i].each(lights[i]);
 
             self.left.all(lights[0][0]);

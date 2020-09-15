@@ -17,9 +17,9 @@ CMDS = {
 
 
 BLANK_OUTPUT = [];
-for i in xrange(5):
+for i in range(5):
     BLANK_OUTPUT.append([]);
-    for j in xrange(5):
+    for j in range(5):
         BLANK_OUTPUT[-1].append([0,0,0]);
 
 
@@ -60,7 +60,7 @@ class Plugin(backend.plugin.Plugin):
 
         # line setup
         self.lines = [];
-        for i in xrange(5):
+        for i in range(5):
             new = [ [], [], [], [],
                     [], [], [], [] ];
 
@@ -124,13 +124,13 @@ class Plugin(backend.plugin.Plugin):
                 self.new_action_type = Sine;
 
         else:
-            print "unrecognized command";
+            print("unrecognized command");
 
 
     def action(self):
         # step all visualizations
-        for line in xrange(5):
-            for index in xrange(8):
+        for line in range(5):
+            for index in range(8):
                 for action in self.lines[line][index]:
                     action.step();
                     if action.done:
@@ -148,23 +148,23 @@ class Plugin(backend.plugin.Plugin):
     def combine_pulses(self):
         output = BLANK_OUTPUT[:];
 
-        for line in xrange(5):
-            for index in xrange(8):
+        for line in range(5):
+            for index in range(8):
                 for action in self.lines[line][index]:
                     rgb = action.rgb();
 
                     output[line] = [
                             [ prev + new for prev, new 
                                 in zip(output[line][led], rgb[led]) ]
-                                    for led in xrange(5) ];
+                                    for led in range(5) ];
 
             # after all elements of the line have been computed, convert to
             # integer command form
-            num_pulses = sum([len(self.lines[line][index]) for index in xrange(8)]);
+            num_pulses = sum([len(self.lines[line][index]) for index in range(8)]);
             if num_pulses:
                 multiplier = self.args.maxval/float(num_pulses);
-                for led in xrange(5):
-                    for comp in xrange(3):
+                for led in range(5):
+                    for comp in range(3):
                         output[line][led][comp] = int(round(multiplier * output[line][led][comp]));
 
         return output;
@@ -231,7 +231,7 @@ class Pulse(LPVis):
                 # building up
                 iidx = int(self.index);
 
-                for i in xrange(iidx):
+                for i in range(iidx):
                     self.vals[i] = 1.0;
                 
                 fidx = self.index - iidx;

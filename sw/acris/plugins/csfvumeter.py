@@ -17,7 +17,7 @@ class Plugin(backend.plugin.Plugin):
         self.right = controllers.wallsconce.WallSconce(network, 0);
         self.addresses.append(self.right.address);
         
-        self.hkns = [ controllers.hknboard.HKNBoard(network, 0x40 + i) for i in xrange(4) ];
+        self.hkns = [ controllers.hknboard.HKNBoard(network, 0x40 + i) for i in range(4) ];
         self.addresses.extend([_.address for _ in self.hkns]);
 
         self.chunk = 512;
@@ -48,9 +48,9 @@ class Plugin(backend.plugin.Plugin):
 
         lights = [];
         
-        for col in xrange(4):
+        for col in range(4):
             _ = [];
-            for row in xrange(5):
+            for row in range(5):
                 _.append([0,0,0]);
             lights.append(_);
             
@@ -69,9 +69,9 @@ class Plugin(backend.plugin.Plugin):
                 v[1] = min(1.0, max(0.0, relsz-0.30));
                 v[0] = min(1.0, max(0.0, relsz-0.20)); # most sensitive
 
-                vals = [ (1-alpha)*vals[i] + (alpha)*v[i] for i in xrange(len(v)) ];
+                vals = [ (1-alpha)*vals[i] + (alpha)*v[i] for i in range(len(v)) ];
 
-                for col in xrange(len(lights[0])):
+                for col in range(len(lights[0])):
                     rgb = [ max(0, min(255, int(maxv*i))) for i in backend.utils.hsv2rgb(hues[col], 1.0, vals[col]) ];
                             
                     lights[0][col] = rgb;
@@ -79,7 +79,7 @@ class Plugin(backend.plugin.Plugin):
                     lights[2][col] = rgb;
                     lights[3][col] = rgb;
 
-                for i in xrange(4):
+                for i in range(4):
                     self.hkns[i].each(lights[i]);
                     
                 self.left.all(lights[0][0]);

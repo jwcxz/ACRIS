@@ -1,21 +1,27 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 
 import argparse, serial, socket, sys
 
-import backend.network
+from backend.network import Network, DummyNetwork
+from backend.interpreter import CommandInterpreter
+from backend.httpserver import get_httpd
 
 import plugins
+
+import importlib
 
 class Acris:
     def __init__(self, skthost='localhost', sktport=55555, serport='/dev/ttyUSB0', serbaud=38400, serparity=serial.PARITY_EVEN):
         if serport.lower() != "dummy":
-            self.network = backend.network.Network(serport, serbaud, serparity);
+            self.network = Network(serport, serbaud, serparity);
         else:
-            self.network = backend.network.DummyNetwork();
+            self.network = DummyNetwork();
 
         # build plugins list
         # name -> (obj, description)
         self.plugins = {};
+        # name -> params
+        self.plugin_params = {};
         self.refresh_plugins();
 
         # current plugins
@@ -30,152 +36,135 @@ class Acris:
         self.sktport = sktport;
 
 
-    def run(self):
-        blog = 5;
-        size = 1024;
+    def set_interpreter(self, interpreter):
+        self.interpreter = interpreter;
 
-        self.skt = socket.socket(socket.AF_INET, socket.SOCK_STREAM);
-        self.skt.bind( (self.skthost,self.sktport) );
-        self.skt.listen(blog);
+    def set_server(self, server):
+        self.server = server;
 
-        while True:
-            try:
-                client, address = self.skt.accept();
-                print ":: Accepted", address
-                data = client.recv(size);
-                print "::   Received:", data.rstrip();
-                statusmsg = "";
-                if data:
-                    # data contains a command and optional arguments
-                    data = data.split(None);
-                    cmd = data[0]
+    def run_server(self):
+        self.server.serve_forever();
 
-                    if cmd == "plugin":
-                        if data[1] in self.plugins:
-                            statusmsg = "Activating %s with args %r" %(data[1], data[2:]);
-                            if not self.activate_plugin(data[1], data[2:]):
-                                statusmsg = "Failed to activate %s: addresses in use" %(data[1]);
-                        else:
-                            statusmsg = "Plugin %s (with args %r) not found)" %(data[1], data[2:]);
 
-                    elif cmd == "stop":
-                        statusmsg = "Stopping %s" %(data[1]);
-                        if not self.stop_plugin(data[1]):
-                            statusmsg = "Failed to stop %s: not activated" %(data[1]);
+    def update_plugin_params(self, plugin_name, new_params):
+        self.plugin_params[plugin_name].update(new_params);
 
-                    elif cmd == "stopall":
-                        statusmsg = "Stopping all plugins and shutting lights off";
-                        act = self.activated.keys();
-                        for p in act:
-                            self.stop_plugin(p);
-                        self.lights_off();
 
-                    elif cmd == "list":
-                        statusmsg = "Available plugins: "
-                        for p in self.plugins:
-                            statusmsg += "\n    %s: %s" % (p, self.plugins[p][1]);
+    def start_or_restart_plugin(self, plugin_name, force=False):
+        plugin_obj = self.plugins[plugin_name][0];
+        new_plugin = plugin_obj(self.network, self.plugin_params[plugin_name]);
 
-                    elif cmd == "activated":
-                        statusmsg = "Activated plugins: %s" %( ' '.join(self.activated.keys()) );
+        # if plugin is already activated, replace it; otherwise ensure that
+        # only one plugin can access each address
+        if plugin_name in self.activated:
+            print("Plugin already active.  Restarting...");
+            self.stop_plugin(plugin_name);
+        else:
+            # TODO: enable force functionality
+            for addr in new_plugin.addresses:
+                if addr in self.used_addresses:
+                    print("Addresses in use already:", new_plugin.addresses, self.used_addresses);
+                    return False;
 
-                    elif cmd == "addresses":
-                        statusmsg = "Addresses in use: %s" %( ' '.join(["0x%02X" %(a) for a in self.used_addresses]) );
+        self.activated[plugin_name] = new_plugin;
+        self.used_addresses.extend(new_plugin.addresses);
+        self.activated[plugin_name].start();
+        return True;
 
-                    elif cmd == "refresh":
-                        statusmsg = "Reloading plugins"
-                        self.refresh_plugins();
 
-                    elif cmd == "die":
-                        act = self.activated.keys();
-                        for p in act:
-                            self.stop_plugin(p);
-                        self.lights_off();
+    def stop_plugin(self, plugin_name):
+        if plugin_name in self.activated and self.activated[plugin_name] != None:
+            if self.activated[plugin_name].enabled:
+                self.activated[plugin_name].stop();
 
-                        statusmsg = "Exiting";
-                        print "::  ", statusmsg;  # hack
-                        client.send(statusmsg);   #
-                        self.skt.shutdown(socket.SHUT_RDWR);
-                        self.skt.close();
-                        sys.exit(0);
+            # free up addresses
+            for addr in self.activated[plugin_name].addresses:
+                if addr in self.used_addresses:
+                    self.used_addresses.remove(addr);
+                else:
+                    print("Warning: 0x%02X not in address list" % addr);
 
-                    else:
-                        statusmsg = "Invalid command";
+            # garbage collect
+            del(self.activated[plugin_name]);
+            return True
 
-                print "::  ", statusmsg;
-                client.send(statusmsg+"\n");
-                client.close();
-            except socket.error:
-                print "whoops"
+        else:
+            print("Error: %s not activated" %(plugin_name));
+            return False
+
+
+    def get_plugin_state(self, plugin_name):
+        return plugin_name in self.activated and self.activated[plugin_name];
+
+
+    def get_plugin_params(self, plugin_name):
+        return self.plugin_params[plugin_name];
+
+
+    def stop_all_plugins(self):
+        for plugin_name in self.activated:
+            self.stop_plugin(plugin_name);
+
+        self.lights_off();
+
+
+    def list_all_plugins(self):
+        return self.plugins.keys();
+
+
+    def list_active_plugins(self):
+        return self.activated.keys();
+
+
+    def list_active_addresses(self):
+        return [ "0x%02X" %(a) for a in self.used_addresses ];
+
+
+    def refresh_plugins(self):
+        importlib.reload(plugins);
+
+        for p in plugins.__all__:
+            _ = __import__('plugins.'+p, globals(), locals(), [p], 0);
+            importlib.reload(_);
+            self.plugins[p] = (_.Plugin, plugins.enabled[p]);
+            self.plugin_params[p] = _.default_params.copy();
+
+        print("-> Refreshed plugins: %s" % ' '.join(self.plugins.keys()));
+
+
+    def die(self):
+        self.stop_all_plugins();
+        self.lights_off();
+        sys.exit(0);
+
 
     def lights_off(self):
         self.network.stopall();
 
-    def activate_plugin(self, pluginname, args):
-        pluginobj = self.plugins[pluginname][0];
-        newplugin = pluginobj(self.network, args);
-
-        # if plugin is already activated, replace it; otherwise ensure that
-        # only one plugin can access each address
-        if pluginname in self.activated:
-            print "Plugin already active.  Restarting...";
-            self.stop_plugin(pluginname);
-        else:
-            for addr in newplugin.addresses:
-                if addr in self.used_addresses:
-                    print "Addresses in use already:", newplugin.addresses, self.used_addresses;
-                    return False;
-
-        self.activated[pluginname] = newplugin;
-        self.used_addresses.extend(newplugin.addresses);
-        self.activated[pluginname].start();
-        return True;
-
-    def stop_plugin(self, pluginname):
-        if pluginname in self.activated and self.activated[pluginname] != None:
-            if self.activated[pluginname].enabled:
-                self.activated[pluginname].stop();
-                
-            # free up addresses
-            for addr in self.activated[pluginname].addresses:
-                if addr in self.used_addresses:
-                    self.used_addresses.remove(addr);
-                else:
-                    print "Warning: 0x%02X not in address list" % addr;
-
-            # garbage collect
-            del(self.activated[pluginname]);
-            return True
-
-        else:
-            print "Error: %s not activated" %(pluginname);
-            return False
 
 
-    def refresh_plugins(self):
-        reload(plugins);
+if __name__ == "__main__":
+    p = argparse.ArgumentParser(description="The ACRIS Master Server");
 
-        for p in plugins.__all__:
-            _ = __import__('plugins.'+p, globals(), locals(), [p], -1);
-            reload(_);
-            self.plugins[p] = (_.Plugin, plugins.enabled[p]);
+    p.add_argument('-s', '--server-host', dest='skthost', action='store',
+            default='', help='host address to bind to');
+    p.add_argument('-p', '--server-port', dest='sktport', action='store',
+            default=55555, type=int, help='host port to bind to');
 
-        print "-> Refreshed plugins: %s" % ' '.join(self.plugins.keys());
+    p.add_argument('-P', '--serial-port', dest='serport', action='store',
+            default='/dev/ttyUSB0', help='serial port');
+    p.add_argument('-B', '--serial-baud', dest='serbaud', action='store',
+            default='38400', help='serial baud rate');
+    p.add_argument('-R', '--serial-parity', dest='serprty', action='store',
+            default='even', help='serial parity (none, even, odd)');
 
+    args = p.parse_args();
 
-p = argparse.ArgumentParser(description="The ACRIS Master Server");
+    if   args.serprty == "even": serparity = serial.PARITY_EVEN;
+    elif args.serprty == "odd":  serparity = serial.PARITY_ODD;
+    else:                        serparity = serial.PARITY_NONE;
 
-p.add_argument('-s', '--server-host', dest='skthost', action='store', default='localhost', help='host address to bind to');
-p.add_argument('-p', '--server-port', dest='sktport', action='store', default='55555', help='host port to bind to');
-
-p.add_argument('-P', '--serial-port', dest='serport', action='store', default='/dev/ttyUSB0', help='serial port');
-p.add_argument('-B', '--serial-baud', dest='serbaud', action='store', default='38400', help='serial baud rate');
-p.add_argument('-R', '--serial-parity', dest='serprty', action='store', default='even', help='serial parity (none, even, odd)');
-
-args = p.parse_args();
-
-if   args.serprty == "even": serparity = serial.PARITY_EVEN;
-elif args.serprty == "odd":  serparity = serial.PARITY_ODD;
-else:                        serparity = serial.PARITY_NONE;
-
-acris = Acris(args.skthost, int(args.sktport), args.serport, int(args.serbaud), serparity);
-acris.run();
+    acris = Acris(args.skthost, int(args.sktport), args.serport, int(args.serbaud), serparity);
+    acris.set_interpreter(CommandInterpreter(acris));
+    acris.set_server(get_httpd(acris, args.skthost, args.sktport));
+    acris.run_server();

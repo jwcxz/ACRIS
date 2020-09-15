@@ -5,9 +5,14 @@ import backend.utils
 
 import controllers.fado
 
+default_params = backend.plugin.PluginConfig(
+        color = backend.plugin.PluginColor(0, 1, 1),
+        maxv = 2047
+        );
+
 class Plugin(backend.plugin.Plugin):
-    def __init__(self, network, args):
-        backend.plugin.Plugin.__init__(self, network, args);
+    def __init__(self, network, params):
+        backend.plugin.Plugin.__init__(self, network, params);
 
         self.fado = controllers.fado.FADO(network, 0x41);
         self.fado.set_mode('hd');
@@ -16,16 +21,5 @@ class Plugin(backend.plugin.Plugin):
     def run(self):
         backend.plugin.Plugin.run(self);
 
-        hue = 0;
-        sat = 1.0;
-        val = 1.0;
-
-        maxv = 4095;
-
-        if len(self.args) >= 1: hue = float(self.args[0]);
-        if len(self.args) >= 2: sat = float(self.args[1]);
-        if len(self.args) >= 3: val = float(self.args[2]);
-        if len(self.args) >= 4: maxv = int(self.args[3]);
-
-        rgb = [ int(maxv * i) for i in backend.utils.hsv2rgb(hue, sat, val) ];
+        rgb = [ int(self.params['maxv'] * i) for i in self.params['color'].as_rgb() ];
         self.fado.all(rgb);

@@ -18,7 +18,7 @@ class Plugin(backend.plugin.Plugin):
         self.right = controllers.wallsconce.WallSconce(network, 0);
         self.addresses.append(self.right.address);
 
-        self.hkns = [ controllers.hknboard.HKNBoard(network, 0x40 + i) for i in xrange(4) ];
+        self.hkns = [ controllers.hknboard.HKNBoard(network, 0x40 + i) for i in range(4) ];
         self.addresses.extend([_.address for _ in self.hkns]);
 
     def run(self):
@@ -51,9 +51,9 @@ class Plugin(backend.plugin.Plugin):
         
         lights = [];
         vals = [];
-        for col in xrange(4):
+        for col in range(4):
             _ = [];
-            for row in xrange(5):
+            for row in range(5):
                 _.append([0,0,0]);
             lights.append(_);
             vals.append([0,0,0,0,0]);
@@ -62,8 +62,8 @@ class Plugin(backend.plugin.Plugin):
         hue = 0;
         
         while self.enabled:
-            for row in xrange(len(lights)):
-                for col in xrange(len(lights[0])):
+            for row in range(len(lights)):
+                for col in range(len(lights[0])):
                     pxl = pattern[(col+int(frame/framestep))%len(pattern)][row];
                     if pxl:
                         vals[row][col] = float(pxl);
@@ -78,14 +78,14 @@ class Plugin(backend.plugin.Plugin):
             
             frame = (frame+1)%(len(pattern)*framestep);
             
-            #print ""
-            #print lights[0];
-            #print lights[1];
-            #print lights[2];
-            #print lights[3];
-            #print ""
+            #print("")
+            #print(lights[0]);
+            #print(lights[1]);
+            #print(lights[2]);
+            #print(lights[3]);
+            #print("")
             # update all lights
-            for i in xrange(4):
+            for i in range(4):
                 self.hkns[i].each(lights[i]);
 
             self.left.all(lights[0][0]);

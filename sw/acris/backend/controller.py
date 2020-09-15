@@ -27,7 +27,7 @@ class Controller:
     def ldset(self, args):
         packedargs = [];
 
-        for i in xrange(5):
+        for i in range(5):
             packedargs.extend(args[i]);
 
         self.network.cmd([cmd.LDSET, self.address]+packedargs);

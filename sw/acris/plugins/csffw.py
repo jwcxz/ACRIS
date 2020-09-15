@@ -18,7 +18,7 @@ class Plugin(backend.plugin.Plugin):
         self.right = controllers.wallsconce.WallSconce(network, 0);
         self.addresses.append(self.right.address);
 
-        self.hkns = [ controllers.hknboard.HKNBoard(network, 0x40 + i) for i in xrange(4) ];
+        self.hkns = [ controllers.hknboard.HKNBoard(network, 0x40 + i) for i in range(4) ];
         self.addresses.extend([_.address for _ in self.hkns]);
 
     def run(self):
@@ -39,9 +39,9 @@ class Plugin(backend.plugin.Plugin):
         
         lights = [];
         comp = [];
-        for col in xrange(4):
+        for col in range(4):
             _ = [];
-            for row in xrange(5):
+            for row in range(5):
                 _.append([0,0,0]);
             lights.append(_);
             comp.append([0,0,0,0,0]);
@@ -73,14 +73,14 @@ class Plugin(backend.plugin.Plugin):
             bcount = (bcount+1)%int(burstdly/timestep);
             
             # assemble bursts
-            for bursts_idx in xrange(len(bursts)):
+            for bursts_idx in range(len(bursts)):
                 b = bursts[bursts_idx];
                 
                 if b['frame'] < b['ts']:
                     # burst
                     _ = backend.utils.hsv2rgb(b['hue'], 1.0, float(b['frame'])/float(b['ts']));
                     __ = [ int(maxv*___) for ___ in _ ];
-                    for ___ in xrange(len(__)):
+                    for ___ in range(len(__)):
                         lights[b['x']][b['y']][___] += __[___];
                     comp[b['x']][b['y']] += 1;
                     
@@ -97,14 +97,14 @@ class Plugin(backend.plugin.Plugin):
                         if __ == [0,0,0]:
                             bdelq.append(bursts_idx);
                     
-                    for xoff in xrange(-b['r']+1,b['r']):
+                    for xoff in range(-b['r']+1,b['r']):
                         if b['x']+xoff < 0 or b['x']+xoff >= len(lights):
                             break;
-                        for yoff in xrange(-b['r']+1,b['r']):
+                        for yoff in range(-b['r']+1,b['r']):
                             if b['y']+yoff < 0 or b['y']+yoff >= len(lights[0]):
                                 break;
                             
-                            for ___ in xrange(3):
+                            for ___ in range(3):
                                 lights[b['x']+xoff][b['y']+yoff][___] += __[___];
                             comp[b['x']+xoff][b['y']+yoff] += 1;
                             
@@ -112,37 +112,37 @@ class Plugin(backend.plugin.Plugin):
 
             # delete stale bursts
             newbursts = [];
-            for idx in xrange(len(bursts)):
+            for idx in range(len(bursts)):
                 if idx not in bdelq:
                     newbursts.append(bursts[idx]);
             bursts = newbursts;
             bdelq = [];
                 
             # adjust each pixel according to the average
-            for x in xrange(len(lights)):
-                for y in xrange(len(lights[0])):
+            for x in range(len(lights)):
+                for y in range(len(lights[0])):
                     if comp[x][y] != 0:
-                        for c in xrange(3):
+                        for c in range(3):
                             lights[x][y][c] = int(max(0,min(255,lights[x][y][c]/float(comp[x][y]))));
                         comp[x][y] = 0;
 
-            #print ""
-            #print lights[0];
-            #print lights[1];
-            #print lights[2];
-            #print lights[3];
-            #print bursts
-            #print ""
+            #print("")
+            #print(lights[0]);
+            #print(lights[1]);
+            #print(lights[2]);
+            #print(lights[3]);
+            #print(bursts)
+            #print("")
             # update all lights
-            for i in xrange(4):
+            for i in range(4):
                 self.hkns[i].each(lights[i]);
 
             self.left.all(lights[0][0]);
             self.right.all(lights[3][4]);
             
             # clear lights array
-            for row in xrange(len(lights)):
-                for col in xrange(len(lights[0])):
+            for row in range(len(lights)):
+                for col in range(len(lights[0])):
                     lights[row][col] = [0,0,0];
             
             # wait a bit before producing next frame

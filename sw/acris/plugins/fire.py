@@ -29,14 +29,14 @@ class Plugin(backend.plugin.Plugin):
         while self.enabled:
             #hue = [ 
                 #hueparams['scale'][i] * math.sin(step * hueparams['frequency'][i]) +
-                #hueparams['offset'][i] for i in xrange(3) ];
+                #hueparams['offset'][i] for i in range(3) ];
 
             hue = [5, 10, 20];
 
             _ = random.uniform(valrdmparams['rangelo'], valrdmparams['rangehi']);
-            val = [ min(1.0, _+valparams['offset'][i]) for i in xrange(3) ]; 
+            val = [ min(1.0, _+valparams['offset'][i]) for i in range(3) ]; 
 
-            rgb = [ [ int(maxv * i) for i in backend.utils.hsv2rgb(hue[j], sat[j], val[j]) ] for j in xrange(3) ];
+            rgb = [ [ int(maxv * i) for i in backend.utils.hsv2rgb(hue[j], sat[j], val[j]) ] for j in range(3) ];
             
             self.left.each(rgb[0], rgb[1], rgb[2]);
             self.right.each(rgb[0], rgb[1], rgb[2]);

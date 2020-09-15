@@ -48,7 +48,7 @@ class Plugin(backend.plugin.Plugin):
             
             
             # inner LEDs red and blue, flashing slowly
-            for v in xrange(len(inners_val)):
+            for v in range(len(inners_val)):
                 inners_val[v] = 0.4 * math.cos(inners_phase[v]) + 0.6;
                 inners_phase[v] += .15
                 if inners_phase[v] >= 2*math.pi:
@@ -56,7 +56,7 @@ class Plugin(backend.plugin.Plugin):
     
             inners_rgb = [ [int(0.75*maxv*_) for _ in 
                 backend.utils.hsv2rgb(inners_hue[i], 1.0, inners_val[i])] 
-                    for i in xrange(len(inners_hue))];
+                    for i in range(len(inners_hue))];
             
             self.table.each([outers_rgb, inners_rgb[0], inners_rgb[1], inners_rgb[2], outers_rgb]);
             time.sleep(timestep);

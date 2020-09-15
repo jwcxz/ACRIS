@@ -55,10 +55,10 @@ if args.plugin:
 
             color = color.rstrip().strip("#");
             if len(color) != 6:
-                print "Invalid color chosen"
+                print("Invalid color chosen");
                 sys.exit(1);
             else:
-                args.plugin.extend([ str(int(color[i:i+2], 16)) for i in xrange(0,6,2) ]);
+                args.plugin.extend([ str(int(color[i:i+2], 16)) for i in range(0,6,2) ]);
 
     commands.append('plugin ' + ' '.join(args.plugin));
 
@@ -71,8 +71,8 @@ if args.kill:
 for c in commands:
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.connect((args.host, args.port));
-    print "Sending %s" % c;
+    print("Sending %s" % c);
     s.send(c);
     data = s.recv(1024)
     s.close()
-    print data,
+    print(data,)
