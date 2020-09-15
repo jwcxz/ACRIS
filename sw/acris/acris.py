@@ -102,7 +102,10 @@ class Acris:
 
 
     def stop_all_plugins(self):
-        for plugin_name in self.activated:
+        # save a copy of the activated plugins list because self.stop_plugin()
+        # will delete entries
+        activated_plugins = list(self.activated.keys());
+        for plugin_name in activated_plugins:
             self.stop_plugin(plugin_name);
 
         self.lights_off();
