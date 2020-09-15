@@ -64,6 +64,8 @@ class AcrisRequestHandler(BaseHTTPRequestHandler):
 
         if result == True:
             self.send_success();
+            self.end_headers();
+            self.wfile.write("".encode());
         elif result == False:
             # TODO: fix this
             self.send_syntax_err();
