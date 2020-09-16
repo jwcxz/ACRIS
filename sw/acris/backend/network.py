@@ -34,7 +34,10 @@ class Network:
         # send a command to a group of lights
         self.cmd([command, 250+self.c(group)] + args);
 
-    def stopall(self):
+    def dev_off(self, address):
+        self.cmd([Commands.LDSET, address] + [0]*15);
+
+    def all_devs_off(self):
         self.cmd([Commands.LDSET, 0xFF] + [0]*15);
 
     # utilities

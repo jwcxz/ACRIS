@@ -29,7 +29,8 @@ class Acris:
         self.activated = {};
 
         # addresses in use by plugins
-        self.used_addresses = [];
+        # address -> plugin_name
+        self.used_addresses = {};
 
         # socket configuration
         self.skthost = skthost;
@@ -55,36 +56,67 @@ class Acris:
         new_plugin = plugin_obj(self.network, self.plugin_params[plugin_name]);
 
         # if plugin is already activated, replace it; otherwise ensure that
-        # only one plugin can access each address
+        # only one plugin can access each address by either stopping the other
+        # plugins or rejecting the request depending on the value of force
         if plugin_name in self.activated:
             print("Plugin already active.  Restarting...");
-            self.stop_plugin(plugin_name);
+            self.stop_plugin(plugin_name, False);
         else:
-            # TODO: enable force functionality
+            # check if plugin is already active
+            overlapping_addresses = [];
+            overlapping_plugins = set();
+
             for addr in new_plugin.addresses:
                 if addr in self.used_addresses:
-                    print("Addresses in use already:", new_plugin.addresses, self.used_addresses);
-                    return False;
+                    overlapping_addresses.append(addr);
+                    overlapping_plugins.add(self.used_addresses[addr]);
 
+                if len(overlapping_addresses):
+                    # there are overlapping addresses, so either stop the
+                    # owning plugins or return an error depending on the value
+                    # of force
+
+                    if force:
+                        for opn in overlapping_plugins:
+                            # when stopping, shut off the lights of those
+                            # overlapping plugins since some addresses may not
+                            # be used by the new plugin
+                            self.stop_plugin(opn, True);
+                    else:
+                        print("Not starting because of overlapping addresses: %s" % plugin_name);
+                        print("    Wanted:", new_plugin.addresses);
+                        print("    In use:", overlapping_addresses);
+                        print("    Owners:", overlapping_plugins);
+                        return False;
+
+        # report the plugin as active
         self.activated[plugin_name] = new_plugin;
-        self.used_addresses.extend(new_plugin.addresses);
+
+        # store addresses used by the plugin
+        for addr in new_plugin.addresses:
+            self.used_addresses[addr] = plugin_name;
+
+        # start the plugin
         self.activated[plugin_name].start();
         return True;
 
 
-    def stop_plugin(self, plugin_name):
+    def stop_plugin(self, plugin_name, lights_off=True):
         if plugin_name in self.activated and self.activated[plugin_name] != None:
             if self.activated[plugin_name].enabled:
                 self.activated[plugin_name].stop();
 
-            # free up addresses
+            # free up addresses and shut off lights if lights_off is True
             for addr in self.activated[plugin_name].addresses:
                 if addr in self.used_addresses:
-                    self.used_addresses.remove(addr);
+                    del(self.used_addresses[addr]);
+
+                    if lights_off:
+                        self.network.dev_off(addr);
                 else:
                     print("Warning: 0x%02X not in address list" % addr);
 
-            # garbage collect
+            # remove plugin object
             del(self.activated[plugin_name]);
             return True
 
@@ -106,21 +138,23 @@ class Acris:
         # will delete entries
         activated_plugins = list(self.activated.keys());
         for plugin_name in activated_plugins:
-            self.stop_plugin(plugin_name);
+            # don't shut off the lights here because they'll be shut off with a
+            # single network command below
+            self.stop_plugin(plugin_name, False);
 
         self.lights_off();
 
 
     def list_all_plugins(self):
-        return self.plugins.keys();
+        return list(self.plugins.keys());
 
 
     def list_active_plugins(self):
-        return self.activated.keys();
+        return list(self.activated.keys());
 
 
     def list_active_addresses(self):
-        return [ "0x%02X" %(a) for a in self.used_addresses ];
+        return [ "0x%02X" % a for a in self.used_addresses ];
 
 
     def refresh_plugins(self):
@@ -142,7 +176,7 @@ class Acris:
 
 
     def lights_off(self):
-        self.network.stopall();
+        self.network.all_devs_off();
 
 
 
