@@ -14,14 +14,17 @@ class Network:
         # configuration
         self.cxn = serial.Serial(port, baud, parity=parity)
 
+    def send(self, bytestr):
+        self.cxn.write(s);
+        self.cxn.flush();
+
     def cmd(self, args, sendsync=True):
         # send a command string
         s = b"";
         if sendsync: s += self.SYNC;
         for a in args: s += self.c(a);
 
-        self.cxn.write(s);
-        self.cxn.flush();
+        self.send(s);
 
     def inst(self, addr, command, args):
         # silly wrapper to perform a command on a single light
@@ -47,5 +50,5 @@ class DummyNetwork(Network):
     def __init__(self):
         pass;
 
-    def cmd(self, args, sendsync=True):
-        pass;
+    def send(self, bytestr):
+        print("> SEND: %r" % ([ "%02x" % b for b in bytestr ]));
