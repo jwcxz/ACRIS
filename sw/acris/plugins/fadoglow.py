@@ -7,6 +7,7 @@ import controllers.fado
 
 default_params = backend.plugin.PluginConfig(
         value = 0.1,
+        value_denom = 1.0,
         time_delay = 0.05,
         hue_step = 1,
         maxv = 2047
@@ -23,7 +24,10 @@ class Plugin(backend.plugin.Plugin):
     def run(self):
         super().run();
 
-        color = backend.plugin.PluginColor(0, 1.0, self.params['value']);
+        # TODO: find a better way to handle value normalization
+        value_norm = float(self.params['value'])/float(self.params['value_denom']);
+
+        color = backend.plugin.PluginColor(0, 1.0, value_norm);
 
         while self.enabled:
             rgb = color.as_rgb_int(self.params['maxv']);
