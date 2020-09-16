@@ -53,7 +53,10 @@ class AcrisRequestHandler(BaseHTTPRequestHandler):
         # this protocol does not use multiple values per field
         params = {};
         for key in query:
-            params[key] = query[key][0];
+            try:
+                params[key] = json.loads(query[key][0]);
+            except json.decoder.JSONDecodeError:
+                params[key] = query[key][0];
 
         print("Got request: %s" % self.path);
         print("    Command: %s" % command);
