@@ -5,6 +5,7 @@ import argparse, serial, socket, sys
 from backend.network import Network, DummyNetwork
 from backend.interpreter import CommandInterpreter
 from backend.httpserver import get_httpd
+from backend.pushservice import HomebridgePushService
 
 import plugins
 
@@ -36,6 +37,9 @@ class Acris:
         self.skthost = skthost;
         self.sktport = sktport;
 
+        # push service
+        self.push_service = None;
+
 
     def set_interpreter(self, interpreter):
         self.interpreter = interpreter;
@@ -45,6 +49,16 @@ class Acris:
 
     def run_server(self):
         self.server.serve_forever();
+
+
+    def set_push_service(self, push_service):
+        self.push_service = push_service;
+
+    def call_push_service(self, plugin_name, new_state):
+        if not self.push_service:
+            return;
+
+        self.push_service.push_state(plugin_name, new_state);
 
 
     def update_plugin_params(self, plugin_name, new_params):
@@ -98,6 +112,10 @@ class Acris:
 
         # start the plugin
         self.activated[plugin_name].start();
+
+        # push the notification if available
+        self.call_push_service(plugin_name, True);
+
         return True;
 
 
@@ -106,7 +124,7 @@ class Acris:
             if self.activated[plugin_name].enabled:
                 self.activated[plugin_name].stop();
 
-            # free up addresses and shut off lights if lights_off is True
+            # free up addresses (and shut off lights if lights_off is True)
             for addr in self.activated[plugin_name].addresses:
                 if addr in self.used_addresses:
                     del(self.used_addresses[addr]);
@@ -118,6 +136,11 @@ class Acris:
 
             # remove plugin object
             del(self.activated[plugin_name]);
+
+            # TODO: should we avoid situations associated with rapid stop/start
+            # patterns on the same plugin?
+            self.call_push_service(plugin_name, False);
+
             return True
 
         else:
@@ -195,6 +218,18 @@ if __name__ == "__main__":
     p.add_argument('-R', '--serial-parity', dest='serprty', action='store',
             default='even', help='serial parity (none, even, odd)');
 
+    p.add_argument('--homebridge-push-host', dest='homebridge_push_host', action='store',
+            default=None, help='if specified alongside --homebridge-push-port, \
+            ACRIS will push a "homebridge-http-notification-server"-compatible \
+            message on plugin state change');
+
+    p.add_argument('--homebridge-push-port', dest='homebridge_push_port', action='store',
+            default=None, type=int, help='if specified alongside \
+            --homebridge-push-host, ACRIS will push a \
+            "homebridge-http-notification-server"-compatible message on \
+            plugin state change');
+
+
     args = p.parse_args();
 
     if   args.serprty == "even": serparity = serial.PARITY_EVEN;
@@ -204,4 +239,9 @@ if __name__ == "__main__":
     acris = Acris(args.skthost, int(args.sktport), args.serport, int(args.serbaud), serparity);
     acris.set_interpreter(CommandInterpreter(acris));
     acris.set_server(get_httpd(acris, args.skthost, args.sktport));
+
+    if args.homebridge_push_host and args.homebridge_push_port:
+        push_service = HomebridgePushService(args.homebridge_push_host, args.homebridge_push_port);
+        acris.set_push_service(push_service);
+
     acris.run_server();
