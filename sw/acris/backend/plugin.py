@@ -98,6 +98,9 @@ class PluginColor(dict):
     def as_rgb(self):
         return list(colorsys.hsv_to_rgb(*self.as_hsv()));
 
+    def as_rgb_int(self, max_value):
+        return [ int(max_value * i) for i in self.as_rgb() ];
+
     def as_dhsv(self):
         dh = self['hue'] * 360;
         return [ dh, self['sat'], self['val'] ];

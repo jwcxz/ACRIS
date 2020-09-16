@@ -1,26 +1,28 @@
 import backend.plugin, time
 
+default_params = backend.plugin.PluginConfig(
+        brightness = 1.0,
+        on_time = 0.01,
+        off_time = 0.07,
+        maxv = 200
+        );
+
 class Plugin(backend.plugin.Plugin):
-    def run(self): 
-        backend.plugin.Plugin.run(self);
+    def __init__(self, network, params):
+        super().__init__(network, params);
 
-        if len(self.args) >= 1: brightness = int(self.args[0]);
-        else:                   brightness = 200;
+    def run(self):
+        super().run();
 
-        if len(self.args) >= 2: offtime = float(self.args[1]);
-        else:                   offtime = .07
+        value = int(self.params['maxv'] * self.params['brightness']);
 
-        if len(self.args) >= 3: ontime = float(self.args[2]);
-        else:                   ontime = .01
-
-        oncmd = [255, brightness, brightness, brightness, 0, 0, 0, brightness,
-                brightness, brightness, 0, 0, 0, brightness, brightness,
-                brightness];
-        offcmd = [255, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        on_cmd = [255, value, value, value, 0, 0, 0, value, value, value, 0, 0,
+                    0, value, value, value];
+        off_cmd = [255, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
         while self.enabled:
-            self.network.cmd(oncmd);
-            time.sleep(ontime);
+            self.network.cmd(on_cmd);
+            time.sleep(self.params['on_time']);
 
-            self.network.cmd(offcmd);
-            time.sleep(offtime);
+            self.network.cmd(off_cmd);
+            time.sleep(self.params['off_time']);

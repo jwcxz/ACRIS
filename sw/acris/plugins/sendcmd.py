@@ -1,11 +1,15 @@
 import backend.plugin
 
+default_params = backend.plugin.PluginConfig(
+        command = []
+        );
+
 class Plugin(backend.plugin.Plugin):
-    def __init__(self, network, args):
-        backend.plugin.Plugin.__init__(self, network, args);
+    def __init__(self, network, params):
+        super().__init__(network, params);
 
-    def run(self): 
-        backend.plugin.Plugin.run(self);
+    def run(self):
+        super().run();
 
-        self.network.cmd(self.args, sendsync=False);
+        self.network.cmd(self.params['command'], sendsync=False);
         self.enabled = False;
