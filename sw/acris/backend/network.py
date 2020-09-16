@@ -15,7 +15,7 @@ class Network:
         self.cxn = serial.Serial(port, baud, parity=parity)
 
     def send(self, bytestr):
-        self.cxn.write(s);
+        self.cxn.write(bytestr);
         self.cxn.flush();
 
     def cmd(self, args, sendsync=True):
