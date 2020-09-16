@@ -1,0 +1,53 @@
+{
+    ...
+
+
+    "accessories": [
+        ...
+
+        {
+            "accessory": "HttpPushRgb",
+            "name": "ACRIS Fado Light",
+            "service": "Light",
+            "timeout": 3000,
+
+            "switch": {
+                "status": {
+                    "url": "http://localhost:55555/acris/status/fadohsv/state",
+                    "bodyRegEx": "on"
+                },
+                "powerOn": "http://localhost:55555/acris/start/fadohsv/force",
+                "powerOff": "http://localhost:55555/acris/stop/fadohsv",
+                "notificationID": "acris-fadohsv"
+            },
+
+            "color": {
+                "status": "http://localhost:55555/acris/status/fadohsv/params?param=color&format=hex",
+                "url": "http://localhost:55555/acris/start/fadohsv/force?color=\"%s\"",
+                "brightness": true
+            }
+        },
+
+        {
+            "accessory": "HttpPushRgb",
+            "name": "ACRIS Fado Glow",
+            "service": "Light",
+            "timeout": 3000,
+
+            "switch": {
+                "status": {
+                    "url": "http://localhost:55555/acris/status/fadoglow/state",
+                    "bodyRegEx": "on"
+                },
+                "powerOn": "http://localhost:55555/acris/start/fadoglow/force",
+                "powerOff": "http://localhost:55555/acris/stop/fadoglow",
+                "notificationID": "acris-fadoglow"
+            },
+
+            "brightness": {
+                "status": "http://localhost:55555/acris/status/fadoglow/params?param=value",
+                "url": "http://localhost:55555/acris/start/fadoglow/force?value=%s&value_denom=100"
+            }
+        }
+    ]
+}

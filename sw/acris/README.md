@@ -1,10 +1,16 @@
 ACRIS Lighting Application
 ==========================
 
-This is the major software package of the project it actually commands the
-lighting network.
+This software controls the lighting network by means of configurable plugins.
+It listens to HTTP requests.
 
 
-## Architecture
+## API
 
-I should write this at some point.
+Documentation is yet to be written.  In the meantime, please refer to the
+comments in [backend/httpserver.py](backend/httpserver.py).
+
+
+## HomeKit integration
+
+Please refer to [../resources/homebridge/README.md](../resources/homebridge/README.md).
