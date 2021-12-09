@@ -13,17 +13,17 @@
 
             "switch": {
                 "status": {
-                    "url": "http://localhost:55555/acris/status/fadohsv/state",
+                    "url": "http://127.0.0.1:55555/acris/status/fadohsv/state",
                     "bodyRegEx": "on"
                 },
-                "powerOn": "http://localhost:55555/acris/start/fadohsv/force",
-                "powerOff": "http://localhost:55555/acris/stop/fadohsv",
+                "powerOn": "http://127.0.0.1:55555/acris/start/fadohsv/force",
+                "powerOff": "http://127.0.0.1:55555/acris/stop/fadohsv",
                 "notificationID": "acris-fadohsv"
             },
 
             "color": {
-                "status": "http://localhost:55555/acris/status/fadohsv/params?param=color&format=hex",
-                "url": "http://localhost:55555/acris/start/fadohsv/force?color=\"%s\"",
+                "status": "http://127.0.0.1:55555/acris/status/fadohsv/params?param=color&format=hex",
+                "url": "http://127.0.0.1:55555/acris/start/fadohsv/force?color=\"%s\"",
                 "brightness": true
             }
         },
@@ -36,17 +36,17 @@
 
             "switch": {
                 "status": {
-                    "url": "http://localhost:55555/acris/status/fadoglow/state",
+                    "url": "http://127.0.0.1:55555/acris/status/fadoglow/state",
                     "bodyRegEx": "on"
                 },
-                "powerOn": "http://localhost:55555/acris/start/fadoglow/force",
-                "powerOff": "http://localhost:55555/acris/stop/fadoglow",
+                "powerOn": "http://127.0.0.1:55555/acris/start/fadoglow/force",
+                "powerOff": "http://127.0.0.1:55555/acris/stop/fadoglow",
                 "notificationID": "acris-fadoglow"
             },
 
             "brightness": {
-                "status": "http://localhost:55555/acris/status/fadoglow/params?param=value",
-                "url": "http://localhost:55555/acris/start/fadoglow/force?value=%s&value_denom=100"
+                "status": "http://127.0.0.1:55555/acris/status/fadoglow/params?param=value",
+                "url": "http://127.0.0.1:55555/acris/start/fadoglow/force?value=%s&value_denom=100"
             }
         }
     ]
